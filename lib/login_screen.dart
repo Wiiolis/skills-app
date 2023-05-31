@@ -21,10 +21,10 @@ class _LoginScreenState extends State<LoginScreen> {
       'Accept': 'application/json',
     };
 
-    var body = {
+    var body = jsonEncode({
       "email": _email,
       "password": _password,
-    };
+    });
 
     try {
       final response = await http.post(
@@ -61,7 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Connection failed"),
-          content: Text("Please check your internet connection."),
+          content: Text("Error message: ${e.toString()}"), // Display the exception message here
+          //Text("Please check your internet connection."),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
