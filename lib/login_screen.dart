@@ -4,6 +4,10 @@ import 'package:http/http.dart' as http;
 import 'welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  final String apiBaseUrl;
+
+  LoginScreen({Key? key, required this.apiBaseUrl}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -13,8 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '', _password = '';
 
   Future<void> _validateLogin() async {
-    // Replace with your API URL
-    String url = "https://gamma.staging.candena.de/api/v1/sessions";
+    String url = "${widget.apiBaseUrl}/api/v1/sessions";
 
     Map<String, String> headers = {
       'Content-type': 'application/json',

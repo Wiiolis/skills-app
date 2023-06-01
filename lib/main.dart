@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final apiBaseUrl = const String.fromEnvironment('API_BASE_URL', defaultValue: 'https://gamma.staging.candena.de');
+  runApp(MyApp(apiBaseUrl: apiBaseUrl));
 }
 
 class MyApp extends StatelessWidget {
+  final String apiBaseUrl;
+
+  MyApp({Key? key, required this.apiBaseUrl}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginScreen(),
+      home: LoginScreen(apiBaseUrl: apiBaseUrl),
     );
   }
 }
