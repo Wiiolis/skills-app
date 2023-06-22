@@ -23,7 +23,6 @@ class Login extends StatelessWidget {
                   image: const AssetImage('assets/images/loginBg.png'),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover),
-              const DocumentBox(),
               SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 20, 10, 50),
