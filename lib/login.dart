@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'components/document_box.dart';
 import 'components/my_textfield.dart';
 import 'components/skill_card_list.dart';
 import 'globals.dart';
@@ -22,6 +23,7 @@ class Login extends StatelessWidget {
                   image: const AssetImage('assets/images/loginBg.png'),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover),
+              const DocumentBox(),
               SingleChildScrollView(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 20, 10, 50),
