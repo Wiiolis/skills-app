@@ -35,7 +35,7 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: true
+      child: false
           ? Scaffold(
               bottomNavigationBar: BottomNavigationBar(
                 items: const <BottomNavigationBarItem>[

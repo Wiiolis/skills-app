@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'components/my_textfield.dart';
 import 'components/skill_card_list.dart';
 import 'globals.dart';
@@ -101,15 +102,24 @@ class Login extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
-                    const Center(
-                      child: Text(
-                        'Forgot your password?',
-                        style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: 12,
-                            decoration: TextDecoration.underline),
+                    Center(
+                      child: TextButton(
+                        onPressed: () async {
+                          var url = Uri.parse(
+                              'https://study.edu.edu.mt/#/password-reset');
+                          if (await canLaunchUrl(url)) {
+                            launchUrl(url);
+                          }
+                        },
+                        child: const Text(
+                          'Forgot your password?',
+                          style: TextStyle(
+                              color: AppColors.primaryColor,
+                              fontSize: 12,
+                              decoration: TextDecoration.underline),
+                        ),
                       ),
                     ),
                   ],
