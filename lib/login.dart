@@ -1,15 +1,88 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'components/document_box.dart';
-import 'components/my_textfield.dart';
-import 'components/skill_card_list.dart';
+import 'package:http/http.dart' as http;
 import 'globals.dart';
+import 'welcome_screen.dart';
+import 'components/my_textfield.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class Login extends StatelessWidget {
-  Login({super.key});
+class Login extends StatefulWidget {
+  final String apiBaseUrl;
+
+  Login({Key? key, required this.apiBaseUrl}) : super(key: key);
+
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final _formKey = GlobalKey<FormState>();
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<void> _validateLogin() async {
+    String url = "${widget.apiBaseUrl}/api/v1/sessions";
+
+    Map<String, String> headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    var body = jsonEncode({
+      "email": usernameController.text,
+      "password": passwordController.text,
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WelcomeScreen()),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Invalid Credentials"),
+              content: Text("Please try again."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Connection failed"),
+            content: Text(
+                "Error message: ${e.toString()}"), // Display the exception message here
+            //Text("Please check your internet connection."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,35 +143,47 @@ class Login extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          MyTextField(
-                            controller: usernameController,
-                            hintText: 'Enter your EDU e-mail adress',
-                            obscureText: false,
-                            label: 'E-mail',
-                          ),
-                          MyTextField(
-                            controller: passwordController,
-                            hintText: 'Enter your EDU password',
-                            obscureText: true,
-                            label: 'Password',
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: const ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                  AppColors.primaryColor,
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                MyTextField(
+                                  controller: usernameController,
+                                  hintText: 'Enter your EDU e-mail adress',
+                                  obscureText: false,
+                                  label: 'E-mail',
                                 ),
-                              ),
-                              child: const Text(
-                                'LOGIN',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                                MyTextField(
+                                  controller: passwordController,
+                                  hintText: 'Enter your EDU password',
+                                  obscureText: false,
+                                  label: 'Password',
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState?.validate() ??
+                                          false) {
+                                        _validateLogin();
+                                      }
+                                    },
+                                    style: const ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(
+                                        AppColors.primaryColor,
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'LOGIN',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(

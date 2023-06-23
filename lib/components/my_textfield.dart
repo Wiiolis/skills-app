@@ -8,12 +8,13 @@ class MyTextField extends StatelessWidget {
   final bool obscureText;
   final String label;
 
-  const MyTextField(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscureText,
-      required this.label});
+  MyTextField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    required this.obscureText,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class MyTextField extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 15),
-          child: TextField(
+          child: TextFormField(
             controller: controller,
             obscureText: obscureText,
             decoration: InputDecoration(
