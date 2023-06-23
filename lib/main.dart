@@ -15,28 +15,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: false
-            ? Scaffold(
-                bottomNavigationBar: BottomNavigationBar(
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.check_outlined),
-                      label: 'Skills',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.file_copy_outlined),
-                      label: 'Documents',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.info),
-                      label: 'Info',
-                    ),
-                  ],
-                ),
-                body: const Dashboard())
-            : MaterialApp(
-                debugShowCheckedModeBanner: false,
-                home: Login(apiBaseUrl: apiBaseUrl),
-              ));
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Login(apiBaseUrl: apiBaseUrl),
+      ),
+    );
   }
 }

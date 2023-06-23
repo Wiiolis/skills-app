@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dashboard.dart';
 import 'globals.dart';
-import 'welcome_screen.dart';
 import 'components/my_textfield.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 201) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => WelcomeScreen()),
+          MaterialPageRoute(builder: (context) => Dashboard()),
         );
       } else {
         showDialog(

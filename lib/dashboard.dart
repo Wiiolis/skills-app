@@ -14,7 +14,24 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.check_outlined),
+            label: 'Skills',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.file_copy_outlined),
+            label: 'Documents',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info),
+            label: 'Info',
+          ),
+        ],
+      ),
+      body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             // Where the linear gradient begins and ends
@@ -36,6 +53,8 @@ class _DashboardState extends State<Dashboard> {
             TopWidgetProfile(),
             SkillCardList(),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
