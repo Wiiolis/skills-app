@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Login extends StatefulWidget {
   final String apiBaseUrl;
 
-  Login({Key? key, required this.apiBaseUrl}) : super(key: key);
+  const Login({Key? key, required this.apiBaseUrl}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
