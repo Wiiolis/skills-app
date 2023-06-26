@@ -68,14 +68,14 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Connection failed"),
+            title: const Text("Connection failed"),
             content: Text(
                 "Error message: ${e.toString()}"), // Display the exception message here
             //Text("Please check your internet connection."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text("OK"),
+                child: const Text("OK"),
               ),
             ],
           );
@@ -156,7 +156,7 @@ class _LoginState extends State<Login> {
                                 MyTextField(
                                   controller: passwordController,
                                   hintText: 'Enter your EDU password',
-                                  obscureText: false,
+                                  obscureText: true,
                                   label: 'Password',
                                 ),
                                 const SizedBox(
