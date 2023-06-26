@@ -5,6 +5,7 @@ import 'dashboard.dart';
 import 'globals.dart';
 import 'components/my_textfield.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   final String apiBaseUrl;
@@ -17,9 +18,14 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoggedIn();
+  }
 
   Future<void> _validateLogin() async {
     String url = "${widget.apiBaseUrl}/api/v1/sessions";
@@ -80,6 +86,26 @@ class _LoginState extends State<Login> {
             ],
           );
         },
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>?> _getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userData = prefs.getString('userData');
+    if (userData != null) {
+      return jsonDecode(userData) as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  void _checkLoggedIn() async {
+    final userData = await _getUserData();
+    if (userData != null) {
+      // User is already logged in, navigate to the dashboard
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
       );
     }
   }
