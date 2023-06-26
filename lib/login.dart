@@ -16,6 +16,12 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+Future<void> saveUserData(Map<String, dynamic> userData) async {
+  final prefs = await SharedPreferences.getInstance();
+  final userDataJson = jsonEncode(userData);
+  await prefs.setString('userData', userDataJson);
+}
+
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
@@ -30,11 +36,6 @@ class _LoginState extends State<Login> {
   Future<void> _validateLogin() async {
     String url = "${widget.apiBaseUrl}/api/v1/sessions";
 
-    Map<String, String> headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    };
-
     var body = jsonEncode({
       "email": usernameController.text,
       "password": passwordController.text,
@@ -48,6 +49,12 @@ class _LoginState extends State<Login> {
       );
 
       if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        final userData = responseData as Map<String, dynamic>;
+
+        // Save the user data in shared preferences
+        await saveUserData(userData);
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Dashboard()),
@@ -57,12 +64,12 @@ class _LoginState extends State<Login> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Invalid Credentials"),
-              content: Text("Please try again."),
+              title: const Text("Invalid Credentials"),
+              content: const Text("Please try again."),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 ),
               ],
             );
@@ -105,7 +112,7 @@ class _LoginState extends State<Login> {
       // User is already logged in, navigate to the dashboard
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(builder: (context) => const Dashboard()),
       );
     }
   }

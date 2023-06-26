@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'dashboard.dart';
 import 'login.dart';
@@ -10,45 +9,33 @@ Future<void> main() async {
   const apiBaseUrl = String.fromEnvironment('API_BASE_URL',
       defaultValue: 'https://gamma.staging.candena.de');
 
-  // Get the user data from persistent storage
   final userData = await _getUserData();
 
-  // Check if user data exists
-  if (userData != null) {
-    runApp(MyApp(
-      apiBaseUrl: apiBaseUrl,
-      userData: userData,
-    ));
-  } else {
-    runApp(MyApp(
-      apiBaseUrl: apiBaseUrl,
-      userData: {},
-    ));
-  }
+  runApp(MyApp(apiBaseUrl: apiBaseUrl, userData: userData));
 }
 
 Future<Map<String, dynamic>?> _getUserData() async {
   final prefs = await SharedPreferences.getInstance();
-  final userData = prefs.getString('userData');
-  if (userData != null) {
-    return jsonDecode(userData) as Map<String, dynamic>;
+  final userDataJson = prefs.getString('userData');
+  if (userDataJson != null) {
+    return jsonDecode(userDataJson) as Map<String, dynamic>;
   }
   return null;
 }
 
 class MyApp extends StatelessWidget {
   final String apiBaseUrl;
-  final userData;
+  final Map<String, dynamic>? userData; // Modify the userData parameter
 
-  const MyApp({Key? key, required this.apiBaseUrl, required this.userData})
+  const MyApp({Key? key, required this.apiBaseUrl, this.userData})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var x = userData;
     return SafeArea(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: x == null ? Login(apiBaseUrl: apiBaseUrl) : Dashboard(),
+        home: userData == null ? Login(apiBaseUrl: apiBaseUrl) : Dashboard(),
       ),
     );
   }
