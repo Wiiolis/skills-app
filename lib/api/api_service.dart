@@ -1,64 +1,93 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:demo_app/api/model/current_user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
+import 'model/login_model.dart';
 import 'model/user_model.dart';
 
 class ApiService {
-  // GET CURRENT USER INFO
-  Future<List<CurrentUser>> getCurrentUser() async {
+  // SAVE TOKEN
+  Future saveToken(String token) async {
+    String ba = "Basic ${base64.encode(utf8.encode('$token:'))}";
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', ba);
+  }
+
+  // LOGIN
+  Future<void> login(body) async {
+    String url = "https://gamma.staging.candena.de/api/v1/sessions";
+
     try {
-      var url =
-          Uri.parse(ApiConstants.baseUrl + ApiConstants.currentUsersEndpoint);
-      String basicAuth =
-          'Basic OHBFVVppY2RXTW9ub0MzSnhPWmMrb1ZPYk1YcFErdVhUM1dtdlUwTjJYZk1wNFpLdnozL0dvYUlFQjdPem1hbDRVaUd2NVZPVUpWODMvU1RrOURKczRXMFdWRVE4Zndld01JM3BZODdDRHlYTUk1bzF1bC9lWVE9Og==';
-      var response = await http.get(
-        url,
-        headers: <String, String>{'authorization': basicAuth},
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: body,
       );
 
-      if (response.statusCode == 200) {
-        dynamic currentUser = response.body;
-        List<CurrentUser> _model = [];
-        _model.add(currentUserFromJson(currentUser));
-        return _model;
-      } else {
-        log('Error getting current user: ${response.statusCode}');
+      if (response.statusCode == 201) {
+        var basicAuth = response.headers['x-new-auth-token']!;
+
+        await saveToken(basicAuth);
+      }
+    } catch (e) {
+      log('Error getting current user: $e');
+    }
+  }
+
+  // GET CURRENT USER INFO
+  Future<CurrentUser?> getCurrentUser() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        var url =
+            Uri.parse(ApiConstants.baseUrl + ApiConstants.currentUsersEndpoint);
+        var response = await http.get(
+          url,
+          headers: <String, String>{'authorization': token},
+        );
+
+        print(response.body);
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          final currentUser = CurrentUser.fromJson(responseData);
+          return currentUser;
+        } else if (response.statusCode == 401) {
+          // Unauthorized access, handle as needed
+          log('Unauthorized access');
+        }
       }
     } catch (e) {
       log('Error getting current user: $e');
     }
 
-    return [];
+    return null;
   }
 
   // GET USER INFO
-  Future<List<User>> getUser(currentUserId) async {
+  Future<User?> getUser(currentUserId) async {
     try {
       ApiConstants.initializeUserEndpoint(currentUserId);
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.userEndpoint);
-      String basicAuth =
-          'Basic OHBFVVppY2RXTW9ub0MzSnhPWmMrb1ZPYk1YcFErdVhUM1dtdlUwTjJYZk1wNFpLdnozL0dvYUlFQjdPem1hbDRVaUd2NVZPVUpWODMvU1RrOURKczRXMFdWRVE4Zndld01JM3BZODdDRHlYTUk1bzF1bC9lWVE9Og==';
-      var response = await http.get(
-        url,
-        headers: <String, String>{'authorization': basicAuth},
-      );
+      var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        dynamic user = response.body;
-        List<User> _model = [];
-        _model.add(userFromJson(user));
-        return _model;
+        dynamic user = jsonDecode(response.body);
+        return userFromJson(user);
       } else {
-        log('Error getting current user: ${response.statusCode}');
+        log('Error getting user info: ${response.statusCode}');
       }
     } catch (e) {
-      log('Error getting current user: $e');
+      log('Error getting user info: $e');
     }
 
-    return [];
+    return null;
   }
 }

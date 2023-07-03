@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'api/api_service.dart';
 import 'dashboard.dart';
-import 'globals.dart';
 import 'components/my_textfield.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'globals.dart';
 
 class Login extends StatefulWidget {
   final String apiBaseUrl;
@@ -14,12 +16,6 @@ class Login extends StatefulWidget {
 
   @override
   _LoginState createState() => _LoginState();
-}
-
-Future<void> saveUserData(Map<String, dynamic> userData) async {
-  final prefs = await SharedPreferences.getInstance();
-  final userDataJson = jsonEncode(userData);
-  await prefs.setString('userData', userDataJson);
 }
 
 class _LoginState extends State<Login> {
@@ -34,83 +30,35 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _validateLogin() async {
-    String url = "${widget.apiBaseUrl}/api/v1/sessions";
+    final prefs = await SharedPreferences.getInstance();
 
     var body = jsonEncode({
       "email": usernameController.text,
       "password": passwordController.text,
     });
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: body,
-      );
-
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
-        final userData = responseData as Map<String, dynamic>;
-
-        // Save the user data in shared preferences
-        await saveUserData(userData);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Invalid Credentials"),
-              content: const Text("Please try again."),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Connection failed"),
-            content: Text(
-                "Error message: ${e.toString()}"), // Display the exception message here
-            //Text("Please check your internet connection."),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    await ApiService().login(body).then((value) => {
+          if (prefs.getString('token') != null)
+            {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Dashboard()),
+              )
+            }
+        });
   }
 
-  Future<Map<String, dynamic>?> _getUserData() async {
+  Future<String?> _getUserToken() async {
     final prefs = await SharedPreferences.getInstance();
-    final userData = prefs.getString('userData');
-    if (userData != null) {
-      return jsonDecode(userData) as Map<String, dynamic>;
-    }
-    return null;
+    final userToken = prefs.getString('token');
+    return userToken;
   }
 
   void _checkLoggedIn() async {
-    final userData = await _getUserData();
-    if (userData != null) {
-      // User is already logged in, navigate to the dashboard
-      Navigator.push(
+    var userToken = await _getUserToken();
+
+    if (userToken != null) {
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Dashboard()),
       );
