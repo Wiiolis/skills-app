@@ -70,9 +70,9 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                 final currentUser = snapshot.data;
                 return Row(
                   children: [
-                    const Icon(
-                      Icons.person_outlined,
-                      size: 38,
+                    CircleAvatar(
+                      radius: 19,
+                      backgroundImage: NetworkImage(currentUser.avatars.small),
                     ),
                     const SizedBox(width: 15),
                     Column(
@@ -81,28 +81,28 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                         Row(
                           children: [
                             Text(
-                              '${currentUser.firstName}',
+                              '${currentUser.firstName + ' ' + currentUser.lastName}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 height: 1.50,
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Text(
-                              'Module 2',
+                            Text(
+                              '${currentUser.clinicalRotation.groupName}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               softWrap: false,
-                              style: TextStyle(height: 1.50),
+                              style: const TextStyle(height: 1.50),
                             ),
                           ],
                         ),
-                        const Text(
-                          'Some Cool Hospital Name',
+                        Text(
+                          '${currentUser.clinicalRotation.hospitalName}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
-                          style: TextStyle(height: 1.50),
+                          style: const TextStyle(height: 1.50),
                         ),
                       ],
                     ),
