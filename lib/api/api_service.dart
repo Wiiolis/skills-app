@@ -18,6 +18,11 @@ class ApiService {
     await prefs.setString('token', ba);
   }
 
+  Future saveCurrentUserId(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('currentUserId', id);
+  }
+
   // LOGIN
   Future<void> login(body) async {
     String url = "https://gamma.staging.candena.de/api/v1/sessions";
@@ -31,8 +36,11 @@ class ApiService {
 
       if (response.statusCode == 201) {
         var basicAuth = response.headers['x-new-auth-token']!;
-
         await saveToken(basicAuth);
+
+        final responseData = jsonDecode(response.body);
+        final loginData = Login.fromJson(responseData);
+        saveCurrentUserId(loginData.userId);
       }
     } catch (e) {
       log('Error getting current user: $e');
@@ -44,20 +52,21 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
+      final currentUserId = prefs.getInt('currentUserId');
 
       if (token != null) {
-        var url =
-            Uri.parse(ApiConstants.baseUrl + ApiConstants.currentUsersEndpoint);
+        ApiConstants.initializeUserEndpoint(currentUserId!);
+        var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.userEndpoint);
         var response = await http.get(
           url,
           headers: <String, String>{'authorization': token},
         );
 
-        print(response.body);
-
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           final currentUser = CurrentUser.fromJson(responseData);
+
+          print(currentUser);
           return currentUser;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed
