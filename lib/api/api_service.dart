@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:demo_app/api/model/current_user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,15 +45,14 @@ class ApiService {
     }
   }
 
-  // GET CURRENT USER INFO
-  Future<CurrentUser?> getCurrentUser() async {
+  // GET USER INFO
+  Future<User?> getUser(userId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
-      final currentUserId = prefs.getInt('currentUserId');
 
       if (token != null) {
-        ApiConstants.initializeUserEndpoint(currentUserId!);
+        ApiConstants.initializeUserEndpoint(userId);
         var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.userEndpoint);
         var response = await http.get(
           url,
@@ -63,33 +61,13 @@ class ApiService {
 
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
-          final currentUser = CurrentUser.fromJson(responseData);
+          final user = User.fromJson(responseData);
 
-          return currentUser;
+          return user;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
-      }
-    } catch (e) {
-      log('Error getting current user: $e');
-    }
-
-    return null;
-  }
-
-  // GET USER INFO
-  Future<User?> getUser(currentUserId) async {
-    try {
-      ApiConstants.initializeUserEndpoint(currentUserId);
-      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.userEndpoint);
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        dynamic user = jsonDecode(response.body);
-        return userFromJson(user);
-      } else {
-        log('Error getting user info: ${response.statusCode}');
       }
     } catch (e) {
       log('Error getting user info: $e');

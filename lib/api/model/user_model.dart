@@ -4,58 +4,56 @@
 
 import 'dart:convert';
 
-User userFromJson(String str) => User.fromJson(json.decode(str));
-
-String userToJson(User data) => json.encode(data.toJson());
-
 class User {
-  Avatars avatars;
-  String bio;
+  Avatars? avatars;
+  String? bio;
   dynamic birthDate;
-  String cityOfResidence;
-  ClinicalRotation clinicalRotation;
-  String countryId;
-  DateTime createdAt;
-  String firstName;
-  String gender;
-  String jobTitle;
-  String lastName;
-  ClinicalRotation links;
-  String personalQuote;
-  DateTime ppAcceptedAt;
-  Role role;
-  String slug;
+  String? cityOfResidence;
+  ClinicalRotation? clinicalRotation;
+  String? countryId;
+  DateTime? createdAt;
+  String? firstName;
+  String? jobTitle;
+  String? lastName;
+  Links? links;
+  String? personalQuote;
+  DateTime? ppAcceptedAt;
+  Role? role;
+  String? slug;
   dynamic studentId;
-  String systemLanguage;
-  bool teachingStaff;
-  List<dynamic> teams;
-  DateTime tosAcceptedAt;
-  int userId;
+  String? systemLanguage;
+  bool? teachingStaff;
+  List<dynamic>? teams;
+  DateTime? tosAcceptedAt;
+  int? userId;
 
   User({
-    required this.avatars,
-    required this.bio,
+    this.avatars,
+    this.bio,
     this.birthDate,
-    required this.cityOfResidence,
-    required this.clinicalRotation,
-    required this.countryId,
-    required this.createdAt,
-    required this.firstName,
-    required this.gender,
-    required this.jobTitle,
-    required this.lastName,
-    required this.links,
-    required this.personalQuote,
-    required this.ppAcceptedAt,
-    required this.role,
-    required this.slug,
+    this.cityOfResidence,
+    this.clinicalRotation,
+    this.countryId,
+    this.createdAt,
+    this.firstName,
+    this.jobTitle,
+    this.lastName,
+    this.links,
+    this.personalQuote,
+    this.ppAcceptedAt,
+    this.role,
+    this.slug,
     this.studentId,
-    required this.systemLanguage,
-    required this.teachingStaff,
-    required this.teams,
-    required this.tosAcceptedAt,
-    required this.userId,
+    this.systemLanguage,
+    this.teachingStaff,
+    this.teams,
+    this.tosAcceptedAt,
+    this.userId,
   });
+
+  factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         avatars: Avatars.fromJson(json["avatars"]),
@@ -66,10 +64,9 @@ class User {
         countryId: json["country_id"],
         createdAt: DateTime.parse(json["created_at"]),
         firstName: json["first_name"],
-        gender: json["gender"],
         jobTitle: json["job_title"],
         lastName: json["last_name"],
-        links: ClinicalRotation.fromJson(json["links"]),
+        links: Links.fromJson(json["links"]),
         personalQuote: json["personal_quote"],
         ppAcceptedAt: DateTime.parse(json["pp_accepted_at"]),
         role: Role.fromJson(json["role"]),
@@ -83,39 +80,42 @@ class User {
       );
 
   Map<String, dynamic> toJson() => {
-        "avatars": avatars.toJson(),
+        "avatars": avatars?.toJson(),
         "bio": bio,
         "birth_date": birthDate,
         "city_of_residence": cityOfResidence,
-        "clinical_rotation": clinicalRotation.toJson(),
+        "clinical_rotation": clinicalRotation?.toJson(),
         "country_id": countryId,
-        "created_at": createdAt.toIso8601String(),
+        "created_at": createdAt?.toIso8601String(),
         "first_name": firstName,
-        "gender": gender,
         "job_title": jobTitle,
         "last_name": lastName,
-        "links": links.toJson(),
+        "links": links?.toJson(),
         "personal_quote": personalQuote,
-        "pp_accepted_at": ppAcceptedAt.toIso8601String(),
-        "role": role.toJson(),
+        "pp_accepted_at": ppAcceptedAt?.toIso8601String(),
+        "role": role?.toJson(),
         "slug": slug,
         "student_id": studentId,
         "system_language": systemLanguage,
         "teaching_staff": teachingStaff,
-        "teams": List<dynamic>.from(teams.map((x) => x)),
-        "tos_accepted_at": tosAcceptedAt.toIso8601String(),
+        "teams": List<dynamic>.from(teams!.map((x) => x)),
+        "tos_accepted_at": tosAcceptedAt?.toIso8601String(),
         "user_id": userId,
       };
 }
 
 class Avatars {
-  String normal;
-  String small;
+  String? normal;
+  String? small;
 
   Avatars({
-    required this.normal,
-    required this.small,
+    this.normal,
+    this.small,
   });
+
+  factory Avatars.fromRawJson(String str) => Avatars.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
 
   factory Avatars.fromJson(Map<String, dynamic> json) => Avatars(
         normal: json["normal"],
@@ -129,26 +129,70 @@ class Avatars {
 }
 
 class ClinicalRotation {
-  ClinicalRotation();
+  String? groupName;
+  int? hospitalId;
+  String? hospitalName;
+  int? userGroupId;
+
+  ClinicalRotation({
+    this.groupName,
+    this.hospitalId,
+    this.hospitalName,
+    this.userGroupId,
+  });
 
   factory ClinicalRotation.fromJson(Map<String, dynamic> json) =>
-      ClinicalRotation();
+      ClinicalRotation(
+        groupName: json["group_name"],
+        hospitalId: json["hospital_id"],
+        hospitalName: json["hospital_name"],
+        userGroupId: json["user_group_id"],
+      );
 
-  Map<String, dynamic> toJson() => {};
+  Map<String, dynamic> toJson() => {
+        "group_name": groupName,
+        "hospital_id": hospitalId,
+        "hospital_name": hospitalName,
+        "user_group_id": userGroupId,
+      };
+}
+
+class Links {
+  String? linkedinUrl;
+
+  Links({
+    this.linkedinUrl,
+  });
+
+  factory Links.fromRawJson(String str) => Links.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Links.fromJson(Map<String, dynamic> json) => Links(
+        linkedinUrl: json["linkedin_url"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "linkedin_url": linkedinUrl,
+      };
 }
 
 class Role {
-  String code;
-  String color;
-  String label;
-  bool primary;
+  String? code;
+  String? color;
+  String? label;
+  bool? primary;
 
   Role({
-    required this.code,
-    required this.color,
-    required this.label,
-    required this.primary,
+    this.code,
+    this.color,
+    this.label,
+    this.primary,
   });
+
+  factory Role.fromRawJson(String str) => Role.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
         code: json["code"],

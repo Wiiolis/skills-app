@@ -11,12 +11,12 @@ class TopWidgetProfile extends StatefulWidget {
 }
 
 class _TopWidgetProfileState extends State<TopWidgetProfile> {
-  late Future<dynamic> _currentUserFuture;
+  late Future<dynamic> _userFuture;
 
   @override
   void initState() {
     super.initState();
-    _currentUserFuture = _getCurrentUser();
+    _userFuture = _getUser();
   }
 
   dynamic apiBaseUrl = const String.fromEnvironment(
@@ -36,11 +36,14 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
     );
   }
 
-  Future<dynamic> _getCurrentUser() async {
+  Future<dynamic> _getUser() async {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     if (token != null) {
-      return ApiService().getCurrentUser();
+      final prefs = await SharedPreferences.getInstance();
+      int? currentUserId = prefs.getInt('currentUserId');
+
+      return ApiService().getUser(currentUserId);
     } else {
       Navigator.pushReplacement(
         context,
@@ -60,20 +63,22 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FutureBuilder<dynamic>(
-            future: _currentUserFuture,
+            future: _userFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                final currentUser = snapshot.data;
+                final user = snapshot.data;
                 return Row(
                   children: [
-                    CircleAvatar(
-                      radius: 19,
-                      backgroundImage: NetworkImage(currentUser.avatars.small),
-                    ),
+                    user.avatars != null
+                        ? CircleAvatar(
+                            radius: 19,
+                            backgroundImage: NetworkImage(user.avatars.small),
+                          )
+                        : Text('data'),
                     const SizedBox(width: 15),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,29 +86,31 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                         Row(
                           children: [
                             Text(
-                              '${currentUser.firstName + ' ' + currentUser.lastName}',
+                              '${user.firstName + ' ' + user.lastName}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 height: 1.50,
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Text(
-                              '${currentUser.clinicalRotation.groupName}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
-                              style: const TextStyle(height: 1.50),
-                            ),
+                            if (user.clinicalRotation.groupName != null)
+                              Text(
+                                '${user.clinicalRotation.groupName}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: const TextStyle(height: 1.50),
+                              ),
                           ],
                         ),
-                        Text(
-                          '${currentUser.clinicalRotation.hospitalName}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          style: const TextStyle(height: 1.50),
-                        ),
+                        if (user.clinicalRotation.hospitalName != null)
+                          Text(
+                            '${user.clinicalRotation.hospitalName}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: const TextStyle(height: 1.50),
+                          ),
                       ],
                     ),
                     const SizedBox(width: 20),
