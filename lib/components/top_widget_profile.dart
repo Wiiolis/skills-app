@@ -1,3 +1,4 @@
+import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_service.dart';
@@ -24,7 +25,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
     defaultValue: 'https://gamma.staging.candena.de',
   );
 
-  Future<void> _logout(BuildContext context) async {
+  _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
 
@@ -33,6 +34,68 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
       MaterialPageRoute(
         builder: (context) => Login(apiBaseUrl: apiBaseUrl),
       ),
+    );
+  }
+
+  Future<void> logoutDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            backgroundColor: AppColors.primaryColor,
+            content: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.logout_outlined,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 40),
+                  const Text(
+                    'Do you want to log out?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () => _logout(context),
+                          style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.white),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 20)),
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                                width: 1.0, color: Colors.white),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 20)),
+                        child: const Text('Cancel',
+                            style: TextStyle(color: Colors.white)),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ));
+      },
     );
   }
 
@@ -78,7 +141,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                             radius: 19,
                             backgroundImage: NetworkImage(user.avatars.small),
                           )
-                        : Text('data'),
+                        : const Text('data'),
                     const SizedBox(width: 15),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +179,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                     const SizedBox(width: 20),
                     IconButton(
                       icon: const Icon(Icons.logout),
-                      onPressed: () => _logout(context),
+                      onPressed: () => logoutDialog(),
                     ),
                   ],
                 );
