@@ -50,10 +50,10 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                 children: [
                   const Icon(
                     Icons.logout_outlined,
-                    size: 30,
+                    size: 40,
                     color: Colors.white,
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 15),
                   const Text(
                     'Do you want to log out?',
                     textAlign: TextAlign.center,
@@ -78,7 +78,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                             style: TextStyle(color: Colors.white),
                           )),
                       const SizedBox(
-                        width: 10,
+                        width: 15,
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
