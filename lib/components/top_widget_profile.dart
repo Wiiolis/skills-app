@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_service.dart';
 import '../login.dart';
+import 'button.dart';
 
 class TopWidgetProfile extends StatefulWidget {
   const TopWidgetProfile({Key? key}) : super(key: key);
@@ -42,6 +43,8 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
             backgroundColor: AppColors.primaryColor,
             content: Padding(
               padding: const EdgeInsets.all(20),
@@ -66,29 +69,16 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                          onPressed: () => _logout(context),
-                          style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  width: 1.0, color: Colors.white),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 20)),
-                          child: const Text(
-                            'Yes',
-                            style: TextStyle(color: Colors.white),
-                          )),
+                      button(
+                        text: 'Yes',
+                        onClick: () => _logout(context),
+                      ),
                       const SizedBox(
                         width: 15,
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                                width: 1.0, color: Colors.white),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20)),
-                        child: const Text('Cancel',
-                            style: TextStyle(color: Colors.white)),
+                      button(
+                        text: 'Cancel',
+                        onClick: () => Navigator.pop(context),
                       )
                     ],
                   )
@@ -177,9 +167,16 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                       ],
                     ),
                     const SizedBox(width: 20),
-                    IconButton(
-                      icon: const Icon(Icons.logout),
-                      onPressed: () => logoutDialog(),
+                    DecoratedBox(
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 228, 240, 238),
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: IconButton(
+                        icon: const Icon(Icons.logout),
+                        iconSize: 23,
+                        color: AppColors.primaryColor,
+                        onPressed: () => logoutDialog(),
+                      ),
                     ),
                   ],
                 );
