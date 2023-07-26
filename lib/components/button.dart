@@ -11,12 +11,11 @@ class button extends StatelessWidget {
     return TextButton(
       onPressed: () => onClick(),
       style: OutlinedButton.styleFrom(
-          fixedSize: const Size(90, 40),
+          fixedSize: const Size(80, 40),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(9),
           ),
-          side: const BorderSide(width: 1.0, color: Colors.white),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20)),
+          side: const BorderSide(width: 1.0, color: Colors.white)),
       child: Text(text, style: const TextStyle(color: Colors.white)),
     );
   }

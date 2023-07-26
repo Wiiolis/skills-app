@@ -52,8 +52,8 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.logout_outlined,
-                    size: 40,
+                    Icons.logout,
+                    size: 50,
                     color: Colors.white,
                   ),
                   const SizedBox(height: 15),
@@ -133,40 +133,43 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                           )
                         : const Text('data'),
                     const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '${user.firstName + ' ' + user.lastName}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                height: 1.50,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            if (user.clinicalRotation.groupName != null)
+                    Flexible(
+                      flex: 100,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
                               Text(
-                                '${user.clinicalRotation.groupName}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: false,
-                                style: const TextStyle(height: 1.50),
+                                '${user.firstName + ' ' + user.lastName}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.50,
+                                ),
                               ),
-                          ],
-                        ),
-                        if (user.clinicalRotation.hospitalName != null)
-                          Text(
-                            '${user.clinicalRotation.hospitalName}',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: false,
-                            style: const TextStyle(height: 1.50),
+                              const SizedBox(width: 10),
+                              if (user.clinicalRotation.groupName != null)
+                                Text(
+                                  '${user.clinicalRotation.groupName}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: false,
+                                  style: const TextStyle(height: 1.50),
+                                ),
+                            ],
                           ),
-                      ],
+                          if (user.clinicalRotation.hospitalName != null)
+                            Text(
+                              '${user.clinicalRotation.hospitalName}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              softWrap: false,
+                              style: const TextStyle(height: 1.50),
+                            ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 20),
+                    Spacer(),
                     DecoratedBox(
                       decoration: const BoxDecoration(
                           color: Color.fromARGB(255, 228, 240, 238),
@@ -177,7 +180,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                         color: AppColors.primaryColor,
                         onPressed: () => logoutDialog(),
                       ),
-                    ),
+                    )
                   ],
                 );
               }
