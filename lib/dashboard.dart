@@ -61,9 +61,7 @@ class _DashboardState extends State<Dashboard> {
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
-            children: [
-              TopWidgetProfile(),
-            ],
+            children: [TopWidgetProfile(), Flexible(child: SkillCardList())],
           ),
         ),
       ),

@@ -62,7 +62,7 @@ class ApiService {
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           final user = User.fromJson(responseData);
-
+          print(user.clinicalRotation?.hospitalName);
           return user;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed

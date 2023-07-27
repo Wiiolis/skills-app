@@ -26,18 +26,13 @@ class _SkillCardListState extends State<SkillCardList> {
         const SizedBox(
           height: 5,
         ),
-        SingleChildScrollView(
-          child: Expanded(
-            child: SizedBox(
-              height: 300,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return const SkillCard();
-                },
-              ),
-            ),
+        Flexible(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return const SkillCard();
+            },
           ),
         ),
       ],
