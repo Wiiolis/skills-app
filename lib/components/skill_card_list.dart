@@ -17,7 +17,7 @@ class _SkillCardListState extends State<SkillCardList> {
   void initState() {
     super.initState();
     _clinicalSkillsFuture = _getClinicalSkills();
-    //_clinicalSkillsFuture.then((value) => print(value.name));
+    _clinicalSkillsFuture.then((value) => print(value[0].name));
   }
 
   Future<dynamic> _getClinicalSkills() {
