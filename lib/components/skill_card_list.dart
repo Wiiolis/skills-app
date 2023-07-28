@@ -12,15 +12,21 @@ class SkillCardList extends StatefulWidget {
 
 class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _clinicalSkillsFuture;
+  late Future<dynamic> _modulesFuture;
 
   @override
   void initState() {
     super.initState();
     _clinicalSkillsFuture = _getClinicalSkills();
+    _modulesFuture = _getModules();
   }
 
   Future<dynamic> _getClinicalSkills() {
     return ApiService().getClinicalSkills(109);
+  }
+
+  Future<dynamic> _getModules() async {
+    return ApiService().getModules();
   }
 
   @override
