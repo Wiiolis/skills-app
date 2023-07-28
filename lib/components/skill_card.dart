@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 import '../globals.dart';
 
 class SkillCard extends StatelessWidget {
-  const SkillCard({super.key});
+  final String title; // Declare the title variable here.
+
+  const SkillCard({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15))),
-      elevation: 4,
-      shadowColor: Colors.black,
+    return Card(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+      elevation: 3,
+      shadowColor: Color.fromARGB(208, 0, 0, 0),
       color: Colors.white,
       child: FractionallySizedBox(
           widthFactor: 1,
-          child: SizedBox(
-            height: 80,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 80),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,15 +29,24 @@ class SkillCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Skill 21'),
-                      Icon(Icons.star_border_rounded,
-                          color: AppColors.goldColor),
+                      Expanded(child: Text(title)), // Use the title prop here.
+                      SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                        width: 25,
+                        child: const Icon(
+                          Icons.star_border_rounded,
+                          color: AppColors.goldColor,
+                          size: 26,
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Row(
+                  const Row(
                     children: [
                       Text(
                         'Assistant M3',
@@ -66,7 +78,11 @@ class SkillCard extends StatelessWidget {
                               fontSize: 12),
                         ),
                       ),
-                      Icon(Icons.chevron_right, color: AppColors.primaryColor),
+                      Icon(
+                        Icons.chevron_right,
+                        color: AppColors.primaryColor,
+                        size: 26,
+                      ),
                     ],
                   )
                 ],

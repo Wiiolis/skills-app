@@ -17,7 +17,6 @@ class _SkillCardListState extends State<SkillCardList> {
   void initState() {
     super.initState();
     _clinicalSkillsFuture = _getClinicalSkills();
-    _clinicalSkillsFuture.then((value) => print(value[0].name));
   }
 
   Future<dynamic> _getClinicalSkills() {
@@ -48,9 +47,9 @@ class _SkillCardListState extends State<SkillCardList> {
               return Flexible(
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 10,
+                  itemCount: clinicalSkills.length,
                   itemBuilder: (context, index) {
-                    return const SkillCard();
+                    return SkillCard(title: clinicalSkills[index].name);
                   },
                 ),
               );
