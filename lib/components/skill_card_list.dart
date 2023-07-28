@@ -1,3 +1,4 @@
+import 'package:demo_app/components/dropdown.dart';
 import 'package:demo_app/components/skill_card.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +47,7 @@ class _SkillCardListState extends State<SkillCardList> {
         const SizedBox(
           height: 5,
         ),
+        dropdown(),
         FutureBuilder<dynamic>(
             future: _clinicalSkillsFuture,
             builder: (context, snapshot) {
