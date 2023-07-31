@@ -1,11 +1,13 @@
-import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
 
-// ignore: camel_case_types
+import '../globals.dart';
+
 class dropdown extends StatelessWidget {
   final List<dynamic> dropdownItems;
+  final Function(int) callback;
 
-  const dropdown({Key? key, required this.dropdownItems}) : super(key: key);
+  const dropdown(
+      {super.key, required this.dropdownItems, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +31,13 @@ class dropdown extends StatelessWidget {
           underline: const SizedBox(),
           items: dropdownItems.map((dynamic value) {
             return DropdownMenuItem<dynamic>(
-              value: value.name,
+              value: value.moduleVersionId,
               child: Text(value.name),
             );
           }).toList(),
-          onChanged: (_) {},
+          onChanged: (dynamic newValue) {
+            callback(newValue);
+          },
         ),
       ),
     );

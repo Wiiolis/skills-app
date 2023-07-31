@@ -18,12 +18,13 @@ class _SkillCardListState extends State<SkillCardList> {
   @override
   void initState() {
     super.initState();
-    _clinicalSkillsFuture = _getClinicalSkills();
     _modulesFuture = _getModules();
+    _clinicalSkillsFuture = _getClinicalSkills(null);
   }
 
-  Future<dynamic> _getClinicalSkills() {
-    return ApiService().getClinicalSkills(109);
+  Future<dynamic> _getClinicalSkills(value) {
+    print(value);
+    return ApiService().getClinicalSkills(value);
   }
 
   Future<dynamic> _getModules() async {
@@ -51,7 +52,12 @@ class _SkillCardListState extends State<SkillCardList> {
           future: _modulesFuture,
           builder: (context, snapshot) {
             final dropdownItems = snapshot.data;
-            return dropdown(dropdownItems: dropdownItems);
+            return dropdown(
+              dropdownItems: dropdownItems,
+              callback: (value) {
+                _getClinicalSkills(value);
+              },
+            );
           },
         ),
         FutureBuilder<dynamic>(
