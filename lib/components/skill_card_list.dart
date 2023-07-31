@@ -47,7 +47,13 @@ class _SkillCardListState extends State<SkillCardList> {
         const SizedBox(
           height: 5,
         ),
-        dropdown(),
+        FutureBuilder<dynamic>(
+          future: _modulesFuture,
+          builder: (context, snapshot) {
+            final dropdownItems = snapshot.data;
+            return dropdown(dropdownItems: dropdownItems);
+          },
+        ),
         FutureBuilder<dynamic>(
             future: _clinicalSkillsFuture,
             builder: (context, snapshot) {

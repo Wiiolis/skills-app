@@ -1,8 +1,11 @@
 import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
 
+// ignore: camel_case_types
 class dropdown extends StatelessWidget {
-  const dropdown({super.key});
+  final List<dynamic> dropdownItems;
+
+  const dropdown({Key? key, required this.dropdownItems}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,10 +13,10 @@ class dropdown extends StatelessWidget {
       width: 150,
       height: 35,
       child: Container(
-        padding: EdgeInsets.fromLTRB(15, 0, 8, 0),
+        padding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(18)),
-        child: DropdownButton<String>(
+        child: DropdownButton<dynamic>(
           iconEnabledColor: AppColors.primaryColor,
           isExpanded: true,
           hint: const Text(
@@ -22,12 +25,12 @@ class dropdown extends StatelessWidget {
             style: TextStyle(
                 color: AppColors.primaryColor, fontWeight: FontWeight.w600),
           ),
-          style: TextStyle(fontSize: 14, color: AppColors.darkGrayColor),
-          underline: SizedBox(),
-          items: <String>['A', 'B', 'C', 'D'].map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
+          style: const TextStyle(fontSize: 14, color: AppColors.darkGrayColor),
+          underline: const SizedBox(),
+          items: dropdownItems.map((dynamic value) {
+            return DropdownMenuItem<dynamic>(
+              value: value.name,
+              child: Text(value.name),
             );
           }).toList(),
           onChanged: (_) {},
