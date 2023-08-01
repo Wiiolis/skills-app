@@ -4,12 +4,12 @@ import '../globals.dart';
 
 typedef DropdownCallback = void Function(int selectedValue);
 
-class dropdown extends StatefulWidget {
+class Dropdown extends StatefulWidget {
   final List<dynamic> dropdownItems;
   int selectValue;
   final DropdownCallback callback; // Add callback property
 
-  dropdown({
+  Dropdown({
     Key? key,
     required this.dropdownItems,
     required this.selectValue,
@@ -17,10 +17,10 @@ class dropdown extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<dropdown> createState() => _dropdownState();
+  State<Dropdown> createState() => _DropdownState();
 }
 
-class _dropdownState extends State<dropdown> {
+class _DropdownState extends State<Dropdown> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(

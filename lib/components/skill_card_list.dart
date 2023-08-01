@@ -3,6 +3,7 @@ import 'package:demo_app/components/skill_card.dart';
 import 'package:flutter/material.dart';
 
 import '../api/api_service.dart';
+import '../skill_detail.dart';
 
 class SkillCardList extends StatefulWidget {
   const SkillCardList({Key? key}) : super(key: key);
@@ -68,7 +69,7 @@ class _SkillCardListState extends State<SkillCardList> {
           future: _modulesFuture,
           builder: (context, snapshot) {
             final dropdownItems = snapshot.data;
-            return dropdown(
+            return Dropdown(
               dropdownItems: dropdownItems,
               selectValue: selectedValue, // Set the default selected value
               callback: (value) {
@@ -91,7 +92,15 @@ class _SkillCardListState extends State<SkillCardList> {
                 shrinkWrap: true,
                 itemCount: clinicalSkills?.length ?? 0,
                 itemBuilder: (context, index) {
-                  return SkillCard(title: clinicalSkills![index].name);
+                  return GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SkillDetail()),
+                        );
+                      },
+                      child: SkillCard(title: clinicalSkills![index].name));
                 },
               ),
             );
