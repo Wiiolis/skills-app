@@ -13,7 +13,7 @@ class SkillCardList extends StatefulWidget {
 }
 
 class _SkillCardListState extends State<SkillCardList> {
-  late Future<dynamic> _clinicalSkillsFuture;
+  late Future<dynamic> _clinicalSkillsFuture = Future<dynamic>.value([]);
   late Future<dynamic> _modulesFuture;
   int selectedValue = 0; // Initialize with a default value
 
@@ -23,8 +23,9 @@ class _SkillCardListState extends State<SkillCardList> {
     _modulesFuture = _getModules();
     _modulesFuture.then((value) async {
       await getselectedValueId(value);
-      _clinicalSkillsFuture = _getClinicalSkills(selectedValue);
-      setState(() {});
+      setState(() {
+        _clinicalSkillsFuture = _getClinicalSkills(selectedValue);
+      });
     });
   }
 
@@ -68,42 +69,52 @@ class _SkillCardListState extends State<SkillCardList> {
         FutureBuilder<dynamic>(
           future: _modulesFuture,
           builder: (context, snapshot) {
-            final dropdownItems = snapshot.data;
-            return Dropdown(
-              dropdownItems: dropdownItems,
-              selectValue: selectedValue, // Set the default selected value
-              callback: (value) {
-                setState(() {
-                  selectedValue =
-                      value; // Update selectedValue with the selected value
-                  _clinicalSkillsFuture =
-                      _getClinicalSkills(value); // Update the Future
-                });
-              },
-            );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final dropdownItems = snapshot.data ?? []; // Handle null data
+              return Dropdown(
+                dropdownItems: dropdownItems,
+                selectValue: selectedValue, // Set the default selected value
+                callback: (value) {
+                  setState(() {
+                    selectedValue =
+                        value; // Update selectedValue with the selected value
+                    _clinicalSkillsFuture =
+                        _getClinicalSkills(value); // Update the Future
+                  });
+                },
+              );
+            }
           },
         ),
         FutureBuilder<dynamic>(
           future: _clinicalSkillsFuture,
           builder: (context, snapshot) {
             final clinicalSkills = snapshot.data;
-            return Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: clinicalSkills?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SkillDetail()),
-                        );
-                      },
-                      child: SkillCard(title: clinicalSkills![index].name));
-                },
-              ),
-            );
+            if (clinicalSkills == null) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: clinicalSkills?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SkillDetail()),
+                          );
+                        },
+                        child: SkillCard(title: clinicalSkills![index].name));
+                  },
+                ),
+              );
+            }
           },
         ),
       ],
