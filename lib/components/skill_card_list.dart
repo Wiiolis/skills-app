@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../api/api_service.dart';
 
 class SkillCardList extends StatefulWidget {
-  const SkillCardList({super.key});
+  const SkillCardList({Key? key}) : super(key: key);
 
   @override
   State<SkillCardList> createState() => _SkillCardListState();
@@ -14,16 +14,32 @@ class SkillCardList extends StatefulWidget {
 class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _clinicalSkillsFuture;
   late Future<dynamic> _modulesFuture;
+  int selectedValue = 0; // Initialize with a default value
 
   @override
   void initState() {
     super.initState();
     _modulesFuture = _getModules();
-    _clinicalSkillsFuture = _getClinicalSkills(null);
+    _modulesFuture.then((value) async {
+      await getselectedValueId(value);
+      _clinicalSkillsFuture = _getClinicalSkills(selectedValue);
+      setState(() {});
+    });
+  }
+
+  Future<void> getselectedValueId(module) async {
+    if (selectedValue != 0) {
+      setState(() {
+        selectedValue = module;
+      });
+    } else {
+      setState(() {
+        selectedValue = module[0].moduleVersionId;
+      });
+    }
   }
 
   Future<dynamic> _getClinicalSkills(value) {
-    print(value);
     return ApiService().getClinicalSkills(value);
   }
 
@@ -54,26 +70,33 @@ class _SkillCardListState extends State<SkillCardList> {
             final dropdownItems = snapshot.data;
             return dropdown(
               dropdownItems: dropdownItems,
+              selectValue: selectedValue, // Set the default selected value
               callback: (value) {
-                _getClinicalSkills(value);
+                setState(() {
+                  selectedValue =
+                      value; // Update selectedValue with the selected value
+                  _clinicalSkillsFuture =
+                      _getClinicalSkills(value); // Update the Future
+                });
               },
             );
           },
         ),
         FutureBuilder<dynamic>(
-            future: _clinicalSkillsFuture,
-            builder: (context, snapshot) {
-              final clinicalSkills = snapshot.data;
-              return Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: clinicalSkills.length,
-                  itemBuilder: (context, index) {
-                    return SkillCard(title: clinicalSkills[index].name);
-                  },
-                ),
-              );
-            }),
+          future: _clinicalSkillsFuture,
+          builder: (context, snapshot) {
+            final clinicalSkills = snapshot.data;
+            return Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: clinicalSkills?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return SkillCard(title: clinicalSkills![index].name);
+                },
+              ),
+            );
+          },
+        ),
       ],
     );
   }

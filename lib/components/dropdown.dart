@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../globals.dart';
 
-class dropdown extends StatelessWidget {
+typedef DropdownCallback = void Function(int selectedValue);
+
+class dropdown extends StatefulWidget {
   final List<dynamic> dropdownItems;
-  final Function(int) callback;
+  int selectValue;
+  final DropdownCallback callback; // Add callback property
 
-  const dropdown(
-      {super.key, required this.dropdownItems, required this.callback});
+  dropdown({
+    Key? key,
+    required this.dropdownItems,
+    required this.selectValue,
+    required this.callback, // Initialize callback in the constructor
+  }) : super(key: key);
 
+  @override
+  State<dropdown> createState() => _dropdownState();
+}
+
+class _dropdownState extends State<dropdown> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -17,26 +29,39 @@ class dropdown extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(18)),
-        child: DropdownButton<dynamic>(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: DropdownButton<int>(
+          // Change the DropdownButton type to int
           iconEnabledColor: AppColors.primaryColor,
           isExpanded: true,
           hint: const Text(
             'Module 1 (Current Module)',
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                color: AppColors.primaryColor, fontWeight: FontWeight.w600),
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          style: const TextStyle(fontSize: 14, color: AppColors.darkGrayColor),
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.darkGrayColor,
+          ),
           underline: const SizedBox(),
-          items: dropdownItems.map((dynamic value) {
-            return DropdownMenuItem<dynamic>(
-              value: value.moduleVersionId,
+          value: widget.selectValue, // Set the selected value
+          items: widget.dropdownItems.map((dynamic value) {
+            return DropdownMenuItem<int>(
+              value: value.moduleVersionId, // Assuming moduleVersionId is int
               child: Text(value.name),
             );
           }).toList(),
-          onChanged: (dynamic newValue) {
-            callback(newValue);
+          onChanged: (newValue) {
+            setState(() {
+              widget.selectValue = newValue!; // Update the selected value
+            });
+            widget.callback(
+                newValue!); // Call the callback function with the selected value
           },
         ),
       ),

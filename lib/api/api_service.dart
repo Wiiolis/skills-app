@@ -81,7 +81,6 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
-
       if (token != null) {
         ApiConstants.initializeClinicalSkills(moduleVersionId);
         var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.clinicalSkills);
