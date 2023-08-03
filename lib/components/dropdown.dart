@@ -6,13 +6,15 @@ typedef DropdownCallback = void Function(int selectedValue);
 
 class Dropdown extends StatefulWidget {
   final List<dynamic> dropdownItems;
-  int selectValue;
+  int selectedValue;
+  var valueName;
   final DropdownCallback callback; // Add callback property
 
   Dropdown({
     Key? key,
     required this.dropdownItems,
-    required this.selectValue,
+    required this.selectedValue,
+    required this.valueName,
     required this.callback, // Initialize callback in the constructor
   }) : super(key: key);
 
@@ -49,16 +51,18 @@ class _DropdownState extends State<Dropdown> {
             color: AppColors.darkGrayColor,
           ),
           underline: const SizedBox(),
-          value: widget.selectValue, // Set the selected value
+          value: widget.selectedValue,
           items: widget.dropdownItems.map((dynamic value) {
             return DropdownMenuItem<int>(
-              value: value.moduleVersionId, // Assuming moduleVersionId is int
+              value: widget.valueName == 'moduleVersionId'
+                  ? value.moduleVersionId
+                  : null,
               child: Text(value.name),
             );
           }).toList(),
           onChanged: (newValue) {
             setState(() {
-              widget.selectValue = newValue!; // Update the selected value
+              widget.selectedValue = newValue!; // Update the selected value
             });
             widget.callback(
                 newValue!); // Call the callback function with the selected value

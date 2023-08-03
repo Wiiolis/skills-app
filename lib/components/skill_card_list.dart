@@ -77,7 +77,7 @@ class _SkillCardListState extends State<SkillCardList> {
               final dropdownItems = snapshot.data ?? []; // Handle null data
               return Dropdown(
                 dropdownItems: dropdownItems,
-                selectValue: selectedValue, // Set the default selected value
+                selectedValue: selectedValue, // Set the default selected value
                 callback: (value) {
                   setState(() {
                     selectedValue =
@@ -86,6 +86,7 @@ class _SkillCardListState extends State<SkillCardList> {
                         _getClinicalSkills(value); // Update the Future
                   });
                 },
+                valueName: 'moduleVersionId',
               );
             }
           },

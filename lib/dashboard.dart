@@ -1,3 +1,4 @@
+import 'package:demo_app/skill_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
@@ -34,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
-            children: [TopWidgetProfile(), Flexible(child: SkillCardList())],
+            children: [Flexible(child: SkillDetail())],
           ),
         ),
       ),
