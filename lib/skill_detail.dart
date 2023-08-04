@@ -19,7 +19,11 @@ class _SkillDetailState extends State<SkillDetail> {
 
   @override
   void initState() {
-    dateInput.text = ""; //set the initial value of text field
+    dateInput.text = DateFormat('dd.MM.yyyy')
+        .format(DateTime.now())
+        .toString()
+        .split(' ')[0];
+
     super.initState();
   }
 
@@ -105,11 +109,55 @@ class _SkillDetailState extends State<SkillDetail> {
                   ),
                   Expanded(
                       flex: 5,
-                      child: Dropdown(
-                        dropdownItems: [],
-                        callback: (selectedValue) => {},
-                        selectedValue: 1,
-                        valueName: 'moduleVersionId',
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: dateInput,
+                        decoration: const InputDecoration(
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+                          isCollapsed: true,
+                          isDense: true,
+                          suffixIcon: Icon(
+                            Icons.edit_calendar,
+                            size: 18,
+                            color: AppColors.primaryColor,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: AppColors.placeholderColor,
+                            ),
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            borderSide:
+                                BorderSide(color: AppColors.primaryLightColor),
+                          ),
+                        ),
+                        readOnly: true,
+                        //set it true, so that user will not able to edit text
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              initialDate: DateTime.now(),
+                              context: context,
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2024));
+                          if (pickedDate != null) {
+                            //pickedDate output format => 2021-03-10 00:00:00.000
+                            String newDate =
+                                DateFormat('dd.MM.yyyy').format(pickedDate);
+                            String date = newDate.toString().split(' ')[0];
+
+                            //formatted date output using intl package =>  2021-03-16
+                            setState(() {
+                              dateInput.text = date;
+                              //set output date to TextField value.
+                            });
+                          } else {}
+                        },
                       ))
                 ],
               ),
@@ -127,43 +175,42 @@ class _SkillDetailState extends State<SkillDetail> {
                   ),
                   Expanded(
                       flex: 5,
-                      child: Center(
-                          child: TextField(
-                        controller: dateInput,
-                        //editing controller of this TextField
-                        decoration: const InputDecoration(
-                            icon:
-                                Icon(Icons.calendar_today), //icon of text field
-                            labelText: "Enter Date" //label text of field
-                            ),
-                        readOnly: true,
-                        //set it true, so that user will not able to edit text
-                        onTap: () async {
-                          DateTimeRange? pickedDate = await showDateRangePicker(
-                              context: context,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2024));
-                          if (pickedDate != null) {
-                            //pickedDate output format => 2021-03-10 00:00:00.000
-                            String startDate = DateFormat('dd/MM/yyyy')
-                                .format(pickedDate.start);
-                            String endDate =
-                                DateFormat('dd/MM/yyyy').format(pickedDate.end);
-
-                            String start = startDate.toString().split(' ')[0];
-                            String end = endDate.toString().split(' ')[0];
-
-                            //formatted date output using intl package =>  2021-03-16
-                            setState(() {
-                              dateInput.text = '$start - $end';
-                              //set output date to TextField value.
-                            });
-                          } else {}
-                        },
-                      )))
+                      child: SizedBox(
+                        height: 40,
+                        child: Dropdown(
+                          dropdownItems: [],
+                          callback: (selectedValue) => {},
+                          selectedValue: 1,
+                          valueName: 'moduleVersionId',
+                        ),
+                      ))
                 ],
               ),
-            )
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(''),
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  Expanded(
+                      flex: 5,
+                      child: SizedBox(
+                          height: 40,
+                          child: Text(
+                            '+ Add new Supervisor',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: AppColors.primaryLightColor),
+                          )))
+                ],
+              ),
+            ),
           ],
         ),
       ),
