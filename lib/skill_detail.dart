@@ -1,12 +1,15 @@
-import 'package:demo_app/components/bottom_navigation.dart';
-import 'package:demo_app/components/button.dart';
-import 'package:demo_app/components/dropdown.dart';
-import 'package:intl/intl.dart';
-import 'package:demo_app/globals.dart';
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
+import 'components/bottom_navigation.dart';
+import 'components/dropdown.dart';
 import 'dashboard.dart';
+import 'globals.dart';
 
 class SkillDetail extends StatefulWidget {
   const SkillDetail({super.key});
@@ -16,7 +19,9 @@ class SkillDetail extends StatefulWidget {
 }
 
 class _SkillDetailState extends State<SkillDetail> {
+  // initialize the signature controller
   TextEditingController dateInput = TextEditingController();
+
   final SignatureController _controller = SignatureController(
       penStrokeWidth: 1,
       penColor: AppColors.darkGrayColor,
@@ -25,12 +30,55 @@ class _SkillDetailState extends State<SkillDetail> {
 
   @override
   void initState() {
+    super.initState();
+    _controller.addListener(() => log('Value changed'));
     dateInput.text = DateFormat('dd.MM.yyyy')
         .format(DateTime.now())
         .toString()
         .split(' ')[0];
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    // IMPORTANT to dispose of the controller
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> exportImage(BuildContext context) async {
+    if (_controller.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          key: Key('snackbarPNG'),
+          content: Text('No content'),
+        ),
+      );
+      return;
+    }
+
+    final Uint8List? data =
+        await _controller.toPngBytes(height: 1000, width: 1000);
+    if (data == null) {
+      return;
+    }
+
+    if (!mounted) return;
+  }
+
+  Future<void> exportSVG(BuildContext context) async {
+    if (_controller.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          key: Key('snackbarSVG'),
+          content: Text('No content'),
+        ),
+      );
+      return;
+    }
+
+    final SvgPicture data = _controller.toSVG()!;
+
+    if (!mounted) return;
   }
 
   @override
@@ -218,13 +266,28 @@ class _SkillDetailState extends State<SkillDetail> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: Text('Supervisor signature',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                  )),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Supervisor signature',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => _controller.clear(),
+                    child: const Text('Clear',
+                        style: TextStyle(
+                            color: AppColors.primaryColor,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ),
             ),
             Container(
               decoration: BoxDecoration(
