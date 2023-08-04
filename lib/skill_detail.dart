@@ -4,6 +4,7 @@ import 'package:demo_app/components/dropdown.dart';
 import 'package:intl/intl.dart';
 import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
+import 'package:signature/signature.dart';
 
 import 'dashboard.dart';
 
@@ -16,6 +17,11 @@ class SkillDetail extends StatefulWidget {
 
 class _SkillDetailState extends State<SkillDetail> {
   TextEditingController dateInput = TextEditingController();
+  final SignatureController _controller = SignatureController(
+      penStrokeWidth: 1,
+      penColor: AppColors.darkGrayColor,
+      exportBackgroundColor: Colors.transparent,
+      exportPenColor: Colors.black);
 
   @override
   void initState() {
@@ -35,6 +41,7 @@ class _SkillDetailState extends State<SkillDetail> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -209,6 +216,27 @@ class _SkillDetailState extends State<SkillDetail> {
                                 color: AppColors.primaryLightColor),
                           )))
                 ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(15),
+              child: Text('Supervisor signature',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  )),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppColors.placeholderColor,
+                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(15))),
+              child: Signature(
+                key: const Key('signature'),
+                controller: _controller,
+                height: 150,
+                backgroundColor: Colors.white,
               ),
             ),
           ],
