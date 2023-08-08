@@ -26,6 +26,25 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
     defaultValue: 'https://gamma.staging.candena.de',
   );
 
+  Future<dynamic> _getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    if (token != null) {
+      final prefs = await SharedPreferences.getInstance();
+      int? currentUserId = prefs.getInt('currentUserId');
+
+      return ApiService().getUser(currentUserId);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Login(apiBaseUrl: apiBaseUrl),
+        ),
+      );
+      return null;
+    }
+  }
+
   _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
@@ -87,25 +106,6 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
             ));
       },
     );
-  }
-
-  Future<dynamic> _getUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    if (token != null) {
-      final prefs = await SharedPreferences.getInstance();
-      int? currentUserId = prefs.getInt('currentUserId');
-
-      return ApiService().getUser(currentUserId);
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Login(apiBaseUrl: apiBaseUrl),
-        ),
-      );
-      return null;
-    }
   }
 
   @override
