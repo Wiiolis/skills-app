@@ -64,6 +64,7 @@ class ApiService {
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           final user = User.fromJson(responseData);
+
           return user;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed

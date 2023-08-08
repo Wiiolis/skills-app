@@ -111,7 +111,7 @@ class _SkillCardListState extends State<SkillCardList> {
                                 builder: (context) => const SkillDetail()),
                           );
                         },
-                        child: SkillCard(title: clinicalSkills![index].name));
+                        child: SkillCard(data: clinicalSkills![index]));
                   },
                 ),
               );
