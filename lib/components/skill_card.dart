@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../globals.dart';
 
@@ -62,9 +63,13 @@ class SkillCard extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      const Text(
-                        '06.02.2023',
-                        style: TextStyle(
+                      Text(
+                        data.assessment != null
+                            ? DateFormat('dd.MM.yyyy')
+                                .format(data.assessment.assessmentDate)
+                                .toString()
+                            : 'date unavailable',
+                        style: const TextStyle(
                             color: AppColors.lightGrayColor,
                             fontWeight: FontWeight.w300,
                             fontSize: 12),
@@ -73,14 +78,15 @@ class SkillCard extends StatelessWidget {
                         width: 10,
                       ),
                       Expanded(
-                        child: data.assessment != null
-                            ? Text(data.assessment.instructor.fullName,
-                                style: const TextStyle(
-                                    color: AppColors.lightGrayColor,
-                                    overflow: TextOverflow.ellipsis,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 12))
-                            : const Text(''),
+                        child: Text(
+                            data.assessment != null
+                                ? data.assessment.instructor.fullName
+                                : 'No instructor',
+                            style: const TextStyle(
+                                color: AppColors.lightGrayColor,
+                                overflow: TextOverflow.ellipsis,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 12)),
                       ),
                       const Icon(
                         Icons.chevron_right,

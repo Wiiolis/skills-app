@@ -68,7 +68,7 @@ class Assessment {
         "level": level,
         "instructor": instructor?.toJson(),
         "assessment_date":
-            "${assessmentDate!.year.toString().padLeft(4, '0')}-${assessmentDate!.month.toString().padLeft(2, '0')}-${assessmentDate!.day.toString().padLeft(2, '0')}",
+            "${assessmentDate!.year.toString().padLeft(4, '0')}.${assessmentDate!.month.toString().padLeft(2, '0')}.${assessmentDate!.day.toString().padLeft(2, '0')}",
         "module_version_id": moduleVersionId,
       };
 }
