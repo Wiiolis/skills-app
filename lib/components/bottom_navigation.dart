@@ -13,12 +13,9 @@ class bottomNavigation extends StatelessWidget {
       fixedColor: Colors.white,
       unselectedItemColor: Colors.white,
       unselectedLabelStyle: const TextStyle(color: Colors.white),
-      items: const <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.check_outlined,
-            color: Colors.white,
-          ),
+          icon: svgPicture.asset("assets/images/Skills.svg"),
           label: 'Skills',
         ),
         BottomNavigationBarItem(
