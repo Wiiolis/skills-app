@@ -16,9 +16,9 @@ class SkillCard extends StatelessWidget {
       child: FractionallySizedBox(
           widthFactor: 1,
           child: SizedBox(
-            height: 90,
+            height: 80,
             child: Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -14,16 +14,43 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.primaryColor,
+        fixedColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        unselectedLabelStyle: const TextStyle(color: Colors.white),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.check_outlined,
+              color: Colors.white,
+            ),
+            label: 'Skills',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.file_copy_outlined,
+              color: Colors.white,
+            ),
+            label: 'Documents',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            label: 'Info',
+          ),
+        ],
+      ),
+      body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            // Where the linear gradient begins and ends
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            // Add one stop for each color. Stops should increase from 0 to 1
             stops: [0.05, 0.15, 0.7, 0.9],
             colors: [
-              // Colors are easy thanks to Flutter's Colors class.
               AppColors.primaryColor,
               AppColors.backgroundColor,
               AppColors.backgroundColor,
@@ -31,11 +58,15 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
         ),
-        child: const Column(
-          children: [
-            TopWidgetProfile(),
-            SkillCardList(),
-          ],
-        ));
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              TopWidgetProfile(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
