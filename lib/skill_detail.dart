@@ -286,11 +286,6 @@ class _SkillDetailState extends State<SkillDetail> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.placeholderColor,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Signature(
                 key: const Key('signature'),
                 controller: _controller,
