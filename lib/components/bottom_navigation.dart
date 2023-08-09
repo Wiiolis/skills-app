@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../globals.dart';
 
@@ -15,21 +16,17 @@ class bottomNavigation extends StatelessWidget {
       unselectedLabelStyle: const TextStyle(color: Colors.white),
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: svgPicture.asset("assets/images/Skills.svg"),
+          icon:
+              SvgPicture.asset('assets/images/Skills.svg', color: Colors.white),
           label: 'Skills',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.file_copy_outlined,
-            color: Colors.white,
-          ),
+          icon: SvgPicture.asset('assets/images/Documents.svg',
+              color: Colors.white),
           label: 'Documents',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.info,
-            color: Colors.white,
-          ),
+          icon: SvgPicture.asset('assets/images/info.svg', color: Colors.white),
           label: 'Info',
         ),
       ],
