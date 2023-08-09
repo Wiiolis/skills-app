@@ -78,14 +78,14 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      button(
+                      Button(
                         text: 'Yes',
                         onClick: () => _logout(context),
                       ),
                       const SizedBox(
                         width: 15,
                       ),
-                      button(
+                      Button(
                         text: 'Cancel',
                         onClick: () => Navigator.pop(context),
                       )

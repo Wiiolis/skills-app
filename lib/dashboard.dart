@@ -28,7 +28,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: bottomNavigation(
+      bottomNavigationBar: BottomNavigation(
           callback: (val) => setState(() => selectedIndex = val)),
       body: Container(
         decoration: const BoxDecoration(
