@@ -1,10 +1,12 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 
-class button extends StatelessWidget {
+class Button extends StatelessWidget {
   final String text;
   final Function() onClick;
 
-  button({required this.text, required this.onClick});
+  Button({required this.text, required this.onClick});
 
   @override
   Widget build(BuildContext context) {

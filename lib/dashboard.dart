@@ -3,7 +3,9 @@ import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
 import 'package:demo_app/components/bottom_navigation.dart';
 
+import 'documents.dart';
 import 'globals.dart';
+import 'info.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -12,11 +14,22 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
+//New
+const List<Widget> pages = <Widget>[SkillCardList(), Documents(), Info()];
+
 class _DashboardState extends State<Dashboard> {
+  int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const bottomNavigation(),
+      bottomNavigationBar: BottomNavigation(
+          callback: (val) => setState(() => selectedIndex = val)),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -31,10 +44,15 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
         ),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
-            children: [TopWidgetProfile(), Flexible(child: SkillCardList())],
+            children: [
+              const TopWidgetProfile(),
+              Expanded(
+                child: pages.elementAt(selectedIndex),
+              )
+            ],
           ),
         ),
       ),

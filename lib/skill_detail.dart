@@ -3,12 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
-import 'components/bottom_navigation.dart';
 import 'components/dropdown.dart';
-import 'dashboard.dart';
 import 'globals.dart';
 
 class SkillDetail extends StatefulWidget {
@@ -85,7 +84,6 @@ class _SkillDetailState extends State<SkillDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: const bottomNavigation(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
         child: Column(
@@ -97,11 +95,7 @@ class _SkillDetailState extends State<SkillDetail> {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Dashboard()),
-                    ),
+                    onTap: () => context.go("/"),
                     child: const Row(
                       children: [
                         Icon(Icons.chevron_left_outlined,
@@ -290,11 +284,6 @@ class _SkillDetailState extends State<SkillDetail> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.placeholderColor,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(15))),
               child: Signature(
                 key: const Key('signature'),
                 controller: _controller,

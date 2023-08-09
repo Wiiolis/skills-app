@@ -1,8 +1,8 @@
 import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_service.dart';
-import '../login.dart';
 import 'button.dart';
 
 class TopWidgetProfile extends StatefulWidget {
@@ -35,12 +35,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
 
       return ApiService().getUser(currentUserId);
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Login(apiBaseUrl: apiBaseUrl),
-        ),
-      );
+      context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
       return null;
     }
   }
@@ -49,12 +44,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => Login(apiBaseUrl: apiBaseUrl),
-      ),
-    );
+    context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
   }
 
   Future<void> logoutDialog() async {
@@ -88,14 +78,14 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      button(
+                      Button(
                         text: 'Yes',
                         onClick: () => _logout(context),
                       ),
                       const SizedBox(
                         width: 15,
                       ),
-                      button(
+                      Button(
                         text: 'Cancel',
                         onClick: () => Navigator.pop(context),
                       )

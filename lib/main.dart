@@ -1,8 +1,14 @@
 import 'dart:convert';
+import 'package:demo_app/components/skill_card_list.dart';
+import 'package:demo_app/documents.dart';
+import 'package:demo_app/skill_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'dashboard.dart';
-import 'login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'info.dart';
+import 'login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,16 +33,46 @@ class MyApp extends StatelessWidget {
   final String apiBaseUrl;
   final Map<String, dynamic>? userData; // Modify the userData parameter
 
-  const MyApp({Key? key, required this.apiBaseUrl, this.userData})
-      : super(key: key);
+  MyApp({Key? key, required this.apiBaseUrl, this.userData}) : super(key: key);
+
+  final GoRouter _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: "/",
+        builder: (context, state) => const Dashboard(),
+      ),
+      GoRoute(
+        path: "/skill-list",
+        builder: (context, state) => const SkillCardList(),
+      ),
+      GoRoute(
+        path: "/skill-detail",
+        builder: (context, state) => const SkillDetail(),
+      ),
+      GoRoute(
+        path: "/documents",
+        builder: (context, state) => const Documents(),
+      ),
+      GoRoute(
+        path: "/info",
+        builder: (context, state) => const Info(),
+      ),
+      GoRoute(
+        name: 'login',
+        path: "/login",
+        builder: (context, state) {
+          final query = state.uri.queryParameters['apiBaseUrl'].toString();
+          return Login(apiBaseUrl: query);
+        },
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: userData == null ? Login(apiBaseUrl: apiBaseUrl) : Dashboard(),
-      ),
+      child: MaterialApp.router(
+          routerConfig: _router, debugShowCheckedModeBanner: false),
     );
   }
 }

@@ -1,9 +1,9 @@
 import 'package:demo_app/components/dropdown.dart';
 import 'package:demo_app/components/skill_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../api/api_service.dart';
-import '../skill_detail.dart';
 
 class SkillCardList extends StatefulWidget {
   const SkillCardList({Key? key}) : super(key: key);
@@ -58,9 +58,7 @@ class _SkillCardListState extends State<SkillCardList> {
           padding: EdgeInsets.only(left: 5),
           child: Text(
             'Skills Catalogue',
-            style: TextStyle(
-              fontSize: 16,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(
@@ -91,6 +89,9 @@ class _SkillCardListState extends State<SkillCardList> {
             }
           },
         ),
+        SizedBox(
+          height: 5,
+        ),
         FutureBuilder<dynamic>(
           future: _clinicalSkillsFuture,
           builder: (context, snapshot) {
@@ -105,11 +106,7 @@ class _SkillCardListState extends State<SkillCardList> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SkillDetail()),
-                          );
+                          context.go("/skill-detail");
                         },
                         child: SkillCard(data: clinicalSkills![index]));
                   },
