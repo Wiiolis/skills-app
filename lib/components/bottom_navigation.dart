@@ -35,28 +35,48 @@ class _BottomNavigationState extends State<BottomNavigation> {
       onTap: _onItemTapped,
       currentIndex: selectedIndex,
       backgroundColor: AppColors.primaryColor,
+      selectedFontSize: 12,
       fixedColor: Colors.white,
       unselectedItemColor: Colors.white,
       unselectedLabelStyle: const TextStyle(color: Colors.white),
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          activeIcon: SvgPicture.asset('assets/images/Skills-filled.svg',
-              color: Colors.white),
-          icon:
-              SvgPicture.asset('assets/images/Skills.svg', color: Colors.white),
+          activeIcon: Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: SvgPicture.asset('assets/images/Skills-filled.svg',
+                color: Colors.white),
+          ),
+          icon: Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: SvgPicture.asset('assets/images/Skills.svg',
+                color: Colors.white),
+          ),
           label: 'Skills',
         ),
         BottomNavigationBarItem(
-          activeIcon: SvgPicture.asset('assets/images/Documents-filled.svg',
-              color: Colors.white),
-          icon: SvgPicture.asset('assets/images/Documents.svg',
-              color: Colors.white),
+          activeIcon: Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: SvgPicture.asset('assets/images/Documents-filled.svg',
+                color: Colors.white),
+          ),
+          icon: Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: SvgPicture.asset('assets/images/Documents.svg',
+                color: Colors.white),
+          ),
           label: 'Documents',
         ),
         BottomNavigationBarItem(
-          activeIcon: SvgPicture.asset('assets/images/info-filled.svg',
-              color: Colors.white),
-          icon: SvgPicture.asset('assets/images/info.svg', color: Colors.white),
+          activeIcon: Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child: SvgPicture.asset('assets/images/info-filled.svg',
+                color: Colors.white),
+          ),
+          icon: Padding(
+            padding: const EdgeInsets.only(bottom: 3),
+            child:
+                SvgPicture.asset('assets/images/info.svg', color: Colors.white),
+          ),
           label: 'Info',
         ),
       ],
