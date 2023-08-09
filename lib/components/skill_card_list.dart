@@ -58,9 +58,7 @@ class _SkillCardListState extends State<SkillCardList> {
           padding: EdgeInsets.only(left: 5),
           child: Text(
             'Skills Catalogue',
-            style: TextStyle(
-              fontSize: 16,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(
@@ -90,6 +88,9 @@ class _SkillCardListState extends State<SkillCardList> {
               );
             }
           },
+        ),
+        SizedBox(
+          height: 5,
         ),
         FutureBuilder<dynamic>(
           future: _clinicalSkillsFuture,
