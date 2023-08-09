@@ -3,12 +3,12 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
 import 'components/bottom_navigation.dart';
 import 'components/dropdown.dart';
-import 'dashboard.dart';
 import 'globals.dart';
 
 class SkillDetail extends StatefulWidget {
@@ -97,11 +97,7 @@ class _SkillDetailState extends State<SkillDetail> {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Dashboard()),
-                    ),
+                    onTap: () => context.go("/"),
                     child: const Row(
                       children: [
                         Icon(Icons.chevron_left_outlined,

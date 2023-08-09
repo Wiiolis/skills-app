@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api/api_service.dart';
@@ -38,13 +39,7 @@ class _LoginState extends State<Login> {
     });
 
     await ApiService().login(body).then((value) => {
-          if (prefs.getString('token') != null)
-            {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const Dashboard()),
-              )
-            }
+          if (prefs.getString('token') != null) {context.go("/")}
         });
   }
 
@@ -58,10 +53,7 @@ class _LoginState extends State<Login> {
     var userToken = await _getUserToken();
 
     if (userToken != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Dashboard()),
-      );
+      context.go('/');
     }
   }
 

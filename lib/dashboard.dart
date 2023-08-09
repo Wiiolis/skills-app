@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
 import 'package:demo_app/components/bottom_navigation.dart';
+import 'package:go_router/go_router.dart';
 
 import 'globals.dart';
 

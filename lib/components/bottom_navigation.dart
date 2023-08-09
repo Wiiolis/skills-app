@@ -26,6 +26,8 @@ class bottomNavigation extends StatelessWidget {
           label: 'Documents',
         ),
         BottomNavigationBarItem(
+          activeIcon: SvgPicture.asset('assets/images/info-filled.svg',
+              color: Colors.white),
           icon: SvgPicture.asset('assets/images/info.svg', color: Colors.white),
           label: 'Info',
         ),
