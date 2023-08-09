@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
-import 'components/bottom_navigation.dart';
 import 'components/dropdown.dart';
 import 'globals.dart';
 
@@ -85,7 +84,6 @@ class _SkillDetailState extends State<SkillDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      bottomNavigationBar: const bottomNavigation(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
         child: Column(

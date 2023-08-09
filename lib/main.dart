@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'package:demo_app/components/skill_card_list.dart';
+import 'package:demo_app/documents.dart';
 import 'package:demo_app/skill_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'info.dart';
 import 'login.dart';
 
 Future<void> main() async {
@@ -39,8 +42,20 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => const Dashboard(),
       ),
       GoRoute(
+        path: "/skill-list",
+        builder: (context, state) => const SkillCardList(),
+      ),
+      GoRoute(
         path: "/skill-detail",
         builder: (context, state) => const SkillDetail(),
+      ),
+      GoRoute(
+        path: "/documents",
+        builder: (context, state) => const Documents(),
+      ),
+      GoRoute(
+        path: "/info",
+        builder: (context, state) => const Info(),
       ),
       GoRoute(
         name: 'login',

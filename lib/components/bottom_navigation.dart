@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../globals.dart';
 
-// ignore: camel_case_types
+typedef navCallback = void Function(int selectedValue);
+
 class bottomNavigation extends StatefulWidget {
-  const bottomNavigation({super.key});
+  final navCallback callback; // Add callback property
+
+  bottomNavigation({
+    Key? key,
+    required this.callback, // Initialize callback in the constructor
+  }) : super(key: key);
 
   @override
   State<bottomNavigation> createState() => _bottomNavigationState();
 }
 
 class _bottomNavigationState extends State<bottomNavigation> {
-  int _selectedIndex = 0;
+  int selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    print(index);
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
+
+    widget.callback(selectedIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       onTap: _onItemTapped,
-      currentIndex: _selectedIndex,
+      currentIndex: selectedIndex,
       backgroundColor: AppColors.primaryColor,
       fixedColor: Colors.white,
       unselectedItemColor: Colors.white,
