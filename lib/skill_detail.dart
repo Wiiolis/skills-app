@@ -28,14 +28,16 @@ class _SkillDetailState extends State<SkillDetail> {
       exportBackgroundColor: Colors.transparent,
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
-  int selectedValue = 0; // Initialize with a default value
+  int selectedValue = 0;
 
   @override
   void initState() {
     super.initState();
     _instructorsFuture = _getInstructors();
+
+    // Set default value for dropdown
     _instructorsFuture.then((value) async {
-      await getselectedValueId(value);
+      await getDefaultDropdownValueId(value);
     });
 
     _controller.addListener(() => log('Value changed'));
@@ -45,16 +47,14 @@ class _SkillDetailState extends State<SkillDetail> {
         .split(' ')[0];
   }
 
-  Future<void> getselectedValueId(instructor) async {
-    if (selectedValue != 0) {
-      setState(() {
-        selectedValue = instructor;
-      });
-    } else {
-      setState(() {
-        selectedValue = instructor[0].instructorId;
-      });
-    }
+  Future<dynamic> _getInstructors() async {
+    return ApiService().getInstructors();
+  }
+
+  Future<void> getDefaultDropdownValueId(instructor) async {
+    setState(() {
+      selectedValue = instructor[0].instructorId;
+    });
   }
 
   @override
@@ -62,10 +62,6 @@ class _SkillDetailState extends State<SkillDetail> {
     // IMPORTANT to dispose of the controller
     _controller.dispose();
     super.dispose();
-  }
-
-  Future<dynamic> _getInstructors() async {
-    return ApiService().getInstructors();
   }
 
   Future<void> exportImage(BuildContext context) async {

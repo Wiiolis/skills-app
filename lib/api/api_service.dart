@@ -44,7 +44,7 @@ class ApiService {
         saveCurrentUserId(loginData.userId);
       }
     } catch (e) {
-      log('Error getting current user: $e');
+      log('Error logging in: $e');
     }
   }
 
@@ -106,7 +106,7 @@ class ApiService {
         }
       }
     } catch (e) {
-      log('Error getting user info: $e');
+      log('Error getting clinical skills: $e');
     }
 
     return null;
@@ -138,7 +138,7 @@ class ApiService {
         }
       }
     } catch (e) {
-      log('Error getting user info: $e');
+      log('Error getting modules: $e');
     }
     return null;
   }
@@ -163,8 +163,6 @@ class ApiService {
             instructors.add(Instructors.fromJson(element));
           }
 
-          print(instructors.length);
-
           return instructors;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed
@@ -172,7 +170,7 @@ class ApiService {
         }
       }
     } catch (e) {
-      log('Error getting user info: $e');
+      log('Error getting instructors: $e');
     }
     return null;
   }
