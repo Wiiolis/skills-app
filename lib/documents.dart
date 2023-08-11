@@ -11,22 +11,20 @@ class Documents extends StatefulWidget {
 class _DocumentsState extends State<Documents> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(left: 5),
           child: Text(
             'Documents',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
-        const SizedBox(
-          height: 5,
+        SizedBox(
+          height: 15,
         ),
-        Container(
-          child: Row(children: [DocumentBox(), DocumentBox()]),
-        )
+        Row(children: [DocumentBox(), DocumentBox()])
       ],
     );
   }
