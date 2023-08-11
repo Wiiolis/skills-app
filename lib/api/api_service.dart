@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:demo_app/api/model/instructors.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -131,6 +132,40 @@ class ApiService {
           }
 
           return modules;
+        } else if (response.statusCode == 401) {
+          // Unauthorized access, handle as needed
+          log('Unauthorized access');
+        }
+      }
+    } catch (e) {
+      log('Error getting user info: $e');
+    }
+    return null;
+  }
+
+  Future<List?> getInstructors() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.instructors);
+        var response = await http.get(
+          url,
+          headers: <String, String>{'authorization': token},
+        );
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          final instructors = [];
+
+          for (var element in responseData) {
+            instructors.add(Instructors.fromJson(element));
+          }
+
+          print(instructors.length);
+
+          return instructors;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed
           log('Unauthorized access');

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
+import 'api/api_service.dart';
 import 'components/dropdown.dart';
 import 'globals.dart';
 
@@ -21,16 +22,22 @@ class SkillDetail extends StatefulWidget {
 class _SkillDetailState extends State<SkillDetail> {
   // initialize the signature controller
   TextEditingController dateInput = TextEditingController();
-
   final SignatureController _controller = SignatureController(
       penStrokeWidth: 1,
       penColor: AppColors.darkGrayColor,
       exportBackgroundColor: Colors.transparent,
       exportPenColor: Colors.black);
+  late Future<dynamic> _instructorsFuture;
+  int selectedValue = 0; // Initialize with a default value
 
   @override
   void initState() {
     super.initState();
+    _instructorsFuture = _getInstructors();
+    _instructorsFuture.then((value) async {
+      await getselectedValueId(value);
+    });
+
     _controller.addListener(() => log('Value changed'));
     dateInput.text = DateFormat('dd.MM.yyyy')
         .format(DateTime.now())
@@ -38,11 +45,27 @@ class _SkillDetailState extends State<SkillDetail> {
         .split(' ')[0];
   }
 
+  Future<void> getselectedValueId(instructor) async {
+    if (selectedValue != 0) {
+      setState(() {
+        selectedValue = instructor;
+      });
+    } else {
+      setState(() {
+        selectedValue = instructor[0].instructorId;
+      });
+    }
+  }
+
   @override
   void dispose() {
     // IMPORTANT to dispose of the controller
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<dynamic> _getInstructors() async {
+    return ApiService().getInstructors();
   }
 
   Future<void> exportImage(BuildContext context) async {
@@ -227,11 +250,31 @@ class _SkillDetailState extends State<SkillDetail> {
                       flex: 5,
                       child: SizedBox(
                         height: 40,
-                        child: Dropdown(
-                          dropdownItems: [],
-                          callback: (selectedValue) => {},
-                          selectedValue: 1,
-                          valueName: 'moduleVersionId',
+                        child: FutureBuilder<dynamic>(
+                          future: _instructorsFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              final dropdownItems =
+                                  snapshot.data ?? []; // Handle null data
+                              return Dropdown(
+                                dropdownItems: dropdownItems,
+                                selectedValue:
+                                    selectedValue, // Set the default selected value
+                                callback: (value) {
+                                  setState(() {
+                                    selectedValue = value; // Update the Future
+                                  });
+                                },
+                                valueName: 'instructorId',
+                              );
+                            }
+                          },
                         ),
                       ))
                 ],
@@ -290,7 +333,18 @@ class _SkillDetailState extends State<SkillDetail> {
               height: 150,
               backgroundColor: Colors.white,
             ),
-            Button(text: 'Save', onClick: () {}, theme: 'dark')
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: Center(
+                child: SizedBox(
+                    width: 150,
+                    child: Expanded(
+                        child: Button(
+                            text: 'Save', onClick: () {}, theme: 'dark'))),
+              ),
+            )
           ],
         ),
       ),

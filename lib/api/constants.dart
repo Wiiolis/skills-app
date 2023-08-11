@@ -3,6 +3,7 @@ class ApiConstants {
   static late String userEndpoint;
   static late String clinicalSkills;
   static String modules = 'module_versions';
+  static String instructors = 'clinical_instructors';
 
   static initializeUserEndpoint(int userId) {
     userEndpoint = 'users/$userId';
