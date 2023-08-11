@@ -56,7 +56,7 @@ class _DropdownState extends State<Dropdown> {
             return DropdownMenuItem<int>(
               value: widget.valueName == 'moduleVersionId'
                   ? value.moduleVersionId
-                  : null,
+                  : value.instructorId,
               child: Text(value.name),
             );
           }).toList(),

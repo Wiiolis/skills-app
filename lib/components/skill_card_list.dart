@@ -30,15 +30,9 @@ class _SkillCardListState extends State<SkillCardList> {
   }
 
   Future<void> getselectedValueId(module) async {
-    if (selectedValue != 0) {
-      setState(() {
-        selectedValue = module;
-      });
-    } else {
-      setState(() {
-        selectedValue = module[0].moduleVersionId;
-      });
-    }
+    setState(() {
+      selectedValue = module[0].moduleVersionId;
+    });
   }
 
   Future<dynamic> _getClinicalSkills(value) {

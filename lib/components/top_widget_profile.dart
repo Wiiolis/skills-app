@@ -81,6 +81,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                       Button(
                         text: 'Yes',
                         onClick: () => _logout(context),
+                        theme: 'light',
                       ),
                       const SizedBox(
                         width: 15,
@@ -88,6 +89,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                       Button(
                         text: 'Cancel',
                         onClick: () => Navigator.pop(context),
+                        theme: 'light',
                       )
                     ],
                   )
