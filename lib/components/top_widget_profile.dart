@@ -118,12 +118,16 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                 final user = snapshot.data;
                 return Row(
                   children: [
-                    user.avatars != null
+                    user.avatars != null && user.avatars.small != null
                         ? CircleAvatar(
                             radius: 19,
                             backgroundImage: NetworkImage(user.avatars.small),
                           )
-                        : const Text('data'),
+                        : const Icon(
+                            Icons.account_circle,
+                            color: Colors.white,
+                            size: 40,
+                          ),
                     const SizedBox(width: 15),
                     Flexible(
                       flex: 100,
@@ -133,31 +137,30 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                           Row(
                             children: [
                               Text(
-                                '${user.firstName + ' ' + user.lastName}',
+                                '${user.firstName ?? ''} ${user.lastName ?? ''}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   height: 1.50,
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              if (user.clinicalRotation.groupName != null)
-                                Text(
-                                  '${user.clinicalRotation.groupName}',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: false,
-                                  style: const TextStyle(height: 1.50),
-                                ),
+                              Text(
+                                user.clinicalRotation.groupName ?? '',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: const TextStyle(height: 1.50),
+                              ),
                             ],
                           ),
-                          if (user.clinicalRotation.hospitalName != null)
-                            Text(
-                              '${user.clinicalRotation.hospitalName}',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
-                              style: const TextStyle(height: 1.50),
-                            ),
+                          Text(
+                            user.clinicalRotation.hospitalName ??
+                                "No Hospital Info",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: const TextStyle(height: 1.50),
+                          )
                         ],
                       ),
                     ),

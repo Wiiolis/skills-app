@@ -65,6 +65,10 @@ class ApiService {
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           final user = User.fromJson(responseData);
+          //If user has hospital assigned, save it to shared preferences
+          if (user.clinicalRotation?.hospitalName != null) {
+            await prefs.setBool('hospitalAssigned', true);
+          }
 
           return user;
         } else if (response.statusCode == 401) {
