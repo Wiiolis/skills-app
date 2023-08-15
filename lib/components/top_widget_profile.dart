@@ -6,19 +6,18 @@ import '../api/api_service.dart';
 import 'button.dart';
 
 class TopWidgetProfile extends StatefulWidget {
-  const TopWidgetProfile({Key? key}) : super(key: key);
+  final user; // Declare the title variable here.
+
+  const TopWidgetProfile({Key? key, required this.user}) : super(key: key);
 
   @override
   _TopWidgetProfileState createState() => _TopWidgetProfileState();
 }
 
 class _TopWidgetProfileState extends State<TopWidgetProfile> {
-  late Future<dynamic> _userFuture;
-
   @override
   void initState() {
     super.initState();
-    _userFuture = _getUser();
   }
 
   dynamic apiBaseUrl = const String.fromEnvironment(
@@ -26,23 +25,10 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
     defaultValue: 'https://gamma.staging.candena.de',
   );
 
-  Future<dynamic> _getUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('token');
-    if (token != null) {
-      final prefs = await SharedPreferences.getInstance();
-      int? currentUserId = prefs.getInt('currentUserId');
-
-      return ApiService().getUser(currentUserId);
-    } else {
-      context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
-      return null;
-    }
-  }
-
   _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
+    prefs.remove('hospitalAssigned');
 
     context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
   }
@@ -108,7 +94,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FutureBuilder<dynamic>(
-            future: _userFuture,
+            future: widget.user,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();

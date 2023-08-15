@@ -11,7 +11,9 @@ import '../api/api_service.dart';
 import '../globals.dart';
 
 class SkillCardList extends StatefulWidget {
-  const SkillCardList({Key? key}) : super(key: key);
+  final user;
+
+  const SkillCardList({Key? key, required this.user}) : super(key: key);
 
   @override
   State<SkillCardList> createState() => _SkillCardListState();
@@ -21,6 +23,7 @@ class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _clinicalSkillsFuture = Future<dynamic>.value([]);
   late Future<dynamic> _modulesFuture;
   int selectedValue = 0; // Initialize with a default value
+  late bool hospitalAssigned = false; // Declare the hospitalAssigned variable
 
   @override
   void initState() {
@@ -34,9 +37,11 @@ class _SkillCardListState extends State<SkillCardList> {
     });
   }
 
-  checkHospital() async {
+  Future<void> _loadHospitalAssigned() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('hospitalAssigned');
+    setState(() {
+      hospitalAssigned = prefs.getBool('hospitalAssigned') ?? false;
+    });
   }
 
   Future<void> getselectedValueId(module) async {
@@ -55,7 +60,8 @@ class _SkillCardListState extends State<SkillCardList> {
 
   @override
   Widget build(BuildContext context) {
-    if (checkHospital() == true) {
+    print([widget.user.clinicalRotation.hospitalName, 'user']);
+    if (widget.user.clinicalRotation.hospitalName != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -130,9 +136,9 @@ class _SkillCardListState extends State<SkillCardList> {
             children: [
               SvgPicture.asset(
                 'assets/images/placeholder.svg',
-                height: 250,
+                height: 237,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const Text(

@@ -41,6 +41,7 @@ class ApiService {
 
         final responseData = jsonDecode(response.body);
         final loginData = Login.fromJson(responseData);
+
         saveCurrentUserId(loginData.userId);
       }
     } catch (e) {
@@ -62,14 +63,16 @@ class ApiService {
           headers: <String, String>{'authorization': token},
         );
 
+        final prefs = await SharedPreferences.getInstance();
+
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           final user = User.fromJson(responseData);
-          //If user has hospital assigned, save it to shared preferences
-          if (user.clinicalRotation?.hospitalName != null) {
-            await prefs.setBool('hospitalAssigned', true);
-          }
 
+          await prefs.setBool(
+              'hospitalAssigned', user.clinicalRotation?.hospitalName != null);
+
+          print([prefs.getBool('hospitalAssigned'), 'xx']);
           return user;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed

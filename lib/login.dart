@@ -30,6 +30,8 @@ class _LoginState extends State<Login> {
 
   Future<void> _validateLogin() async {
     final prefs = await SharedPreferences.getInstance();
+    bool newHospitalAssigned = false; // Determine this value
+    await prefs.setBool('hospitalAssigned', newHospitalAssigned);
 
     var body = jsonEncode({
       "email": usernameController.text,
@@ -51,7 +53,7 @@ class _LoginState extends State<Login> {
     var userToken = await _getUserToken();
 
     if (userToken != null) {
-      context.go('/');
+      context.push('/');
     }
   }
 
