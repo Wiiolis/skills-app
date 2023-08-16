@@ -7,8 +7,17 @@ checkHospital() async {
   return prefs.getBool('hospitalAssigned');
 }
 
-class Info extends StatelessWidget {
-  const Info({super.key});
+class Info extends StatefulWidget {
+  var user;
+
+  Info({super.key, required this.user});
+
+  @override
+  State<Info> createState() => _InfoState();
+}
+
+class _InfoState extends State<Info> {
+  late bool hospitalAssigned = false; // Declare the hospitalAssigned variable
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +118,7 @@ class Info extends StatelessWidget {
         ),
         Padding(
             padding: const EdgeInsets.all(15),
-            child: checkHospital() == true
+            child: widget.user.clinicalRotation.hospitalName != null
                 ? const Column(
                     children: [
                       Row(

@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../api/api_service.dart';
@@ -37,13 +36,6 @@ class _SkillCardListState extends State<SkillCardList> {
     });
   }
 
-  Future<void> _loadHospitalAssigned() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      hospitalAssigned = prefs.getBool('hospitalAssigned') ?? false;
-    });
-  }
-
   Future<void> getselectedValueId(module) async {
     setState(() {
       selectedValue = module[0].moduleVersionId;
@@ -60,7 +52,6 @@ class _SkillCardListState extends State<SkillCardList> {
 
   @override
   Widget build(BuildContext context) {
-    print([widget.user.clinicalRotation.hospitalName, 'user']);
     if (widget.user.clinicalRotation.hospitalName != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

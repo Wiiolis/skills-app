@@ -32,8 +32,8 @@ class _DashboardState extends State<Dashboard> {
 
     return [
       SkillCardList(user: user),
-      Documents(),
-      Info(),
+      const Documents(),
+      Info(user: user),
     ];
   }
 
@@ -46,7 +46,6 @@ class _DashboardState extends State<Dashboard> {
     final prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     if (token != null) {
-      final prefs = await SharedPreferences.getInstance();
       int? currentUserId = prefs.getInt('currentUserId');
 
       return ApiService().getUser(currentUserId);
@@ -86,7 +85,8 @@ class _DashboardState extends State<Dashboard> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (snapshot.hasError) {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));

@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: "/info",
-        builder: (context, state) => const Info(),
+        builder: (context, state) => Info(user: const []),
       ),
       GoRoute(
         name: 'login',

@@ -72,7 +72,6 @@ class ApiService {
           await prefs.setBool(
               'hospitalAssigned', user.clinicalRotation?.hospitalName != null);
 
-          print([prefs.getBool('hospitalAssigned'), 'xx']);
           return user;
         } else if (response.statusCode == 401) {
           // Unauthorized access, handle as needed
