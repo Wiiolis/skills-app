@@ -63,18 +63,12 @@ class ApiService {
           headers: <String, String>{'authorization': token},
         );
 
-        final prefs = await SharedPreferences.getInstance();
-
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
           final user = User.fromJson(responseData);
 
-          await prefs.setBool(
-              'hospitalAssigned', user.clinicalRotation?.hospitalName != null);
-
           return user;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }
@@ -107,7 +101,6 @@ class ApiService {
 
           return clinicalSkills;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }
@@ -139,7 +132,6 @@ class ApiService {
 
           return modules;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }
@@ -171,7 +163,6 @@ class ApiService {
 
           return instructors;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }

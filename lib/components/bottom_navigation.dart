@@ -7,11 +7,11 @@ import '../globals.dart';
 typedef navCallback = void Function(int selectedValue);
 
 class BottomNavigation extends StatefulWidget {
-  final navCallback callback; // Add callback property
+  final navCallback callback;
 
   const BottomNavigation({
     Key? key,
-    required this.callback, // Initialize callback in the constructor
+    required this.callback,
   }) : super(key: key);
 
   @override

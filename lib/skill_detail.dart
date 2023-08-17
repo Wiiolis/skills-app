@@ -215,15 +215,11 @@ class _SkillDetailState extends State<SkillDetail> {
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2024));
                           if (pickedDate != null) {
-                            //pickedDate output format => 2021-03-10 00:00:00.000
                             String newDate =
                                 DateFormat('dd.MM.yyyy').format(pickedDate);
                             String date = newDate.toString().split(' ')[0];
-
-                            //formatted date output using intl package =>  2021-03-16
                             setState(() {
                               dateInput.text = date;
-                              //set output date to TextField value.
                             });
                           } else {}
                         },
@@ -256,15 +252,13 @@ class _SkillDetailState extends State<SkillDetail> {
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else {
-                              final dropdownItems =
-                                  snapshot.data ?? []; // Handle null data
+                              final dropdownItems = snapshot.data ?? [];
                               return Dropdown(
                                 dropdownItems: dropdownItems,
-                                selectedValue:
-                                    selectedValue, // Set the default selected value
+                                selectedValue: selectedValue,
                                 callback: (value) {
                                   setState(() {
-                                    selectedValue = value; // Update the Future
+                                    selectedValue = value;
                                   });
                                 },
                                 valueName: 'instructorId',

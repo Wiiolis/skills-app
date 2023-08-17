@@ -21,8 +21,8 @@ class SkillCardList extends StatefulWidget {
 class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _clinicalSkillsFuture = Future<dynamic>.value([]);
   late Future<dynamic> _modulesFuture;
-  int selectedValue = 0; // Initialize with a default value
-  late bool hospitalAssigned = false; // Declare the hospitalAssigned variable
+  int selectedValue = 0;
+  late bool hospitalAssigned = false;
 
   @override
   void initState() {
@@ -74,17 +74,14 @@ class _SkillCardListState extends State<SkillCardList> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                final dropdownItems = snapshot.data ?? []; // Handle null data
+                final dropdownItems = snapshot.data ?? [];
                 return Dropdown(
                   dropdownItems: dropdownItems,
-                  selectedValue:
-                      selectedValue, // Set the default selected value
+                  selectedValue: selectedValue,
                   callback: (value) {
                     setState(() {
-                      selectedValue =
-                          value; // Update selectedValue with the selected value
-                      _clinicalSkillsFuture =
-                          _getClinicalSkills(value); // Update the Future
+                      selectedValue = value;
+                      _clinicalSkillsFuture = _getClinicalSkills(value);
                     });
                   },
                   valueName: 'moduleVersionId',

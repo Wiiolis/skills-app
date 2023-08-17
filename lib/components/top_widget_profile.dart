@@ -6,7 +6,7 @@ import '../api/api_service.dart';
 import 'button.dart';
 
 class TopWidgetProfile extends StatefulWidget {
-  final user; // Declare the title variable here.
+  final user;
 
   const TopWidgetProfile({Key? key, required this.user}) : super(key: key);
 
