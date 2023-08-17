@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
     var userToken = await _getUserToken();
 
     if (userToken != null) {
-      context.go('/');
+      context.push('/');
     }
   }
 

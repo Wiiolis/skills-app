@@ -41,6 +41,7 @@ class ApiService {
 
         final responseData = jsonDecode(response.body);
         final loginData = Login.fromJson(responseData);
+
         saveCurrentUserId(loginData.userId);
       }
     } catch (e) {
@@ -68,7 +69,6 @@ class ApiService {
 
           return user;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }
@@ -101,7 +101,6 @@ class ApiService {
 
           return clinicalSkills;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }
@@ -133,7 +132,6 @@ class ApiService {
 
           return modules;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }
@@ -165,7 +163,6 @@ class ApiService {
 
           return instructors;
         } else if (response.statusCode == 401) {
-          // Unauthorized access, handle as needed
           log('Unauthorized access');
         }
       }

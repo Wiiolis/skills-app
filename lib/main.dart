@@ -43,7 +43,9 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: "/skill-list",
-        builder: (context, state) => const SkillCardList(),
+        builder: (context, state) => const SkillCardList(
+          user: [],
+        ),
       ),
       GoRoute(
         path: "/skill-detail",
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: "/info",
-        builder: (context, state) => const Info(),
+        builder: (context, state) => Info(user: const []),
       ),
       GoRoute(
         name: 'login',

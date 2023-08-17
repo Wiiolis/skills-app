@@ -2,27 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
 import 'package:demo_app/components/bottom_navigation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'api/api_service.dart';
 import 'documents.dart';
 import 'globals.dart';
 import 'info.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
-//New
-const List<Widget> pages = <Widget>[SkillCardList(), Documents(), Info()];
-
 class _DashboardState extends State<Dashboard> {
   int selectedIndex = 0;
+  late Future<dynamic> _userFuture;
 
   @override
   void initState() {
     super.initState();
+    _userFuture = _getUser();
+  }
+
+  Future<List<Widget>> pages() async {
+    var user = await _userFuture;
+
+    return [
+      SkillCardList(user: user),
+      const Documents(),
+      Info(user: user),
+    ];
+  }
+
+  dynamic apiBaseUrl = const String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://gamma.staging.candena.de',
+  );
+
+  Future<dynamic> _getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    if (token != null) {
+      int? currentUserId = prefs.getInt('currentUserId');
+
+      return ApiService().getUser(currentUserId);
+    } else {
+      context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
+      return null;
+    }
   }
 
   @override
@@ -48,10 +78,22 @@ class _DashboardState extends State<Dashboard> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              const TopWidgetProfile(),
+              TopWidgetProfile(user: _userFuture),
               Expanded(
-                child: pages.elementAt(selectedIndex),
-              )
+                  child: FutureBuilder<List<Widget>>(
+                      future: pages(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else {
+                          return snapshot.data![selectedIndex];
+                        }
+                      }))
             ],
           ),
         ),
