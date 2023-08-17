@@ -1,11 +1,5 @@
 import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-checkHospital() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('hospitalAssigned');
-}
 
 class Info extends StatefulWidget {
   var user;
@@ -17,7 +11,7 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  late bool hospitalAssigned = false; // Declare the hospitalAssigned variable
+  late bool hospitalAssigned = false;
 
   @override
   Widget build(BuildContext context) {

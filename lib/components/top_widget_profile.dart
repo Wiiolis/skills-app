@@ -28,7 +28,6 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
   _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('token');
-    prefs.remove('hospitalAssigned');
 
     context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
   }
