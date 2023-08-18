@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:demo_app/components/skill_card_list.dart';
-import 'package:demo_app/documents.dart';
-import 'package:demo_app/skill_detail.dart';
+import 'package:demo_app/views/documents.dart';
+import 'package:demo_app/views/skill_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'dashboard.dart';
+import 'views/dashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'info.dart';
-import 'login.dart';
+import 'views/info.dart';
+import 'views/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

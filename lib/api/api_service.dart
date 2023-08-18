@@ -178,20 +178,21 @@ class ApiService {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.clinicalSkill);
 
     try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: body,
-      );
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
 
-      print(body);
+      if (token != null) {
+        final response = await http.post(
+          url,
+          headers: <String, String>{'authorization': token},
+          body: body,
+        );
 
-      print([url, 'url']);
-      print([response.statusCode, 'statusCode']);
-      print([response.body, 'body']);
-
-      if (response.statusCode == 201) {
-        print("yaaas");
+        if (response.statusCode == 201) {
+          print("yaaas"); // finish later
+        } else if (response.statusCode == 401) {
+          log('Unauthorized access');
+        }
       }
     } catch (e) {
       log('Error: $e');
