@@ -171,4 +171,24 @@ class ApiService {
     }
     return null;
   }
+
+  // save clinical skills
+  Future<void> saveClinicalSkill(moduleVersionId, skillId, body) async {
+    ApiConstants.initializeClinicalSkill(moduleVersionId, skillId);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.clinicalSkill);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({}),
+      );
+
+      if (response.statusCode == 201) {
+        print("yaaas");
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
+  }
 }

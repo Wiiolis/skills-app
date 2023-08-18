@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -13,13 +14,26 @@ import 'components/dropdown.dart';
 import 'globals.dart';
 
 class SkillDetail extends StatefulWidget {
-  const SkillDetail({super.key});
+  final String? moduleVersionId;
+  final String? skillId;
+  final String? level;
+
+  const SkillDetail({
+    Key? key,
+    required this.moduleVersionId,
+    required this.skillId,
+    required this.level,
+  }) : super(key: key);
 
   @override
   State<SkillDetail> createState() => _SkillDetailState();
 }
 
 class _SkillDetailState extends State<SkillDetail> {
+  Future<dynamic> _saveClinicalSkill(moduleVersionId, skillId) {
+    return ApiService().saveClinicalSkill(moduleVersionId, skillId, {});
+  }
+
   // initialize the signature controller
   TextEditingController dateInput = TextEditingController();
   final SignatureController _controller = SignatureController(
@@ -28,14 +42,12 @@ class _SkillDetailState extends State<SkillDetail> {
       exportBackgroundColor: Colors.transparent,
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
-  int selectedValue = 0;
+  int selectedInstructorId = 0;
 
   @override
   void initState() {
     super.initState();
     _instructorsFuture = _getInstructors();
-
-    // Set default value for dropdown
     _instructorsFuture.then((value) async {
       await getDefaultDropdownValueId(value);
     });
@@ -45,16 +57,31 @@ class _SkillDetailState extends State<SkillDetail> {
         .format(DateTime.now())
         .toString()
         .split(' ')[0];
+
+    _saveClinicalSkill(widget.moduleVersionId, widget.skillId);
   }
 
   Future<dynamic> _getInstructors() async {
     return ApiService().getInstructors();
   }
 
-  Future<void> getDefaultDropdownValueId(instructor) async {
+  getDefaultDropdownValueId(instructor) {
     setState(() {
-      selectedValue = instructor[0].instructorId;
+      selectedInstructorId = instructor[0].instructorId;
     });
+  }
+
+  _saveSkill() {
+    var body = jsonEncode({
+      "instructor_id": selectedInstructorId,
+      "level": widget.level,
+      "date": dateInput.text,
+    });
+
+    print(body);
+
+    return ApiService()
+        .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body);
   }
 
   @override
@@ -255,10 +282,10 @@ class _SkillDetailState extends State<SkillDetail> {
                               final dropdownItems = snapshot.data ?? [];
                               return Dropdown(
                                 dropdownItems: dropdownItems,
-                                selectedValue: selectedValue,
+                                selectedValue: selectedInstructorId,
                                 callback: (value) {
                                   setState(() {
-                                    selectedValue = value;
+                                    selectedInstructorId = value;
                                   });
                                 },
                                 valueName: 'instructorId',
@@ -332,7 +359,9 @@ class _SkillDetailState extends State<SkillDetail> {
                     width: 150,
                     child: Expanded(
                         child: Button(
-                            text: 'Save', onClick: () {}, theme: 'dark'))),
+                            text: 'Save',
+                            onClick: () => _saveSkill(),
+                            theme: 'dark'))),
               ),
             )
           ],

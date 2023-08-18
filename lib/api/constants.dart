@@ -15,6 +15,6 @@ class ApiConstants {
   }
 
   static initializeClinicalSkill(int moduleVersionId, int skillId) {
-    userEndpoint = 'modules/$moduleVersionId/clinical_skills/$skillId';
+    clinicalSkill = 'modules/$moduleVersionId/clinical_skills/$skillId';
   }
 }

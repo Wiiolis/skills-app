@@ -21,7 +21,7 @@ class SkillCardList extends StatefulWidget {
 class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _clinicalSkillsFuture = Future<dynamic>.value([]);
   late Future<dynamic> _modulesFuture;
-  int selectedValue = 0;
+  int selectedModuleVersionId = 0;
   late bool hospitalAssigned = false;
 
   @override
@@ -31,14 +31,14 @@ class _SkillCardListState extends State<SkillCardList> {
     _modulesFuture.then((value) async {
       await getselectedValueId(value);
       setState(() {
-        _clinicalSkillsFuture = _getClinicalSkills(selectedValue);
+        _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
       });
     });
   }
 
   Future<void> getselectedValueId(module) async {
     setState(() {
-      selectedValue = module[0].moduleVersionId;
+      selectedModuleVersionId = module[0].moduleVersionId;
     });
   }
 
@@ -77,10 +77,10 @@ class _SkillCardListState extends State<SkillCardList> {
                 final dropdownItems = snapshot.data ?? [];
                 return Dropdown(
                   dropdownItems: dropdownItems,
-                  selectedValue: selectedValue,
+                  selectedValue: selectedModuleVersionId,
                   callback: (value) {
                     setState(() {
-                      selectedValue = value;
+                      selectedModuleVersionId = value;
                       _clinicalSkillsFuture = _getClinicalSkills(value);
                     });
                   },
@@ -106,7 +106,15 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                           onTap: () {
-                            context.go("/skill-detail");
+                            context.goNamed("skillDetail", pathParameters: {
+                              "moduleVersionId":
+                                  selectedModuleVersionId.toString(),
+                              "skillId": clinicalSkills[index]
+                                  .clinicalSkillId
+                                  .toString()
+                            }, queryParameters: {
+                              "level": clinicalSkills[index].level
+                            });
                           },
                           child: SkillCard(data: clinicalSkills![index]));
                     },

@@ -48,9 +48,13 @@ class MyApp extends StatelessWidget {
         ),
       ),
       GoRoute(
-        path: "/skill-detail",
-        builder: (context, state) => const SkillDetail(),
-      ),
+          name: "skillDetail",
+          path: '/skill-list/:moduleVersionId/clinical-skills/:skillId',
+          builder: (context, state) => SkillDetail(
+                level: state.uri.queryParameters['level'],
+                moduleVersionId: state.pathParameters['moduleVersionId'],
+                skillId: state.pathParameters['skillId'],
+              )),
       GoRoute(
         path: "/documents",
         builder: (context, state) => const Documents(),
