@@ -181,8 +181,14 @@ class ApiService {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({}),
+        body: body,
       );
+
+      print(body);
+
+      print([url, 'url']);
+      print([response.statusCode, 'statusCode']);
+      print([response.body, 'body']);
 
       if (response.statusCode == 201) {
         print("yaaas");

@@ -6,7 +6,7 @@ typedef DropdownCallback = void Function(int selectedValue);
 
 class Dropdown extends StatefulWidget {
   final List<dynamic> dropdownItems;
-  int selectedValue;
+  dynamic selectedValue;
   var valueName;
   final DropdownCallback callback; // Add callback property
 

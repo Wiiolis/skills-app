@@ -14,8 +14,8 @@ import 'components/dropdown.dart';
 import 'globals.dart';
 
 class SkillDetail extends StatefulWidget {
-  final String? moduleVersionId;
-  final String? skillId;
+  final int moduleVersionId;
+  final int skillId;
   final String? level;
 
   const SkillDetail({
@@ -30,10 +30,6 @@ class SkillDetail extends StatefulWidget {
 }
 
 class _SkillDetailState extends State<SkillDetail> {
-  Future<dynamic> _saveClinicalSkill(moduleVersionId, skillId) {
-    return ApiService().saveClinicalSkill(moduleVersionId, skillId, {});
-  }
-
   // initialize the signature controller
   TextEditingController dateInput = TextEditingController();
   final SignatureController _controller = SignatureController(
@@ -57,8 +53,6 @@ class _SkillDetailState extends State<SkillDetail> {
         .format(DateTime.now())
         .toString()
         .split(' ')[0];
-
-    _saveClinicalSkill(widget.moduleVersionId, widget.skillId);
   }
 
   Future<dynamic> _getInstructors() async {
@@ -71,17 +65,19 @@ class _SkillDetailState extends State<SkillDetail> {
     });
   }
 
-  _saveSkill() {
+  Future _saveSkill() async {
     var body = jsonEncode({
       "instructor_id": selectedInstructorId,
       "level": widget.level,
-      "date": dateInput.text,
+      "date": '2023-09-01',
     });
 
-    print(body);
-
-    return ApiService()
-        .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body);
+    try {
+      return ApiService()
+          .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body);
+    } catch (err) {
+      print([err, "Errrr"]);
+    }
   }
 
   @override
