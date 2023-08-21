@@ -126,6 +126,7 @@ class _SkillCardListState extends State<SkillCardList> {
                       selectedModuleVersionId = value;
                       _clinicalSkillsFuture = _getClinicalSkills(value);
                       getFilteredSkills();
+                      _searchController.clear();
                     });
                   },
                   valueName: 'moduleVersionId',
