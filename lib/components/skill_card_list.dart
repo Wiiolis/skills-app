@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -106,7 +108,7 @@ class _SkillCardListState extends State<SkillCardList> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           FutureBuilder<dynamic>(
@@ -134,7 +136,7 @@ class _SkillCardListState extends State<SkillCardList> {
               }
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           const Padding(
@@ -161,7 +163,14 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          // ... Rest of your code ...
+                          context.goNamed("skillDetail", pathParameters: {
+                            "moduleVersionId":
+                                selectedModuleVersionId.toString(),
+                            "skillId":
+                                clinicalSkills[index].clinicalSkillId.toString()
+                          }, queryParameters: {
+                            "level": clinicalSkills[index].level
+                          });
                         },
                         child: SkillCard(data: filteredSkills[index]),
                       );
@@ -174,11 +183,65 @@ class _SkillCardListState extends State<SkillCardList> {
         ],
       );
     } else {
-      return const SingleChildScrollView(
+      return SingleChildScrollView(
         child: Expanded(
           child: Column(
             children: [
-              // ... Rest of your code ...
+              SvgPicture.asset(
+                'assets/images/placeholder.svg',
+                height: 237,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Hello, Jane!',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text('You’re not in Clinical Rotation currently.',
+                  style: TextStyle(fontSize: 16)),
+              const SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: SizedBox(
+                  width: 300,
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: 'You can stay and explore the app or ',
+                          style: TextStyle(
+                              fontSize: 16, color: AppColors.darkGrayColor),
+                        ),
+                        TextSpan(
+                          text: 'Go to the Platform',
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: AppColors.goldColor,
+                              decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              launchUrl(
+                                  'https://docs.flutter.io/flutter/services/UrlLauncher-class.html'
+                                      as Uri);
+                            },
+                        ),
+                        const TextSpan(
+                          text:
+                              ' and come back when your Clinical Rotation starts!',
+                          style: TextStyle(
+                              fontSize: 16, color: AppColors.darkGrayColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
