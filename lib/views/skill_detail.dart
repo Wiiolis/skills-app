@@ -49,7 +49,7 @@ class _SkillDetailState extends State<SkillDetail> {
     });
 
     _controller.addListener(() => log('Value changed'));
-    dateInput.text = DateFormat('dd.MM.yyyy')
+    dateInput.text = DateFormat('yyyy-MM-dd')
         .format(DateTime.now())
         .toString()
         .split(' ')[0];
@@ -74,7 +74,8 @@ class _SkillDetailState extends State<SkillDetail> {
 
     try {
       return ApiService()
-          .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body);
+          .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body)
+          .then((value) => context.go("/"));
     } catch (err) {
       print(err);
     }

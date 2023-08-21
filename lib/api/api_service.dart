@@ -188,9 +188,7 @@ class ApiService {
           body: body,
         );
 
-        if (response.statusCode == 201) {
-          print("yaaas"); // finish later
-        } else if (response.statusCode == 401) {
+        if (response.statusCode == 401) {
           log('Unauthorized access');
         }
       }
