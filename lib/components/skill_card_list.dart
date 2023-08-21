@@ -67,15 +67,43 @@ class _SkillCardListState extends State<SkillCardList> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 5),
-            child: Text(
-              'Skills Catalogue',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          // Search Bar
+          SizedBox(
+            height: 35,
+            child: TextField(
+              textAlignVertical: TextAlignVertical.center,
+              controller: _searchController,
+              onChanged: (value) {
+                filterSkills(value);
+              },
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.primaryColor,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.white,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                  borderSide: BorderSide(color: AppColors.primaryLightColor),
+                ),
+                fillColor: Colors.white,
+                filled: true,
+                hintText: 'Search skill by name',
+                hintStyle: TextStyle(
+                  color: AppColors.placeholderColor,
+                ),
+              ),
             ),
           ),
-          const SizedBox(
-            height: 5,
+          SizedBox(
+            height: 10,
           ),
           FutureBuilder<dynamic>(
             future: _modulesFuture,
@@ -100,22 +128,18 @@ class _SkillCardListState extends State<SkillCardList> {
               }
             },
           ),
+          SizedBox(
+            height: 10,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: Text(
+              'Skills Catalogue',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+          ),
           const SizedBox(
             height: 5,
-          ),
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                filterSkills(value);
-              },
-              decoration: const InputDecoration(
-                hintText: 'Search skills...',
-                prefixIcon: Icon(Icons.search),
-              ),
-            ),
           ),
           FutureBuilder<dynamic>(
             future: _clinicalSkillsFuture,
