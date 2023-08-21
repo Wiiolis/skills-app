@@ -36,15 +36,19 @@ class _SkillCardListState extends State<SkillCardList> {
         _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
       });
 
-      _clinicalSkillsFuture.then((value) => {
-            setState(() {
-              clinicalSkills = value;
-              filteredSkills = List.from(clinicalSkills);
-            })
-          });
+      getFilteredSkills();
     });
 
     filterSkills(null);
+  }
+
+  getFilteredSkills() {
+    return _clinicalSkillsFuture.then((value) => {
+          setState(() {
+            clinicalSkills = value;
+            filteredSkills = List.from(clinicalSkills);
+          })
+        });
   }
 
   Future<void> getselectedValueId(module) async {
@@ -121,6 +125,7 @@ class _SkillCardListState extends State<SkillCardList> {
                     setState(() {
                       selectedModuleVersionId = value;
                       _clinicalSkillsFuture = _getClinicalSkills(value);
+                      getFilteredSkills();
                     });
                   },
                   valueName: 'moduleVersionId',
