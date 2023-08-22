@@ -68,8 +68,8 @@ class ApiService {
           final user = User.fromJson(responseData);
 
           return user;
-        } else if (response.statusCode == 401) {
-          log('Unauthorized access');
+        } else {
+          log('error');
         }
       }
     } catch (e) {
@@ -188,7 +188,7 @@ class ApiService {
           body: body,
         );
 
-        if (response.statusCode == 401) {
+        if (response.statusCode != 200) {
           log('Unauthorized access');
         }
       }

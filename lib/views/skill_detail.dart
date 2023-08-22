@@ -240,7 +240,7 @@ class _SkillDetailState extends State<SkillDetail> {
                               lastDate: DateTime(2024));
                           if (pickedDate != null) {
                             String newDate =
-                                DateFormat('dd.MM.yyyy').format(pickedDate);
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
                             String date = newDate.toString().split(' ')[0];
                             setState(() {
                               dateInput.text = date;
