@@ -96,6 +96,7 @@ class ApiService {
           final clinicalSkills = [];
 
           for (var element in responseData) {
+            print(element);
             clinicalSkills.add(ClinicalSkills.fromJson(element));
           }
 

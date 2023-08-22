@@ -286,6 +286,7 @@ class _SkillDetailState extends State<SkillDetail> {
                                   });
                                 },
                                 valueName: 'instructorId',
+                                theme: 'dark',
                               );
                             }
                           },

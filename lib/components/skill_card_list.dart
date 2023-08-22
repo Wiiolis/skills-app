@@ -121,6 +121,7 @@ class _SkillCardListState extends State<SkillCardList> {
               } else {
                 final dropdownItems = snapshot.data ?? [];
                 return Dropdown(
+                  theme: 'light',
                   dropdownItems: dropdownItems,
                   selectedValue: selectedModuleVersionId,
                   callback: (value) {
