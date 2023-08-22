@@ -34,9 +34,14 @@ class _DropdownState extends State<Dropdown> {
         padding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: widget.theme == 'dark'
+                  ? AppColors.placeholderColor
+                  : Colors.white),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: DropdownButton<int>(
+          focusColor: Colors.transparent,
           iconEnabledColor: AppColors.primaryColor,
           isExpanded: true,
           hint: const Text(

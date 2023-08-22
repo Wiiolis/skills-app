@@ -96,7 +96,6 @@ class ApiService {
           final clinicalSkills = [];
 
           for (var element in responseData) {
-            print(element);
             clinicalSkills.add(ClinicalSkills.fromJson(element));
           }
 
@@ -188,6 +187,27 @@ class ApiService {
           headers: <String, String>{'authorization': token},
           body: body,
         );
+
+        if (response.statusCode != 200) {
+          log('Unauthorized access');
+        }
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
+  }
+
+  Future<dynamic> getClinicalSkill(moduleVersionId, skillId) async {
+    ApiConstants.initializeClinicalSkill(moduleVersionId, skillId);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.clinicalSkill);
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        final response = await http
+            .get(url, headers: <String, String>{'authorization': token});
 
         if (response.statusCode != 200) {
           log('Unauthorized access');

@@ -32,7 +32,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: MaterialApp.router(
-          routerConfig: router, debugShowCheckedModeBanner: false),
+          theme: ThemeData(fontFamily: 'OpenSans'),
+          routerConfig: router,
+          debugShowCheckedModeBanner: false),
     );
   }
 }

@@ -225,7 +225,7 @@ class _SkillDetailState extends State<SkillDetail> {
                           fillColor: Colors.white,
                           filled: true,
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
                             borderSide:
                                 BorderSide(color: AppColors.primaryLightColor),
                           ),
@@ -337,7 +337,7 @@ class _SkillDetailState extends State<SkillDetail> {
                         style: TextStyle(
                             color: AppColors.primaryColor,
                             decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w600)),
+                            fontWeight: FontWeight.normal)),
                   ),
                 ],
               ),

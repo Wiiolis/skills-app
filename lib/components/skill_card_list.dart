@@ -103,7 +103,8 @@ class _SkillCardListState extends State<SkillCardList> {
                 filled: true,
                 hintText: 'Search skill by name',
                 hintStyle: TextStyle(
-                  color: AppColors.placeholderColor,
+                  fontSize: 12,
+                  color: AppColors.lightGrayColor,
                 ),
               ),
             ),
