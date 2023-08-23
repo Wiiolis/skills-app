@@ -24,7 +24,6 @@ class ApiService {
     await prefs.setInt('currentUserId', id);
   }
 
-  // LOGIN
   Future<void> login(body) async {
     String url = "https://gamma.staging.candena.de/api/v1/sessions";
 
@@ -35,9 +34,6 @@ class ApiService {
         body: body,
       );
 
-      print([response.body, 'response.body']);
-      print([response.statusCode, 'response.statusCode']);
-
       if (response.statusCode == 201) {
         var basicAuth = response.headers['x-new-auth-token']!;
         await saveToken(basicAuth);
@@ -46,9 +42,12 @@ class ApiService {
         final loginData = Login.fromJson(responseData);
 
         saveCurrentUserId(loginData.userId);
+      } else {
+        throw response.statusCode; // Throw your specific error code
       }
     } catch (e) {
       log('Error logging in: $e');
+      throw 401; // Throw your specific error code
     }
   }
 

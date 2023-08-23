@@ -21,6 +21,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  String errorMessage = '';
 
   @override
   void initState() {
@@ -36,9 +37,25 @@ class _LoginState extends State<Login> {
       "password": passwordController.text,
     });
 
-    await ApiService().login(body).then((value) => {
-          if (prefs.getString('token') != null) {context.goNamed("home")}
-        });
+    await ApiService()
+        .login(body)
+        .then(
+          (value) => {
+            errorMessage = '',
+            if (prefs.getString('token') != null)
+              {
+                context.goNamed("home"),
+              }
+          },
+        )
+        .catchError((error) => {
+              setState(() {
+                error == 401
+                    ? errorMessage = 'Wrong credentials'
+                    : errorMessage = 'Error logging in';
+                errorMessage = 'Wrong credentials';
+              })
+            });
   }
 
   Future<String?> _getUserToken() async {
@@ -51,7 +68,7 @@ class _LoginState extends State<Login> {
     var userToken = await _getUserToken();
 
     if (userToken != null) {
-      context.push('/');
+      context.goNamed('home');
     }
   }
 
@@ -130,6 +147,15 @@ class _LoginState extends State<Login> {
                                   obscureText: true,
                                   label: 'Password',
                                 ),
+                                errorMessage != ''
+                                    ? Text(
+                                        errorMessage,
+                                        style: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 213, 93, 91),
+                                        ),
+                                      )
+                                    : SizedBox(),
                                 const SizedBox(
                                   height: 10,
                                 ),
