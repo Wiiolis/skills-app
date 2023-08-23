@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
     });
 
     await ApiService().login(body).then((value) => {
-          if (prefs.getString('token') != null) {context.go("/")}
+          if (prefs.getString('token') != null) {context.goNamed("home")}
         });
   }
 

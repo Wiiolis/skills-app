@@ -35,6 +35,9 @@ class ApiService {
         body: body,
       );
 
+      print([response.body, 'response.body']);
+      print([response.statusCode, 'response.statusCode']);
+
       if (response.statusCode == 201) {
         var basicAuth = response.headers['x-new-auth-token']!;
         await saveToken(basicAuth);

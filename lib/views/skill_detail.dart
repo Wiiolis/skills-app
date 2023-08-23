@@ -75,7 +75,7 @@ class _SkillDetailState extends State<SkillDetail> {
     try {
       return ApiService()
           .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body)
-          .then((value) => context.go("/"));
+          .then((value) => context.goNamed("home"));
     } catch (err) {
       print(err);
     }
@@ -140,7 +140,7 @@ class _SkillDetailState extends State<SkillDetail> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.go("/"),
+                      onTap: () => context.goNamed("home"),
                       child: const Row(
                         children: [
                           Icon(Icons.chevron_left_outlined,

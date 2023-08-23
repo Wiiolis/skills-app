@@ -10,7 +10,16 @@ import 'views/skill_detail.dart';
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
+      name: 'login',
       path: "/",
+      builder: (context, state) {
+        final query = state.uri.queryParameters['apiBaseUrl'].toString();
+        return Login(apiBaseUrl: query);
+      },
+    ),
+    GoRoute(
+      name: 'home',
+      path: "/home",
       builder: (context, state) => const Dashboard(),
     ),
     GoRoute(
@@ -35,14 +44,6 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: "/info",
       builder: (context, state) => Info(user: const []),
-    ),
-    GoRoute(
-      name: 'login',
-      path: "/login",
-      builder: (context, state) {
-        final query = state.uri.queryParameters['apiBaseUrl'].toString();
-        return Login(apiBaseUrl: query);
-      },
     ),
   ],
 );
