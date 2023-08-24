@@ -23,7 +23,6 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-    print("xxxxxxx");
     super.initState();
     _userFuture = _getUser();
   }

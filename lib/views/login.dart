@@ -126,7 +126,7 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                           const Text(
-                              'To begin mastering your critical skills, login with your platform credentials below.',
+                              'To begin mastering your clinical skills, login with your platform credentials below.',
                               textAlign: TextAlign.center),
                           const SizedBox(
                             height: 20,

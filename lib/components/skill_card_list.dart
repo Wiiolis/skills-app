@@ -169,9 +169,9 @@ class _SkillCardListState extends State<SkillCardList> {
                             "moduleVersionId":
                                 selectedModuleVersionId.toString(),
                             "skillId":
-                                clinicalSkills[index].clinicalSkillId.toString()
+                                filteredSkills[index].clinicalSkillId.toString()
                           }, queryParameters: {
-                            "level": clinicalSkills[index].level
+                            "level": filteredSkills[index].level
                           });
                         },
                         child: SkillCard(data: filteredSkills[index]),
