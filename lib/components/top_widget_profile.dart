@@ -67,6 +67,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                         text: 'Yes',
                         onClick: () => _logout(context),
                         theme: 'light',
+                        radius: 'semiround',
                       ),
                       const SizedBox(
                         width: 15,
@@ -75,6 +76,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                         text: 'Cancel',
                         onClick: () => Navigator.pop(context),
                         theme: 'light',
+                        radius: 'semiround',
                       )
                     ],
                   )

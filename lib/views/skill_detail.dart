@@ -364,9 +364,11 @@ class _SkillDetailState extends State<SkillDetail> {
                     height: 45,
                     child: Expanded(
                         child: Button(
-                            text: 'Save',
-                            onClick: () => _saveSkill(),
-                            theme: 'dark'))),
+                      text: 'Save',
+                      onClick: () => _saveSkill(),
+                      theme: 'dark',
+                      radius: 'semiround',
+                    ))),
               ),
             ],
           ),

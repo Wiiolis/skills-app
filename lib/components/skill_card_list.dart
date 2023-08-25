@@ -8,6 +8,7 @@ import '../api/api_service.dart';
 import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
+import 'button.dart';
 
 class SkillCardList extends StatefulWidget {
   final user;
@@ -112,31 +113,45 @@ class _SkillCardListState extends State<SkillCardList> {
           const SizedBox(
             height: 10,
           ),
-          FutureBuilder<dynamic>(
-            future: _modulesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final dropdownItems = snapshot.data ?? [];
-                return Dropdown(
-                  theme: 'light',
-                  dropdownItems: dropdownItems,
-                  selectedValue: selectedModuleVersionId,
-                  callback: (value) {
-                    setState(() {
-                      selectedModuleVersionId = value;
-                      _clinicalSkillsFuture = _getClinicalSkills(value);
-                      getFilteredSkills();
-                      _searchController.clear();
-                    });
-                  },
-                  valueName: 'moduleVersionId',
-                );
-              }
-            },
+          Row(
+            children: [
+              FutureBuilder<dynamic>(
+                future: _modulesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final dropdownItems = snapshot.data ?? [];
+                    return Dropdown(
+                      theme: 'light',
+                      dropdownItems: dropdownItems,
+                      selectedValue: selectedModuleVersionId,
+                      callback: (value) {
+                        setState(() {
+                          selectedModuleVersionId = value;
+                          _clinicalSkillsFuture = _getClinicalSkills(value);
+                          getFilteredSkills();
+                          _searchController.clear();
+                        });
+                      },
+                      valueName: 'moduleVersionId',
+                    );
+                  }
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Button(
+                  text: 'Completed',
+                  onClick: () => {},
+                  theme: 'transparent-dark',
+                  radius: 'round',
+                  width: 110,
+                  height: 35),
+            ],
           ),
           const SizedBox(
             height: 10,
