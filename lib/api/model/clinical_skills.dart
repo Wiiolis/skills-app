@@ -1,16 +1,16 @@
-// To parse this JSON data, do
-//
-//     final clinicalSkills = clinicalSkillsFromJson(jsonString);
-
 import 'dart:convert';
 
 class ClinicalSkills {
   String? name;
+  String? level;
+  String? module;
   Assessment? assessment;
   int? clinicalSkillId;
 
   ClinicalSkills({
     this.name,
+    this.level,
+    this.module,
     this.assessment,
     this.clinicalSkillId,
   });
@@ -22,6 +22,8 @@ class ClinicalSkills {
 
   factory ClinicalSkills.fromJson(Map<String, dynamic> json) => ClinicalSkills(
         name: json["name"],
+        level: json["level"],
+        module: json["module"],
         assessment: json["assessment"] == null
             ? null
             : Assessment.fromJson(json["assessment"]),
@@ -30,6 +32,8 @@ class ClinicalSkills {
 
   Map<String, dynamic> toJson() => {
         "name": name,
+        "level": level,
+        "module": module,
         "assessment": assessment?.toJson(),
         "clinical_skill_id": clinicalSkillId,
       };
@@ -68,7 +72,7 @@ class Assessment {
         "level": level,
         "instructor": instructor?.toJson(),
         "assessment_date":
-            "${assessmentDate!.year.toString().padLeft(4, '0')}.${assessmentDate!.month.toString().padLeft(2, '0')}.${assessmentDate!.day.toString().padLeft(2, '0')}",
+            "${assessmentDate!.year.toString().padLeft(4, '0')}-${assessmentDate!.month.toString().padLeft(2, '0')}-${assessmentDate!.day.toString().padLeft(2, '0')}",
         "module_version_id": moduleVersionId,
       };
 }

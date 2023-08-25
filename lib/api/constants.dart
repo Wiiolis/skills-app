@@ -4,6 +4,7 @@ class ApiConstants {
   static late String clinicalSkills;
   static String modules = 'module_versions';
   static String instructors = 'clinical_instructors';
+  static late String clinicalSkill;
 
   static initializeUserEndpoint(int userId) {
     userEndpoint = 'users/$userId';
@@ -11,5 +12,9 @@ class ApiConstants {
 
   static initializeClinicalSkills(int moduleVersionId) {
     clinicalSkills = 'modules/$moduleVersionId/clinical_skills';
+  }
+
+  static initializeClinicalSkill(int moduleVersionId, int skillId) {
+    clinicalSkill = 'modules/$moduleVersionId/clinical_skills/$skillId';
   }
 }

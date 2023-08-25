@@ -24,7 +24,6 @@ class ApiService {
     await prefs.setInt('currentUserId', id);
   }
 
-  // LOGIN
   Future<void> login(body) async {
     String url = "https://gamma.staging.candena.de/api/v1/sessions";
 
@@ -43,9 +42,12 @@ class ApiService {
         final loginData = Login.fromJson(responseData);
 
         saveCurrentUserId(loginData.userId);
+      } else {
+        throw response.statusCode; // Throw your specific error code
       }
     } catch (e) {
       log('Error logging in: $e');
+      throw 401; // Throw your specific error code
     }
   }
 
@@ -68,8 +70,8 @@ class ApiService {
           final user = User.fromJson(responseData);
 
           return user;
-        } else if (response.statusCode == 401) {
-          log('Unauthorized access');
+        } else {
+          log('error');
         }
       }
     } catch (e) {
@@ -170,5 +172,51 @@ class ApiService {
       log('Error getting instructors: $e');
     }
     return null;
+  }
+
+  // save clinical skills
+  Future<void> saveClinicalSkill(moduleVersionId, skillId, body) async {
+    ApiConstants.initializeClinicalSkill(moduleVersionId, skillId);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.clinicalSkill);
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        final response = await http.post(
+          url,
+          headers: <String, String>{'authorization': token},
+          body: body,
+        );
+
+        if (response.statusCode != 200) {
+          log('Unauthorized access');
+        }
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
+  }
+
+  Future<dynamic> getClinicalSkill(moduleVersionId, skillId) async {
+    ApiConstants.initializeClinicalSkill(moduleVersionId, skillId);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.clinicalSkill);
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        final response = await http
+            .get(url, headers: <String, String>{'authorization': token});
+
+        if (response.statusCode != 200) {
+          log('Unauthorized access');
+        }
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
   }
 }

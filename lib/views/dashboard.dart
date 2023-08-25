@@ -5,9 +5,9 @@ import 'package:demo_app/components/bottom_navigation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'api/api_service.dart';
+import '../api/api_service.dart';
 import 'documents.dart';
-import 'globals.dart';
+import '../globals.dart';
 import 'info.dart';
 
 class Dashboard extends StatefulWidget {

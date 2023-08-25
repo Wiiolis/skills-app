@@ -8,14 +8,16 @@ class Dropdown extends StatefulWidget {
   final List<dynamic> dropdownItems;
   int selectedValue;
   var valueName;
-  final DropdownCallback callback; // Add callback property
+  final DropdownCallback callback;
+  String theme = 'light'; //light or dark
 
   Dropdown({
     Key? key,
     required this.dropdownItems,
     required this.selectedValue,
     required this.valueName,
-    required this.callback, // Initialize callback in the constructor
+    required this.callback,
+    required this.theme,
   }) : super(key: key);
 
   @override
@@ -32,10 +34,14 @@ class _DropdownState extends State<Dropdown> {
         padding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: widget.theme == 'dark'
+                  ? AppColors.placeholderColor
+                  : Colors.white),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: DropdownButton<int>(
-          // Change the DropdownButton type to int
+          focusColor: Colors.transparent,
           iconEnabledColor: AppColors.primaryColor,
           isExpanded: true,
           hint: const Text(
@@ -46,9 +52,13 @@ class _DropdownState extends State<Dropdown> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          style: const TextStyle(
+          style: TextStyle(
+            fontWeight:
+                widget.theme == 'dark' ? FontWeight.w400 : FontWeight.w600,
             fontSize: 14,
-            color: AppColors.darkGrayColor,
+            color: widget.theme == 'dark'
+                ? AppColors.darkGrayColor
+                : AppColors.primaryColor,
           ),
           underline: const SizedBox(),
           value: widget.selectedValue,
@@ -62,10 +72,9 @@ class _DropdownState extends State<Dropdown> {
           }).toList(),
           onChanged: (newValue) {
             setState(() {
-              widget.selectedValue = newValue!; // Update the selected value
+              widget.selectedValue = newValue!;
             });
-            widget.callback(
-                newValue!); // Call the callback function with the selected value
+            widget.callback(newValue!);
           },
         ),
       ),

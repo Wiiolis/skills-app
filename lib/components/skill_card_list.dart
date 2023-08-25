@@ -1,13 +1,13 @@
-import 'package:demo_app/components/dropdown.dart';
-import 'package:demo_app/components/skill_card.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../api/api_service.dart';
 import '../globals.dart';
+import '../components/dropdown.dart';
+import '../components/skill_card.dart';
 
 class SkillCardList extends StatefulWidget {
   final user;
@@ -21,8 +21,12 @@ class SkillCardList extends StatefulWidget {
 class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _clinicalSkillsFuture = Future<dynamic>.value([]);
   late Future<dynamic> _modulesFuture;
-  int selectedValue = 0;
+  int selectedModuleVersionId = 0;
   late bool hospitalAssigned = false;
+
+  TextEditingController _searchController = TextEditingController();
+  List<dynamic> clinicalSkills = [];
+  List<dynamic> filteredSkills = [];
 
   @override
   void initState() {
@@ -31,14 +35,27 @@ class _SkillCardListState extends State<SkillCardList> {
     _modulesFuture.then((value) async {
       await getselectedValueId(value);
       setState(() {
-        _clinicalSkillsFuture = _getClinicalSkills(selectedValue);
+        _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
       });
+
+      getFilteredSkills();
     });
+
+    filterSkills(null);
+  }
+
+  getFilteredSkills() {
+    return _clinicalSkillsFuture.then((value) => {
+          setState(() {
+            clinicalSkills = value;
+            filteredSkills = List.from(clinicalSkills);
+          })
+        });
   }
 
   Future<void> getselectedValueId(module) async {
     setState(() {
-      selectedValue = module[0].moduleVersionId;
+      selectedModuleVersionId = module[0].moduleVersionId;
     });
   }
 
@@ -56,15 +73,44 @@ class _SkillCardListState extends State<SkillCardList> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 5),
-            child: Text(
-              'Skills Catalogue',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          // Search Bar
+          SizedBox(
+            height: 35,
+            child: TextField(
+              textAlignVertical: TextAlignVertical.center,
+              controller: _searchController,
+              onChanged: (value) {
+                filterSkills(value);
+              },
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.primaryColor,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.white,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(18)),
+                  borderSide: BorderSide(color: AppColors.primaryLightColor),
+                ),
+                fillColor: Colors.white,
+                filled: true,
+                hintText: 'Search skill by name',
+                hintStyle: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.lightGrayColor,
+                ),
+              ),
             ),
           ),
           const SizedBox(
-            height: 5,
+            height: 10,
           ),
           FutureBuilder<dynamic>(
             future: _modulesFuture,
@@ -76,12 +122,15 @@ class _SkillCardListState extends State<SkillCardList> {
               } else {
                 final dropdownItems = snapshot.data ?? [];
                 return Dropdown(
+                  theme: 'light',
                   dropdownItems: dropdownItems,
-                  selectedValue: selectedValue,
+                  selectedValue: selectedModuleVersionId,
                   callback: (value) {
                     setState(() {
-                      selectedValue = value;
+                      selectedModuleVersionId = value;
                       _clinicalSkillsFuture = _getClinicalSkills(value);
+                      getFilteredSkills();
+                      _searchController.clear();
                     });
                   },
                   valueName: 'moduleVersionId',
@@ -90,25 +139,43 @@ class _SkillCardListState extends State<SkillCardList> {
             },
           ),
           const SizedBox(
+            height: 10,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: Text(
+              'Skills Catalogue',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+          ),
+          const SizedBox(
             height: 5,
           ),
           FutureBuilder<dynamic>(
             future: _clinicalSkillsFuture,
             builder: (context, snapshot) {
-              final clinicalSkills = snapshot.data;
-              if (clinicalSkills == null) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
               } else {
                 return Flexible(
                   child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: clinicalSkills?.length ?? 0,
+                    itemCount: filteredSkills.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                          onTap: () {
-                            context.go("/skill-detail");
-                          },
-                          child: SkillCard(data: clinicalSkills![index]));
+                        onTap: () {
+                          context.goNamed("skillDetail", pathParameters: {
+                            "moduleVersionId":
+                                selectedModuleVersionId.toString(),
+                            "skillId":
+                                filteredSkills[index].clinicalSkillId.toString()
+                          }, queryParameters: {
+                            "level": filteredSkills[index].level
+                          });
+                        },
+                        child: SkillCard(data: filteredSkills[index]),
+                      );
                     },
                   ),
                 );
@@ -181,6 +248,21 @@ class _SkillCardListState extends State<SkillCardList> {
           ),
         ),
       );
+    }
+  }
+
+  void filterSkills(String? query) {
+    if (query == null || query.isEmpty) {
+      setState(() {
+        filteredSkills =
+            List.from(clinicalSkills); // Reset filteredSkills to all skills
+      });
+    } else {
+      setState(() {
+        filteredSkills = clinicalSkills.where((skill) {
+          return skill.name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
     }
   }
 }

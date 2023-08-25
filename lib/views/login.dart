@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'api/api_service.dart';
-import 'components/my_textfield.dart';
+import '../api/api_service.dart';
+import '../components/my_textfield.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'globals.dart';
+import '../globals.dart';
 
 class Login extends StatefulWidget {
   final String apiBaseUrl;
@@ -21,6 +21,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  String errorMessage = '';
 
   @override
   void initState() {
@@ -36,9 +37,25 @@ class _LoginState extends State<Login> {
       "password": passwordController.text,
     });
 
-    await ApiService().login(body).then((value) => {
-          if (prefs.getString('token') != null) {context.go("/")}
-        });
+    await ApiService()
+        .login(body)
+        .then(
+          (value) => {
+            errorMessage = '',
+            if (prefs.getString('token') != null)
+              {
+                context.goNamed("home"),
+              }
+          },
+        )
+        .catchError((error) => {
+              setState(() {
+                error == 401
+                    ? errorMessage = 'Wrong credentials'
+                    : errorMessage = 'Error logging in';
+                errorMessage = 'Wrong credentials';
+              })
+            });
   }
 
   Future<String?> _getUserToken() async {
@@ -51,7 +68,7 @@ class _LoginState extends State<Login> {
     var userToken = await _getUserToken();
 
     if (userToken != null) {
-      context.push('/');
+      context.goNamed('home');
     }
   }
 
@@ -109,7 +126,7 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                           const Text(
-                              'To begin mastering your critical skills, login with your platform credentials below.',
+                              'To begin mastering your clinical skills, login with your platform credentials below.',
                               textAlign: TextAlign.center),
                           const SizedBox(
                             height: 20,
@@ -130,6 +147,15 @@ class _LoginState extends State<Login> {
                                   obscureText: true,
                                   label: 'Password',
                                 ),
+                                errorMessage != ''
+                                    ? Text(
+                                        errorMessage,
+                                        style: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 213, 93, 91),
+                                        ),
+                                      )
+                                    : SizedBox(),
                                 const SizedBox(
                                   height: 10,
                                 ),
