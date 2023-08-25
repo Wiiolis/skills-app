@@ -24,6 +24,7 @@ class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _modulesFuture;
   int selectedModuleVersionId = 0;
   late bool hospitalAssigned = false;
+  bool filterCompletedSkills = false;
 
   TextEditingController _searchController = TextEditingController();
   List<dynamic> clinicalSkills = [];
@@ -141,12 +142,12 @@ class _SkillCardListState extends State<SkillCardList> {
                   }
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Button(
                   text: 'Completed',
-                  onClick: () => {},
+                  onClick: () => filterSkills(null),
                   theme: 'transparent-dark',
                   radius: 'round',
                   width: 110,
@@ -267,16 +268,51 @@ class _SkillCardListState extends State<SkillCardList> {
   }
 
   void filterSkills(String? query) {
-    if (query == null || query.isEmpty) {
+    List copyClinicalSkills = clinicalSkills;
+
+    if (filterCompletedSkills == true) {
+      var skills = [];
+
+      for (var skill in copyClinicalSkills) {
+        if (skill.assessment != null) {
+          skills.add(skill);
+        }
+      }
+
+      copyClinicalSkills = skills;
+
+      if (query == null || query.isEmpty) {
+        setState(() {
+          filteredSkills = List.from(
+              copyClinicalSkills); // Reset filteredSkills to all skills
+        });
+      } else {
+        setState(() {
+          filteredSkills = copyClinicalSkills.where((skill) {
+            return skill.name.toLowerCase().contains(query.toLowerCase());
+          }).toList();
+        });
+      }
+
       setState(() {
-        filteredSkills =
-            List.from(clinicalSkills); // Reset filteredSkills to all skills
+        filterCompletedSkills = false;
       });
     } else {
+      if (query == null || query.isEmpty) {
+        setState(() {
+          filteredSkills =
+              List.from(clinicalSkills); // Reset filteredSkills to all skills
+        });
+      } else {
+        setState(() {
+          filteredSkills = clinicalSkills.where((skill) {
+            return skill.name.toLowerCase().contains(query.toLowerCase());
+          }).toList();
+        });
+      }
+
       setState(() {
-        filteredSkills = clinicalSkills.where((skill) {
-          return skill.name.toLowerCase().contains(query.toLowerCase());
-        }).toList();
+        filterCompletedSkills = true;
       });
     }
   }
