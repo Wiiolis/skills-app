@@ -29,6 +29,7 @@ class _SkillCardListState extends State<SkillCardList> {
   TextEditingController _searchController = TextEditingController();
   List<dynamic> clinicalSkills = [];
   List<dynamic> filteredSkills = [];
+  List<dynamic> copyClinicalSkills = [];
 
   @override
   void initState() {
@@ -42,8 +43,6 @@ class _SkillCardListState extends State<SkillCardList> {
 
       getFilteredSkills();
     });
-
-    filterSkills(null);
   }
 
   getFilteredSkills() {
@@ -82,7 +81,15 @@ class _SkillCardListState extends State<SkillCardList> {
               textAlignVertical: TextAlignVertical.center,
               controller: _searchController,
               onChanged: (value) {
-                filterSkills(value);
+                if (filterCompletedSkills) {
+                  filterSkills(
+                      value,
+                      clinicalSkills
+                          .where((skill) => skill.assessment != null)
+                          .toList());
+                } else {
+                  filterSkills(value, copyClinicalSkills);
+                }
               },
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.zero,
@@ -134,6 +141,7 @@ class _SkillCardListState extends State<SkillCardList> {
                           selectedModuleVersionId = value;
                           _clinicalSkillsFuture = _getClinicalSkills(value);
                           getFilteredSkills();
+                          filterCompletedSkills = false;
                           _searchController.clear();
                         });
                       },
@@ -147,8 +155,10 @@ class _SkillCardListState extends State<SkillCardList> {
               ),
               Button(
                   text: 'Completed',
-                  onClick: () => filterSkills(null),
-                  theme: 'transparent-dark',
+                  onClick: () => switchCompletedFilter(),
+                  theme: filterCompletedSkills == true
+                      ? 'dark'
+                      : 'transparent-dark',
                   radius: 'round',
                   width: 110,
                   height: 35),
@@ -267,52 +277,28 @@ class _SkillCardListState extends State<SkillCardList> {
     }
   }
 
-  void filterSkills(String? query) {
-    List copyClinicalSkills = clinicalSkills;
+  void switchCompletedFilter() {
+    if (!filterCompletedSkills) {
+      var completedSkills =
+          clinicalSkills.where((skill) => skill.assessment != null).toList();
+      filterSkills(_searchController.text, completedSkills);
+      filterCompletedSkills = true;
+    } else {
+      filterSkills(_searchController.text, copyClinicalSkills);
+      filterCompletedSkills = false;
+    }
+  }
 
-    if (filterCompletedSkills == true) {
-      var skills = [];
-
-      for (var skill in copyClinicalSkills) {
-        if (skill.assessment != null) {
-          skills.add(skill);
-        }
-      }
-
-      copyClinicalSkills = skills;
-
-      if (query == null || query.isEmpty) {
-        setState(() {
-          filteredSkills = List.from(
-              copyClinicalSkills); // Reset filteredSkills to all skills
-        });
-      } else {
-        setState(() {
-          filteredSkills = copyClinicalSkills.where((skill) {
-            return skill.name.toLowerCase().contains(query.toLowerCase());
-          }).toList();
-        });
-      }
-
+  void filterSkills(String query, List<dynamic> skillsList) {
+    if (query.isEmpty) {
       setState(() {
-        filterCompletedSkills = false;
+        filteredSkills = List.from(skillsList);
       });
     } else {
-      if (query == null || query.isEmpty) {
-        setState(() {
-          filteredSkills =
-              List.from(clinicalSkills); // Reset filteredSkills to all skills
-        });
-      } else {
-        setState(() {
-          filteredSkills = clinicalSkills.where((skill) {
-            return skill.name.toLowerCase().contains(query.toLowerCase());
-          }).toList();
-        });
-      }
-
       setState(() {
-        filterCompletedSkills = true;
+        filteredSkills = skillsList.where((skill) {
+          return skill.name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
       });
     }
   }
