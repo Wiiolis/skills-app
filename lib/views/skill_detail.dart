@@ -72,8 +72,6 @@ class _SkillDetailState extends State<SkillDetail> {
       "date": dateInput.text,
     });
 
-    print([body, 'body']);
-
     try {
       return ApiService()
           .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body)
