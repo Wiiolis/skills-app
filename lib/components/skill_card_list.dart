@@ -8,6 +8,7 @@ import '../api/api_service.dart';
 import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
+import 'button.dart';
 
 class SkillCardList extends StatefulWidget {
   final user;
@@ -23,10 +24,12 @@ class _SkillCardListState extends State<SkillCardList> {
   late Future<dynamic> _modulesFuture;
   int selectedModuleVersionId = 0;
   late bool hospitalAssigned = false;
+  bool filterCompletedSkills = false;
 
   TextEditingController _searchController = TextEditingController();
   List<dynamic> clinicalSkills = [];
   List<dynamic> filteredSkills = [];
+  List<dynamic> copyClinicalSkills = [];
 
   @override
   void initState() {
@@ -40,17 +43,42 @@ class _SkillCardListState extends State<SkillCardList> {
 
       getFilteredSkills();
     });
-
-    filterSkills(null);
   }
 
   getFilteredSkills() {
-    return _clinicalSkillsFuture.then((value) => {
-          setState(() {
-            clinicalSkills = value;
-            filteredSkills = List.from(clinicalSkills);
-          })
-        });
+    return _clinicalSkillsFuture.then((value) {
+      setState(() {
+        clinicalSkills = value;
+        filteredSkills = List.from(clinicalSkills);
+        copyClinicalSkills = List.from(clinicalSkills);
+      });
+    });
+  }
+
+  void switchCompletedFilter() {
+    if (!filterCompletedSkills) {
+      var completedSkills =
+          clinicalSkills.where((skill) => skill.assessment != null).toList();
+      filterSkills(_searchController.text, completedSkills);
+      filterCompletedSkills = true;
+    } else {
+      filterSkills(_searchController.text, copyClinicalSkills);
+      filterCompletedSkills = false;
+    }
+  }
+
+  void filterSkills(String query, List<dynamic> skillsList) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredSkills = List.from(skillsList);
+      });
+    } else {
+      setState(() {
+        filteredSkills = skillsList.where((skill) {
+          return skill.name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
+    }
   }
 
   Future<void> getselectedValueId(module) async {
@@ -80,7 +108,15 @@ class _SkillCardListState extends State<SkillCardList> {
               textAlignVertical: TextAlignVertical.center,
               controller: _searchController,
               onChanged: (value) {
-                filterSkills(value);
+                if (filterCompletedSkills) {
+                  filterSkills(
+                      value,
+                      clinicalSkills
+                          .where((skill) => skill.assessment != null)
+                          .toList());
+                } else {
+                  filterSkills(value, copyClinicalSkills);
+                }
               },
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.zero,
@@ -112,31 +148,48 @@ class _SkillCardListState extends State<SkillCardList> {
           const SizedBox(
             height: 10,
           ),
-          FutureBuilder<dynamic>(
-            future: _modulesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final dropdownItems = snapshot.data ?? [];
-                return Dropdown(
-                  theme: 'light',
-                  dropdownItems: dropdownItems,
-                  selectedValue: selectedModuleVersionId,
-                  callback: (value) {
-                    setState(() {
-                      selectedModuleVersionId = value;
-                      _clinicalSkillsFuture = _getClinicalSkills(value);
-                      getFilteredSkills();
-                      _searchController.clear();
-                    });
-                  },
-                  valueName: 'moduleVersionId',
-                );
-              }
-            },
+          Row(
+            children: [
+              FutureBuilder<dynamic>(
+                future: _modulesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final dropdownItems = snapshot.data ?? [];
+                    return Dropdown(
+                      theme: 'light',
+                      dropdownItems: dropdownItems,
+                      selectedValue: selectedModuleVersionId,
+                      callback: (value) {
+                        setState(() {
+                          selectedModuleVersionId = value;
+                          _clinicalSkillsFuture = _getClinicalSkills(value);
+                          getFilteredSkills();
+                          filterCompletedSkills = false;
+                          _searchController.clear();
+                        });
+                      },
+                      valueName: 'moduleVersionId',
+                    );
+                  }
+                },
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Button(
+                  text: 'Completed',
+                  onClick: () => switchCompletedFilter(),
+                  theme: filterCompletedSkills == true
+                      ? 'dark'
+                      : 'transparent-dark',
+                  radius: 'round',
+                  width: 110,
+                  height: 35),
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -248,21 +301,6 @@ class _SkillCardListState extends State<SkillCardList> {
           ),
         ),
       );
-    }
-  }
-
-  void filterSkills(String? query) {
-    if (query == null || query.isEmpty) {
-      setState(() {
-        filteredSkills =
-            List.from(clinicalSkills); // Reset filteredSkills to all skills
-      });
-    } else {
-      setState(() {
-        filteredSkills = clinicalSkills.where((skill) {
-          return skill.name.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-      });
     }
   }
 }
