@@ -11,6 +11,7 @@ import 'package:signature/signature.dart';
 
 import '../api/api_service.dart';
 import '../components/dropdown.dart';
+import '../components/dropdown2.dart';
 import '../globals.dart';
 
 class SkillDetail extends StatefulWidget {
@@ -39,6 +40,8 @@ class _SkillDetailState extends State<SkillDetail> {
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
   int selectedInstructorId = 0;
+  String selectedRole = 'One';
+  List<String> roles = <String>['One', 'Two', 'Three', 'Four'];
 
   @override
   void initState() {
@@ -69,6 +72,7 @@ class _SkillDetailState extends State<SkillDetail> {
     var body = jsonEncode({
       "instructor_id": selectedInstructorId,
       "level": widget.level,
+      "role": selectedRole,
       "date": dateInput.text,
     });
 
@@ -169,10 +173,9 @@ class _SkillDetailState extends State<SkillDetail> {
                 child: Text(
                     'Lorem ipsum dolor sit amet and some other very very boring text that no one understands.'),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Row(
-                  children: [
+              Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Row(children: [
                     Expanded(
                       flex: 2,
                       child: Text('Role'),
@@ -182,14 +185,18 @@ class _SkillDetailState extends State<SkillDetail> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: Text(
-                        'Assistant M3',
-                        style: TextStyle(fontWeight: FontWeight.w700),
+                      child: Dropdown2(
+                        callback: (selectedItem) {
+                          setState(() {
+                            selectedRole = selectedItem;
+                          });
+                        },
+                        dropdownItems: roles,
+                        selectedItem: selectedRole,
+                        valueName: 'name',
                       ),
-                    )
-                  ],
-                ),
-              ),
+                    ),
+                  ])),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
@@ -280,16 +287,16 @@ class _SkillDetailState extends State<SkillDetail> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
-                                return Dropdown(
-                                  dropdownItems: dropdownItems,
-                                  selectedValue: selectedInstructorId,
+                                return Dropdown2(
+                                  dropdownItems:
+                                      dropdownItems, // Replace with actual instructor data
+                                  selectedItem: selectedInstructorId,
                                   callback: (value) {
                                     setState(() {
                                       selectedInstructorId = value;
                                     });
                                   },
                                   valueName: 'instructorId',
-                                  theme: 'dark',
                                 );
                               }
                             },
