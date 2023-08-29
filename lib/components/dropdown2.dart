@@ -24,6 +24,16 @@ class Dropdown2 extends StatefulWidget {
   State<Dropdown2> createState() => _Dropdown2State();
 }
 
+getValue(dynamic value, String valueName) {
+  if (valueName == 'instructorId') {
+    return value.instructorId;
+  } else if (valueName == 'moduleVersionId') {
+    return value.moduleVersionId;
+  } else {
+    return value;
+  }
+}
+
 class _Dropdown2State extends State<Dropdown2> {
   @override
   Widget build(BuildContext context) {
@@ -54,10 +64,9 @@ class _Dropdown2State extends State<Dropdown2> {
             value: widget.selectedItem,
             items: widget.dropdownItems.map((dynamic value) {
               return DropdownMenuItem<dynamic>(
-                value: widget.valueName == 'instructorId'
-                    ? value.instructorId
-                    : value,
-                child: Text(valueName(value)), // Use a function to extract name
+                value: getValue(value, widget.valueName),
+                child:
+                    Text(getValueText(value)), // Use a function to extract name
               );
             }).toList(),
             onChanged: (newValue) {
@@ -70,7 +79,7 @@ class _Dropdown2State extends State<Dropdown2> {
         ));
   }
 
-  String valueName(dynamic value) {
+  String getValueText(dynamic value) {
     if (value is String) {
       return value;
     } else if (value is Map<String, dynamic>) {

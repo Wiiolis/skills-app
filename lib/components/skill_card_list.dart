@@ -9,6 +9,7 @@ import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
 import 'button.dart';
+import 'dropdown2.dart';
 
 class SkillCardList extends StatefulWidget {
   final user;
@@ -159,10 +160,9 @@ class _SkillCardListState extends State<SkillCardList> {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final dropdownItems = snapshot.data ?? [];
-                    return Dropdown(
-                      theme: 'light',
+                    return Dropdown2(
                       dropdownItems: dropdownItems,
-                      selectedValue: selectedModuleVersionId,
+                      selectedItem: selectedModuleVersionId,
                       callback: (value) {
                         setState(() {
                           selectedModuleVersionId = value;
