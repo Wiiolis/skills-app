@@ -11,7 +11,7 @@ import 'package:signature/signature.dart';
 
 import '../api/api_service.dart';
 import '../components/dropdown.dart';
-import '../components/dropdown2.dart';
+import '../components/dropdown.dart';
 import '../globals.dart';
 
 class SkillDetail extends StatefulWidget {
@@ -40,8 +40,12 @@ class _SkillDetailState extends State<SkillDetail> {
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
   int selectedInstructorId = 0;
-  String selectedRole = 'One';
-  List<String> roles = <String>['One', 'Two', 'Three', 'Four'];
+  String selectedRole = 'Assistant';
+  List<String> roles = <String>[
+    'Assistant',
+    'Transition to Observer',
+    'Transition to Performer'
+  ];
 
   @override
   void initState() {

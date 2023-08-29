@@ -1,83 +1,91 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../globals.dart';
 
-typedef DropdownCallback = void Function(int selectedValue);
+typedef DropdownCallback = void Function(dynamic selectedItem);
 
-class Dropdown extends StatefulWidget {
+class Dropdown2 extends StatefulWidget {
   final List<dynamic> dropdownItems;
-  int selectedValue;
-  var valueName;
+  var selectedItem;
   final DropdownCallback callback;
-  String theme = 'light'; //light or dark
+  final String valueName;
 
-  Dropdown({
+  Dropdown2({
     Key? key,
     required this.dropdownItems,
-    required this.selectedValue,
+    required this.selectedItem,
     required this.valueName,
     required this.callback,
-    required this.theme,
   }) : super(key: key);
 
   @override
-  State<Dropdown> createState() => _DropdownState();
+  State<Dropdown2> createState() => _Dropdown2State();
 }
 
-class _DropdownState extends State<Dropdown> {
+getValue(dynamic value, String valueName) {
+  if (valueName == 'instructorId') {
+    return value.instructorId;
+  } else if (valueName == 'moduleVersionId') {
+    return value.moduleVersionId;
+  } else {
+    return value;
+  }
+}
+
+class _Dropdown2State extends State<Dropdown2> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 150,
-      height: 35,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-              color: widget.theme == 'dark'
-                  ? AppColors.placeholderColor
-                  : Colors.white),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: DropdownButton<int>(
-          focusColor: Colors.transparent,
-          iconEnabledColor: AppColors.primaryColor,
-          isExpanded: true,
-          hint: const Text(
-            'Module 1 (Current Module)',
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.w600,
+        width: 150,
+        height: 40,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(15, 0, 8, 0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: AppColors.placeholderColor),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: DropdownButton(
+            focusColor: Colors.transparent,
+            iconEnabledColor: AppColors.primaryColor,
+            isExpanded: true,
+            hint: const Text(
+              'Role',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: AppColors.darkGrayColor,
+              ),
             ),
+            style:
+                const TextStyle(fontSize: 14, color: AppColors.darkGrayColor),
+            underline: const SizedBox(),
+            value: widget.selectedItem,
+            items: widget.dropdownItems.map((dynamic value) {
+              return DropdownMenuItem<dynamic>(
+                value: getValue(value, widget.valueName),
+                child:
+                    Text(getValueText(value)), // Use a function to extract name
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                widget.selectedItem = newValue!;
+              });
+              widget.callback(newValue!);
+            },
           ),
-          style: TextStyle(
-            fontWeight:
-                widget.theme == 'dark' ? FontWeight.w400 : FontWeight.w600,
-            fontSize: 14,
-            color: widget.theme == 'dark'
-                ? AppColors.darkGrayColor
-                : AppColors.primaryColor,
-          ),
-          underline: const SizedBox(),
-          value: widget.selectedValue,
-          items: widget.dropdownItems.map((dynamic value) {
-            return DropdownMenuItem<int>(
-              value: widget.valueName == 'moduleVersionId'
-                  ? value.moduleVersionId
-                  : value.instructorId,
-              child: Text(value.name),
-            );
-          }).toList(),
-          onChanged: (newValue) {
-            setState(() {
-              widget.selectedValue = newValue!;
-            });
-            widget.callback(newValue!);
-          },
-        ),
-      ),
-    );
+        ));
+  }
+
+  String getValueText(dynamic value) {
+    if (value is String) {
+      return value;
+    } else if (value is Map<String, dynamic>) {
+      return value['name'];
+    } else {
+      return value.name.toString();
+    }
   }
 }

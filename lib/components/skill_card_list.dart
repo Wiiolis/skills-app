@@ -9,7 +9,7 @@ import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
 import 'button.dart';
-import 'dropdown2.dart';
+import 'dropdown.dart';
 
 class SkillCardList extends StatefulWidget {
   final user;
