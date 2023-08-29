@@ -224,7 +224,15 @@ class _SkillCardListState extends State<SkillCardList> {
                             "skillId":
                                 filteredSkills[index].clinicalSkillId.toString()
                           }, queryParameters: {
-                            "level": filteredSkills[index].level
+                            "level": filteredSkills[index].level,
+                            "instructorId":
+                                filteredSkills[index].assessment != null
+                                    ? filteredSkills[index]
+                                        .assessment
+                                        .instructor
+                                        .instructorId
+                                        .toString()
+                                    : null
                           });
                         },
                         child: SkillCard(data: filteredSkills[index]),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:demo_app/components/button.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,14 @@ class SkillDetail extends StatefulWidget {
   final int moduleVersionId;
   final int skillId;
   final String? level;
+  final int? instructorId;
 
   const SkillDetail({
     Key? key,
     required this.moduleVersionId,
     required this.skillId,
     required this.level,
+    this.instructorId,
   }) : super(key: key);
 
   @override
@@ -66,9 +69,11 @@ class _SkillDetailState extends State<SkillDetail> {
     return ApiService().getInstructors();
   }
 
-  getDefaultDropdownValueId(instructor) {
+  getDefaultDropdownValueId(value) {
     setState(() {
-      selectedInstructorId = instructor[0].instructorId;
+      selectedInstructorId = widget.instructorId != null
+          ? widget.instructorId
+          : value[0].instructorId;
     });
   }
 

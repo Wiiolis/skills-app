@@ -17,6 +17,8 @@ class ApiService {
     String ba = "Basic ${base64.encode(utf8.encode('$token:'))}";
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', ba);
+
+    print(ba);
   }
 
   Future saveCurrentUserId(int id) async {
