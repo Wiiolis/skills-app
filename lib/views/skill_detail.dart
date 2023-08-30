@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:demo_app/components/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+//import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
@@ -145,15 +144,13 @@ class _SkillDetailState extends State<SkillDetail> {
       return;
     }
 
-    final SvgPicture data = _controller.toSVG()!;
+    //final SvgPicture data = _controller.toSVG()!;
 
     if (!mounted) return;
   }
 
   @override
   Widget build(BuildContext context) {
-    String? initialLevel = getCurrentUserLevel(); // Get the initial level
-
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
@@ -198,13 +195,13 @@ class _SkillDetailState extends State<SkillDetail> {
                     'Lorem ipsum dolor sit amet and some other very very boring text that no one understands.'),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(children: [
-                  Expanded(
+                  const Expanded(
                     flex: 2,
                     child: Text('level'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Expanded(
@@ -215,8 +212,8 @@ class _SkillDetailState extends State<SkillDetail> {
                           selectedLevel = selectedItem;
                         });
                       },
-                      dropdownItems: levels, // Pass your levels list here
-                      selectedItem: initialLevel, // Use the initial level here
+                      dropdownItems: levels,
+                      selectedItem: selectedLevel,
                       valueName: 'level',
                     ),
                   ),
