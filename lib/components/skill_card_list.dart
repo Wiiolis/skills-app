@@ -218,22 +218,28 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          context.goNamed("skillDetail", pathParameters: {
-                            "moduleVersionId":
-                                selectedModuleVersionId.toString(),
-                            "skillId":
-                                filteredSkills[index].clinicalSkillId.toString()
-                          }, queryParameters: {
-                            "level": filteredSkills[index].level,
-                            "instructorId":
-                                filteredSkills[index].assessment != null
-                                    ? filteredSkills[index]
-                                        .assessment
-                                        .instructor
-                                        .instructorId
-                                        .toString()
-                                    : null
-                          });
+                          context.goNamed(
+                            "skillDetail",
+                            pathParameters: {
+                              "moduleVersionId":
+                                  selectedModuleVersionId.toString(),
+                              "skillId": filteredSkills[index]
+                                  .clinicalSkillId
+                                  .toString(),
+                            },
+                            queryParameters: {
+                              "level": filteredSkills[index]
+                                  .level, // Pass the selected level
+                              "instructorId":
+                                  filteredSkills[index].assessment != null
+                                      ? filteredSkills[index]
+                                          .assessment
+                                          .instructor
+                                          .instructorId
+                                          .toString()
+                                      : null,
+                            },
+                          );
                         },
                         child: SkillCard(data: filteredSkills[index]),
                       );

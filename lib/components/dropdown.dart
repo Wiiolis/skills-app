@@ -30,7 +30,7 @@ getValue(dynamic value, String valueName) {
   } else if (valueName == 'moduleVersionId') {
     return value.moduleVersionId;
   } else {
-    return value;
+    return value['level'];
   }
 }
 
@@ -65,8 +65,7 @@ class _Dropdown2State extends State<Dropdown2> {
             items: widget.dropdownItems.map((dynamic value) {
               return DropdownMenuItem<dynamic>(
                 value: getValue(value, widget.valueName),
-                child:
-                    Text(getValueText(value)), // Use a function to extract name
+                child: Text(getValueText(value)),
               );
             }).toList(),
             onChanged: (newValue) {
@@ -79,7 +78,7 @@ class _Dropdown2State extends State<Dropdown2> {
         ));
   }
 
-  String getValueText(dynamic value) {
+  dynamic getValueText(dynamic value) {
     if (value is String) {
       return value;
     } else if (value is Map<String, dynamic>) {

@@ -12,7 +12,6 @@ import 'package:signature/signature.dart';
 
 import '../api/api_service.dart';
 import '../components/dropdown.dart';
-import '../components/dropdown.dart';
 import '../globals.dart';
 
 class SkillDetail extends StatefulWidget {
@@ -43,12 +42,14 @@ class _SkillDetailState extends State<SkillDetail> {
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
   int selectedInstructorId = 0;
-  String selectedRole = 'Assistant';
-  List<String> roles = <String>[
-    'Assistant',
-    'Transition to Observer',
-    'Transition to Performer'
+  String? selectedLevel;
+
+  List<Map<String, String>> levels = [
+    {'name': 'xx assistant', 'level': 'assistant'},
+    {'name': 'xx observer', 'level': 'observer'},
+    {'name': 'xx performer', 'level': 'performer'}
   ];
+  //List<String> levels = <String>['assistant', 'observer', 'performer'];
 
   @override
   void initState() {
@@ -63,6 +64,19 @@ class _SkillDetailState extends State<SkillDetail> {
         .format(DateTime.now())
         .toString()
         .split(' ')[0];
+
+    selectedLevel = widget.level;
+  }
+
+  String getCurrentUserLevel() {
+    if (widget.level != null) {
+      for (var levelData in levels) {
+        if (levelData['level'] == widget.level) {
+          return levelData['level']!;
+        }
+      }
+    }
+    return levels[0]['level']!; // Use the first level as a default value
   }
 
   Future<dynamic> _getInstructors() async {
@@ -80,8 +94,7 @@ class _SkillDetailState extends State<SkillDetail> {
   Future _saveSkill() async {
     var body = jsonEncode({
       "instructor_id": selectedInstructorId,
-      "level": widget.level,
-      "role": selectedRole,
+      "level": selectedLevel,
       "date": dateInput.text,
     });
 
@@ -139,6 +152,8 @@ class _SkillDetailState extends State<SkillDetail> {
 
   @override
   Widget build(BuildContext context) {
+    String? initialLevel = getCurrentUserLevel(); // Get the initial level
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
@@ -183,29 +198,30 @@ class _SkillDetailState extends State<SkillDetail> {
                     'Lorem ipsum dolor sit amet and some other very very boring text that no one understands.'),
               ),
               Padding(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Row(children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text('Role'),
+                padding: EdgeInsets.only(bottom: 10),
+                child: Row(children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text('level'),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Dropdown2(
+                      callback: (selectedItem) {
+                        setState(() {
+                          selectedLevel = selectedItem;
+                        });
+                      },
+                      dropdownItems: levels, // Pass your levels list here
+                      selectedItem: initialLevel, // Use the initial level here
+                      valueName: 'level',
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Dropdown2(
-                        callback: (selectedItem) {
-                          setState(() {
-                            selectedRole = selectedItem;
-                          });
-                        },
-                        dropdownItems: roles,
-                        selectedItem: selectedRole,
-                        valueName: 'name',
-                      ),
-                    ),
-                  ])),
+                  ),
+                ]),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
