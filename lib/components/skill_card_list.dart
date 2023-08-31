@@ -226,9 +226,9 @@ class _SkillCardListState extends State<SkillCardList> {
                                   .toString(),
                             },
                             queryParameters: {
-                              "level": filteredSkills[index]
-                                  .assessment
-                                  .level, // Pass the selected level
+                              "level":
+                                  filteredSkills[index].assessment?.level ??
+                                      'assistant', // Pass the selected level
                               "instructorId":
                                   filteredSkills[index].assessment != null
                                       ? filteredSkills[index]
