@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:demo_app/components/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+//import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
@@ -17,12 +17,14 @@ class SkillDetail extends StatefulWidget {
   final int moduleVersionId;
   final int skillId;
   final String? level;
+  final int? instructorId;
 
   const SkillDetail({
     Key? key,
     required this.moduleVersionId,
     required this.skillId,
     required this.level,
+    this.instructorId,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,14 @@ class _SkillDetailState extends State<SkillDetail> {
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
   int selectedInstructorId = 0;
+  String? selectedLevel;
+
+  List<Map<String, String>> levels = [
+    {'name': 'Assistant', 'level': 'assistant'},
+    {'name': 'Transition to Observer', 'level': 'observer'},
+    {'name': 'Transition to Performer', 'level': 'performer'}
+  ];
+  //List<String> levels = <String>['assistant', 'observer', 'performer'];
 
   @override
   void initState() {
@@ -53,22 +63,37 @@ class _SkillDetailState extends State<SkillDetail> {
         .format(DateTime.now())
         .toString()
         .split(' ')[0];
+
+    selectedLevel = widget.level;
+  }
+
+  String getCurrentUserLevel() {
+    if (widget.level != null) {
+      for (var levelData in levels) {
+        if (levelData['level'] == widget.level) {
+          return levelData['level']!;
+        }
+      }
+    }
+    return levels[0]['level']!; // Use the first level as a default value
   }
 
   Future<dynamic> _getInstructors() async {
     return ApiService().getInstructors();
   }
 
-  getDefaultDropdownValueId(instructor) {
+  getDefaultDropdownValueId(value) {
     setState(() {
-      selectedInstructorId = instructor[0].instructorId;
+      selectedInstructorId = widget.instructorId != null
+          ? widget.instructorId
+          : value[0].instructorId;
     });
   }
 
   Future _saveSkill() async {
     var body = jsonEncode({
       "instructor_id": selectedInstructorId,
-      "level": widget.level,
+      "level": selectedLevel,
       "date": dateInput.text,
     });
 
@@ -119,7 +144,7 @@ class _SkillDetailState extends State<SkillDetail> {
       return;
     }
 
-    final SvgPicture data = _controller.toSVG()!;
+    //final SvgPicture data = _controller.toSVG()!;
 
     if (!mounted) return;
   }
@@ -169,26 +194,30 @@ class _SkillDetailState extends State<SkillDetail> {
                 child: Text(
                     'Lorem ipsum dolor sit amet and some other very very boring text that no one understands.'),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text('Role'),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(children: [
+                  const Expanded(
+                    flex: 2,
+                    child: Text('level'),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Dropdown2(
+                      callback: (selectedItem) {
+                        setState(() {
+                          selectedLevel = selectedItem;
+                        });
+                      },
+                      dropdownItems: levels,
+                      selectedItem: selectedLevel,
+                      valueName: 'level',
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Text(
-                        'Assistant M3',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ]),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -280,16 +309,16 @@ class _SkillDetailState extends State<SkillDetail> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
-                                return Dropdown(
-                                  dropdownItems: dropdownItems,
-                                  selectedValue: selectedInstructorId,
+                                return Dropdown2(
+                                  dropdownItems:
+                                      dropdownItems, // Replace with actual instructor data
+                                  selectedItem: selectedInstructorId,
                                   callback: (value) {
                                     setState(() {
                                       selectedInstructorId = value;
                                     });
                                   },
                                   valueName: 'instructorId',
-                                  theme: 'dark',
                                 );
                               }
                             },

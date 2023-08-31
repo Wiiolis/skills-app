@@ -54,10 +54,13 @@ class SkillCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Text(
-                      'Assistant M3',
+                    Text(
+                      data.assessment?.level.toString().capitalize() ??
+                          'No Role',
                       style: TextStyle(
-                          color: AppColors.greenColor,
+                          color: data.assessment?.level != null
+                              ? AppColors.greenColor
+                              : AppColors.placeholderColor,
                           fontWeight: FontWeight.w600,
                           fontSize: 12),
                     ),
@@ -70,8 +73,10 @@ class SkillCard extends StatelessWidget {
                               .format(data.assessment.assessmentDate)
                               .toString()
                           : 'date unavailable',
-                      style: const TextStyle(
-                          color: AppColors.lightGrayColor,
+                      style: TextStyle(
+                          color: data.assessment != null
+                              ? AppColors.lightGrayColor
+                              : AppColors.placeholderColor,
                           fontWeight: FontWeight.w300,
                           fontSize: 12),
                     ),
@@ -83,8 +88,10 @@ class SkillCard extends StatelessWidget {
                           data.assessment != null
                               ? data.assessment.instructor.fullName
                               : 'No instructor',
-                          style: const TextStyle(
-                              color: AppColors.lightGrayColor,
+                          style: TextStyle(
+                              color: data.assessment != null
+                                  ? AppColors.lightGrayColor
+                                  : AppColors.placeholderColor,
                               overflow: TextOverflow.ellipsis,
                               fontWeight: FontWeight.w300,
                               fontSize: 12)),
@@ -102,5 +109,11 @@ class SkillCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension StringExtensions on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }

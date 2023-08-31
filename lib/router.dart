@@ -33,6 +33,8 @@ final GoRouter router = GoRouter(
         path: '/skill-list/:moduleVersionId/clinical-skills/:skillId',
         builder: (context, state) => SkillDetail(
               level: state.uri.queryParameters['level'],
+              instructorId:
+                  int.tryParse(state.uri.queryParameters['instructorId']!),
               moduleVersionId:
                   int.tryParse(state.pathParameters['moduleVersionId']!) ?? 0,
               skillId: int.tryParse(state.pathParameters['skillId']!) ?? 0,

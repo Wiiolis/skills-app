@@ -190,6 +190,10 @@ class ApiService {
           body: body,
         );
 
+        print([url, 'url']);
+        print([body, 'payload']);
+        print([response.statusCode, 'response.statusCode']);
+
         if (response.statusCode != 200) {
           log('Unauthorized access');
         }

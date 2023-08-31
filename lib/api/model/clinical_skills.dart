@@ -81,11 +81,13 @@ class Instructor {
   String? fullName;
   String? department;
   int? hospitalId;
+  int? instructorId;
 
   Instructor({
     this.fullName,
     this.department,
     this.hospitalId,
+    this.instructorId,
   });
 
   factory Instructor.fromRawJson(String str) =>
@@ -97,11 +99,13 @@ class Instructor {
         fullName: json["full_name"],
         department: json["department"],
         hospitalId: json["hospital_id"],
+        instructorId: json["instructor_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "full_name": fullName,
         "department": department,
         "hospital_id": hospitalId,
+        "instructor_id": instructorId,
       };
 }

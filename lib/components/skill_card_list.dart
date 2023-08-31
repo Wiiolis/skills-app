@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
@@ -159,10 +158,9 @@ class _SkillCardListState extends State<SkillCardList> {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final dropdownItems = snapshot.data ?? [];
-                    return Dropdown(
-                      theme: 'light',
+                    return Dropdown2(
                       dropdownItems: dropdownItems,
-                      selectedValue: selectedModuleVersionId,
+                      selectedItem: selectedModuleVersionId,
                       callback: (value) {
                         setState(() {
                           selectedModuleVersionId = value;
@@ -218,14 +216,29 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          context.goNamed("skillDetail", pathParameters: {
-                            "moduleVersionId":
-                                selectedModuleVersionId.toString(),
-                            "skillId":
-                                filteredSkills[index].clinicalSkillId.toString()
-                          }, queryParameters: {
-                            "level": filteredSkills[index].level
-                          });
+                          context.goNamed(
+                            "skillDetail",
+                            pathParameters: {
+                              "moduleVersionId":
+                                  selectedModuleVersionId.toString(),
+                              "skillId": filteredSkills[index]
+                                  .clinicalSkillId
+                                  .toString(),
+                            },
+                            queryParameters: {
+                              "level":
+                                  filteredSkills[index].assessment?.level ??
+                                      'assistant', // Pass the selected level
+                              "instructorId":
+                                  filteredSkills[index].assessment != null
+                                      ? filteredSkills[index]
+                                          .assessment
+                                          .instructor
+                                          .instructorId
+                                          .toString()
+                                      : null,
+                            },
+                          );
                         },
                         child: SkillCard(data: filteredSkills[index]),
                       );
