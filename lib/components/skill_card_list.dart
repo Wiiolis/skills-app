@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
@@ -9,7 +8,6 @@ import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
 import 'button.dart';
-import 'dropdown.dart';
 
 class SkillCardList extends StatefulWidget {
   final user;
@@ -229,6 +227,7 @@ class _SkillCardListState extends State<SkillCardList> {
                             },
                             queryParameters: {
                               "level": filteredSkills[index]
+                                  .assessment
                                   .level, // Pass the selected level
                               "instructorId":
                                   filteredSkills[index].assessment != null

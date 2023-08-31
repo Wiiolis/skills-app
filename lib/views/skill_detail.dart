@@ -44,9 +44,9 @@ class _SkillDetailState extends State<SkillDetail> {
   String? selectedLevel;
 
   List<Map<String, String>> levels = [
-    {'name': 'xx assistant', 'level': 'assistant'},
-    {'name': 'xx observer', 'level': 'observer'},
-    {'name': 'xx performer', 'level': 'performer'}
+    {'name': 'Assistant', 'level': 'assistant'},
+    {'name': 'Transition to Observer', 'level': 'observer'},
+    {'name': 'Transition to Performer', 'level': 'performer'}
   ];
   //List<String> levels = <String>['assistant', 'observer', 'performer'];
 
