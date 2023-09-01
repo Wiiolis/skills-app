@@ -184,9 +184,9 @@ class _SkillCardListState extends State<SkillCardList> {
                   theme: filterCompletedSkills == true
                       ? 'dark'
                       : 'transparent-dark',
-                  radius: 'round',
-                  width: 110,
-                  height: 35),
+                  radius: 20,
+                  buttonWidth: 110,
+                  buttonHeight: 35),
             ],
           ),
           const SizedBox(

@@ -6,14 +6,14 @@ class MyTextField extends StatelessWidget {
   final controller;
   final String hintText;
   final bool obscureText;
-  final String label;
+  final String? label;
 
   const MyTextField({
     super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-    required this.label,
+    this.label,
   });
 
   @override
@@ -23,15 +23,18 @@ class MyTextField extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-          child: Text(label,
-              style:
-                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+          child: label != null
+              ? Text(label!,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 12))
+              : null,
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 15),
+        Expanded(
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
+            expands: true,
+            maxLines: null,
             decoration: InputDecoration(
               enabledBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)),

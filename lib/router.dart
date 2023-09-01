@@ -49,6 +49,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) => Info(user: const []),
     ),
     GoRoute(
+      name: "NewSupervisor",
       path: "/newSupervisor",
       builder: (context, state) => const NewSupervisor(),
     ),

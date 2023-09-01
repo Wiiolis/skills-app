@@ -327,26 +327,29 @@ class _SkillDetailState extends State<SkillDetail> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       flex: 2,
                       child: Text(''),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 25,
                     ),
                     Expanded(
                         flex: 5,
                         child: SizedBox(
                             height: 40,
-                            child: Text(
-                              '+ Add new Supervisor',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: AppColors.primaryLightColor),
+                            child: GestureDetector(
+                              onTap: () => context.goNamed('NewSupervisor'),
+                              child: const Text(
+                                '+ Add new Supervisor',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: AppColors.primaryColor),
+                              ),
                             )))
                   ],
                 ),
@@ -394,7 +397,7 @@ class _SkillDetailState extends State<SkillDetail> {
                       text: 'Save',
                       onClick: () => _saveSkill(),
                       theme: 'dark',
-                      radius: 'semiround',
+                      radius: 9,
                     ))),
               ),
             ],
