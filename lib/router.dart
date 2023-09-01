@@ -1,3 +1,4 @@
+import 'package:demo_app/views/new_supervisor.dart';
 import 'package:go_router/go_router.dart';
 
 import 'components/skill_card_list.dart';
@@ -46,6 +47,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: "/info",
       builder: (context, state) => Info(user: const []),
+    ),
+    GoRoute(
+      path: "/newSupervisor",
+      builder: (context, state) => const NewSupervisor(),
     ),
   ],
 );
