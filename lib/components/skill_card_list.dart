@@ -161,6 +161,7 @@ class _SkillCardListState extends State<SkillCardList> {
                     return Dropdown2(
                       dropdownItems: dropdownItems,
                       selectedItem: selectedModuleVersionId,
+                      dropdownWidth: 150,
                       callback: (value) {
                         setState(() {
                           selectedModuleVersionId = value;
