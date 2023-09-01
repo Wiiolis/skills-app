@@ -18,6 +18,7 @@ class SkillDetail extends StatefulWidget {
   final int skillId;
   final String? level;
   final int? instructorId;
+  final String? name;
 
   const SkillDetail({
     Key? key,
@@ -25,6 +26,7 @@ class SkillDetail extends StatefulWidget {
     required this.skillId,
     required this.level,
     this.instructorId,
+    this.name,
   }) : super(key: key);
 
   @override
@@ -189,11 +191,9 @@ class _SkillDetailState extends State<SkillDetail> {
                   const Expanded(child: Text(''))
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Text(
-                    'Lorem ipsum dolor sit amet and some other very very boring text that no one understands.'),
-              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 30),
+                  child: Text(widget.name!)),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(children: [
