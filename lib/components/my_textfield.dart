@@ -7,6 +7,8 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final String? label;
+  final bool email;
+  final bool required;
 
   const MyTextField({
     super.key,
@@ -14,6 +16,8 @@ class MyTextField extends StatelessWidget {
     required this.hintText,
     required this.obscureText,
     this.label,
+    this.email = false,
+    this.required = false,
   });
 
   @override
@@ -33,6 +37,20 @@ class MyTextField extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             obscureText: obscureText,
+            validator: (value) {
+              // Check if this field is empty
+              if ((value == null || value.isEmpty) && required == true) {
+                return 'This field is required';
+              }
+
+              // using regular expression
+              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value!) && email == true) {
+                return "Please enter a valid email address";
+              }
+
+              // the email is valid
+              return null;
+            },
             expands: true,
             maxLines: null,
             decoration: InputDecoration(

@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:demo_app/components/button.dart';
 import 'package:demo_app/components/my_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../api/api_service.dart';
 import '../components/dropdown.dart';
 import '../globals.dart';
 
@@ -23,6 +26,16 @@ class _NewSupervisorState extends State<NewSupervisor> {
     {'name': 'Hospital One', 'level': 'assistant'},
     {'name': 'Hospital Two', 'level': 'observer'},
   ];
+
+  Future _saveSupervisor() async {
+    var body = jsonEncode({
+      "full_name": nameInputController,
+      "email": emailInputController,
+      "department": departmentInputController,
+    });
+
+    return ApiService().saveInstructor(body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +154,8 @@ class _NewSupervisorState extends State<NewSupervisor> {
                         SizedBox(
                           height: 50,
                           child: MyTextField(
+                            email: true,
+                            required: true,
                             controller: emailInputController,
                             hintText: 'Add supervisor email',
                             obscureText: false,
