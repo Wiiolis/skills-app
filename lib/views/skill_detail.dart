@@ -343,7 +343,7 @@ class _SkillDetailState extends State<SkillDetail> {
                         child: SizedBox(
                             height: 40,
                             child: GestureDetector(
-                              onTap: () => context.goNamed('NewSupervisor'),
+                              onTap: () => context.push('/newSupervisor'),
                               child: const Text(
                                 '+ Add new Supervisor',
                                 style: TextStyle(

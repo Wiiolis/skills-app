@@ -36,7 +36,7 @@ class _NewSupervisorState extends State<NewSupervisor> {
               Stack(
                 children: [
                   GestureDetector(
-                    onTap: () => context.goNamed("home"),
+                    onTap: () => context.pop(),
                     child: const Row(
                       children: [
                         Icon(Icons.chevron_left_outlined,

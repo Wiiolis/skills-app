@@ -30,17 +30,17 @@ final GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
-        name: "skillDetail",
-        path: '/skill-list/:moduleVersionId/clinical-skills/:skillId',
-        builder: (context, state) => SkillDetail(
-              level: state.uri.queryParameters['level'],
-              name: state.uri.queryParameters['name'],
-              instructorId:
-                  int.tryParse(state.uri.queryParameters['instructorId']!),
-              moduleVersionId:
-                  int.tryParse(state.pathParameters['moduleVersionId']!) ?? 0,
-              skillId: int.tryParse(state.pathParameters['skillId']!) ?? 0,
-            )),
+      name: "skillDetail",
+      path: '/skill-list/:moduleVersionId/clinical-skills/:skillId',
+      builder: (context, state) => SkillDetail(
+        level: state.uri.queryParameters['level'],
+        name: state.uri.queryParameters['name'],
+        instructorId: int.tryParse(state.uri.queryParameters['instructorId']!),
+        moduleVersionId:
+            int.tryParse(state.pathParameters['moduleVersionId']!) ?? 0,
+        skillId: int.tryParse(state.pathParameters['skillId']!) ?? 0,
+      ),
+    ),
     GoRoute(
       path: "/documents",
       builder: (context, state) => const Documents(),
