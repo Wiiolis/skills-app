@@ -90,16 +90,13 @@ class _SkillDetailState extends State<SkillDetail> {
     });
   }
 
-  newSupervisorId(value) async {
-    await _getInstructors().then(
-      (i) => {
-        setState(() {
-          print('xxx');
-          selectedInstructorId = value;
-          print([selectedInstructorId, 'selectedInstructorId']);
-        })
-      },
-    );
+  newSupervisorId(value) {
+    setState(() {
+      _instructorsFuture = _getInstructors();
+      _instructorsFuture.then(
+        (i) => {selectedInstructorId = value},
+      );
+    });
   }
 
   Future _saveSkill() async {
@@ -320,12 +317,10 @@ class _SkillDetailState extends State<SkillDetail> {
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
                                 return Dropdown2(
-                                  dropdownItems:
-                                      dropdownItems, // Replace with actual instructor data
+                                  dropdownItems: dropdownItems,
                                   selectedItem: selectedInstructorId,
                                   callback: (value) {
                                     setState(() {
-                                      print("xxxxxxx2");
                                       selectedInstructorId = value;
                                     });
                                   },
@@ -357,7 +352,9 @@ class _SkillDetailState extends State<SkillDetail> {
                               onTap: () => GoRouter.of(context)
                                   .pushNamed('NewSupervisor')
                                   .then((value) {
-                                if (value != null) newSupervisorId(value);
+                                if (value != null) {
+                                  newSupervisorId(value);
+                                }
                               }),
                               child: const Text(
                                 '+ Add new Supervisor',

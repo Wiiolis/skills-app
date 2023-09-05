@@ -234,13 +234,14 @@ class ApiService {
           body: body,
         );
 
-        if (response.statusCode != 200) {
-          log('Unauthorized access');
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          final instructor = Instructor.fromJson(responseData);
+
+          return instructor.instructorId;
         }
 
-        final Map data = json.decode(response.body);
-
-        return data[0].instructor_id;
+        return null;
       }
     } catch (e) {
       log('Error: $e');
