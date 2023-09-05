@@ -220,7 +220,7 @@ class ApiService {
     }
   }
 
-  Future<void> saveInstructor(body) async {
+  Future<dynamic> saveInstructor(body) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.instructors);
 
     try {
@@ -234,12 +234,13 @@ class ApiService {
           body: body,
         );
 
-        print(body);
-        print(response.statusCode);
-
         if (response.statusCode != 200) {
           log('Unauthorized access');
         }
+
+        final Map data = json.decode(response.body);
+
+        return data[0].instructor_id;
       }
     } catch (e) {
       log('Error: $e');

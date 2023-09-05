@@ -20,6 +20,7 @@ class _NewSupervisorState extends State<NewSupervisor> {
   final nameInputController = TextEditingController();
   final emailInputController = TextEditingController();
   final departmentInputController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   String? selectedHospital;
   List<Map<String, String>> hospitals = [
@@ -29,12 +30,14 @@ class _NewSupervisorState extends State<NewSupervisor> {
 
   Future _saveSupervisor() async {
     var body = jsonEncode({
-      "full_name": nameInputController,
-      "email": emailInputController,
-      "department": departmentInputController,
+      "full_name": nameInputController.text,
+      "email": emailInputController.text,
+      "department": departmentInputController.text,
     });
 
-    return ApiService().saveInstructor(body);
+    return ApiService().saveInstructor(body).then((value) => {
+          Navigator.pop(context, value),
+        });
   }
 
   @override
@@ -77,183 +80,184 @@ class _NewSupervisorState extends State<NewSupervisor> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Supervisor Details',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Supervisor Details',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
 
-                    // NAME
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Name Surname',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  'Required',
-                                  style: TextStyle(
-                                      color: AppColors.lightGrayColor,
-                                      fontSize: 10),
-                                )
-                              ]),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: MyTextField(
+                      // NAME
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Name Surname',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    'Required',
+                                    style: TextStyle(
+                                        color: AppColors.lightGrayColor,
+                                        fontSize: 10),
+                                  )
+                                ]),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(
                             controller: nameInputController,
                             hintText: 'Add supervisor name and surname',
                             obscureText: false,
                           ),
-                        )
-                      ],
-                    ),
+                        ],
+                      ),
 
-                    // EMAIL
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Email',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  'Required',
-                                  style: TextStyle(
-                                      color: AppColors.lightGrayColor,
-                                      fontSize: 10),
-                                )
-                              ]),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: MyTextField(
-                            email: true,
-                            required: true,
+                      // EMAIL
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Email',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    'Required',
+                                    style: TextStyle(
+                                        color: AppColors.lightGrayColor,
+                                        fontSize: 10),
+                                  )
+                                ]),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(
                             controller: emailInputController,
-                            hintText: 'Add supervisor email',
+                            hintText: 'Add email',
+                            email: true,
                             obscureText: false,
                           ),
-                        )
-                      ],
-                    ),
+                        ],
+                      ),
 
-                    //HOSPITAL
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Hospital',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  'Select Hospital',
-                                  style: TextStyle(
-                                      color: AppColors.lightGrayColor,
-                                      fontSize: 10),
-                                )
-                              ]),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        SizedBox(
-                            height: 50,
-                            child: Dropdown2(
-                              dropdownItems: hospitals,
-                              callback: (selectedItem) {
-                                setState(() {
-                                  selectedHospital = selectedItem;
-                                });
-                              },
-                              selectedItem: selectedHospital,
-                              valueName: 'name',
-                            ))
-                      ],
-                    ),
+                      //HOSPITAL
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Hospital',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    'Select Hospital',
+                                    style: TextStyle(
+                                        color: AppColors.lightGrayColor,
+                                        fontSize: 10),
+                                  )
+                                ]),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          SizedBox(
+                              height: 50,
+                              child: Dropdown2(
+                                dropdownItems: hospitals,
+                                callback: (selectedItem) {
+                                  setState(() {
+                                    selectedHospital = selectedItem;
+                                  });
+                                },
+                                selectedItem: selectedHospital,
+                                valueName: 'name',
+                              ))
+                        ],
+                      ),
 
-                    //DEPARTMENT
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Department',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  'Required',
-                                  style: TextStyle(
-                                      color: AppColors.lightGrayColor,
-                                      fontSize: 10),
-                                )
-                              ]),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: MyTextField(
+                      //DEPARTMENT
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Department',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    'Required',
+                                    style: TextStyle(
+                                        color: AppColors.lightGrayColor,
+                                        fontSize: 10),
+                                  )
+                                ]),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(
                             controller: departmentInputController,
                             hintText: 'e.g. Cardiology',
                             obscureText: false,
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Button(
-                        text: 'Submit',
-                        onClick: () {},
-                        theme: 'dark',
-                        radius: 5)
-                  ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Button(
+                          text: 'Submit',
+                          onClick: () {
+                            if (_formKey.currentState!.validate()) {
+                              return _saveSupervisor();
+                            }
+                          },
+                          theme: 'dark',
+                          radius: 5)
+                    ],
+                  ),
                 ),
               )
             ],

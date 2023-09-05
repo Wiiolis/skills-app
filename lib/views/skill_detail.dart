@@ -86,10 +86,20 @@ class _SkillDetailState extends State<SkillDetail> {
 
   getDefaultDropdownValueId(value) {
     setState(() {
-      selectedInstructorId = widget.instructorId != null
-          ? widget.instructorId
-          : value[0].instructorId;
+      selectedInstructorId = widget.instructorId ?? value[0].instructorId;
     });
+  }
+
+  newSupervisorId(value) async {
+    await _getInstructors().then(
+      (i) => {
+        setState(() {
+          print('xxx');
+          selectedInstructorId = value;
+          print([selectedInstructorId, 'selectedInstructorId']);
+        })
+      },
+    );
   }
 
   Future _saveSkill() async {
@@ -315,6 +325,7 @@ class _SkillDetailState extends State<SkillDetail> {
                                   selectedItem: selectedInstructorId,
                                   callback: (value) {
                                     setState(() {
+                                      print("xxxxxxx2");
                                       selectedInstructorId = value;
                                     });
                                   },
@@ -343,7 +354,11 @@ class _SkillDetailState extends State<SkillDetail> {
                         child: SizedBox(
                             height: 40,
                             child: GestureDetector(
-                              onTap: () => context.push('/newSupervisor'),
+                              onTap: () => GoRouter.of(context)
+                                  .pushNamed('NewSupervisor')
+                                  .then((value) {
+                                if (value != null) newSupervisorId(value);
+                              }),
                               child: const Text(
                                 '+ Add new Supervisor',
                                 style: TextStyle(
