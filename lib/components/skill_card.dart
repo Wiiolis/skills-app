@@ -6,10 +6,21 @@ import '../globals.dart';
 class SkillCard extends StatelessWidget {
   final data;
 
-  const SkillCard({
+  SkillCard({
     Key? key,
     required this.data,
   }) : super(key: key);
+
+  String getLevelName(String level) {
+    List levelName = levels.where((o) => o.containsValue(level)).toList();
+    return levelName[0]['name'];
+  }
+
+  List levels = [
+    {'name': 'Observer', 'level': 'observer'},
+    {'name': 'Transition to Assistant', 'level': 'assistant'},
+    {'name': 'Transition to Performer', 'level': 'performer'}
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +66,7 @@ class SkillCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      data.assessment?.level.toString().capitalize() ??
+                      getLevelName(data.assessment?.level).toString() ??
                           'No Role',
                       style: TextStyle(
                           color: data.assessment?.level != null
