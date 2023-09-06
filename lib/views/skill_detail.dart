@@ -93,10 +93,15 @@ class _SkillDetailState extends State<SkillDetail> {
   newSupervisorId(value) {
     setState(() {
       _instructorsFuture = _getInstructors();
-      _instructorsFuture.then(
-        (i) => {selectedInstructorId = value},
-      );
     });
+
+    _instructorsFuture.then(
+      (i) => {
+        setState(() {
+          selectedInstructorId = value;
+        })
+      },
+    );
   }
 
   Future _saveSkill() async {
@@ -108,7 +113,7 @@ class _SkillDetailState extends State<SkillDetail> {
 
     try {
       return ApiService()
-          .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body)
+          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
           .then((value) => context.goNamed("home"));
     } catch (err) {
       print(err);
