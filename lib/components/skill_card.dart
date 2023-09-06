@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../globals.dart';
 
+// ignore: must_be_immutable
 class SkillCard extends StatelessWidget {
   final data;
 
@@ -13,7 +14,8 @@ class SkillCard extends StatelessWidget {
 
   String getLevelName(String level) {
     List levelName = levels.where((o) => o.containsValue(level)).toList();
-    return levelName[0]['name'];
+
+    return levelName[0]['name'].toString();
   }
 
   List levels = [
@@ -66,8 +68,9 @@ class SkillCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      getLevelName(data.assessment?.level).toString() ??
-                          'No Role',
+                      data.assessment?.level != null
+                          ? getLevelName(data.assessment?.level)
+                          : 'No Role',
                       style: TextStyle(
                           color: data.assessment?.level != null
                               ? AppColors.greenColor
