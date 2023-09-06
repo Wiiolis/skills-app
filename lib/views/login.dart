@@ -139,7 +139,11 @@ class _LoginState extends State<Login> {
                                   controller: usernameController,
                                   hintText: 'Enter your EDU e-mail adress',
                                   obscureText: false,
+                                  email: true,
                                   label: 'E-mail',
+                                ),
+                                SizedBox(
+                                  height: 10,
                                 ),
                                 MyTextField(
                                   controller: passwordController,

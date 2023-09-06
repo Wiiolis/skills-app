@@ -38,6 +38,9 @@ class _MyTextFieldState extends State<MyTextField> {
                       fontWeight: FontWeight.w600, fontSize: 12))
               : null,
         ),
+        SizedBox(
+          height: widget.label != null ? 10 : 0,
+        ),
         TextFormField(
           controller: widget.controller,
           obscureText: widget.obscureText,
@@ -55,7 +58,7 @@ class _MyTextFieldState extends State<MyTextField> {
             return null;
           },
           expands: false,
-          maxLines: null,
+          maxLines: 1,
           decoration: InputDecoration(
             errorMaxLines: 1,
             enabledBorder: const OutlineInputBorder(
