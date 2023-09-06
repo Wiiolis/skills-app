@@ -24,7 +24,14 @@ class _DocumentsState extends State<Documents> {
         SizedBox(
           height: 15,
         ),
-        Row(children: [DocumentBox(), DocumentBox()])
+        Row(children: [
+          DocumentBox(
+              link:
+                  'https://forms.office.com/Pages/ResponsePage.aspx?id=4tBQCHG-HUOV508p2RZigi4QA0HASP1Nu9bnlnDMM0NUMUhOTkdHSjlINEVWMEk4TFQ1STREWjc1QyQlQCN0PWcu&wdLOR=c787A2C49-FEF5-4FDC-B3E5-FD35588DCCFE'),
+          DocumentBox(
+              link:
+                  'https://forms.office.com/Pages/ResponsePage.aspx?id=4tBQCHG-HUOV508p2RZiggwXvnK8OZ5IsnAYlg1uCBxURFREMk01RU1EOUpRQktMSEtUVjk2Q1NFUCQlQCN0PWcu')
+        ])
       ],
     );
   }
