@@ -86,7 +86,7 @@ class _InfoState extends State<Info> {
                   SizedBox(
                     width: 10,
                   ),
-                  Text('0123 456 789',
+                  Text('0151 53157235',
                       style: TextStyle(decoration: TextDecoration.underline)),
                 ],
               ),

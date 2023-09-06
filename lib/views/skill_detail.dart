@@ -18,6 +18,7 @@ class SkillDetail extends StatefulWidget {
   final int skillId;
   final String? level;
   final int? instructorId;
+  final String? name;
 
   const SkillDetail({
     Key? key,
@@ -25,6 +26,7 @@ class SkillDetail extends StatefulWidget {
     required this.skillId,
     required this.level,
     this.instructorId,
+    this.name,
   }) : super(key: key);
 
   @override
@@ -83,10 +85,22 @@ class _SkillDetailState extends State<SkillDetail> {
 
   getDefaultDropdownValueId(value) {
     setState(() {
-      selectedInstructorId = widget.instructorId != null
-          ? widget.instructorId
-          : value[0].instructorId;
+      selectedInstructorId = widget.instructorId ?? value[0].instructorId;
     });
+  }
+
+  newSupervisorId(value) {
+    setState(() {
+      _instructorsFuture = _getInstructors();
+    });
+
+    _instructorsFuture.then(
+      (i) => {
+        setState(() {
+          selectedInstructorId = value;
+        })
+      },
+    );
   }
 
   Future _saveSkill() async {
@@ -98,7 +112,7 @@ class _SkillDetailState extends State<SkillDetail> {
 
     try {
       return ApiService()
-          .saveClinicalSkill((widget.moduleVersionId), widget.skillId, body)
+          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
           .then((value) => context.goNamed("home"));
     } catch (err) {
       print(err);
@@ -188,11 +202,9 @@ class _SkillDetailState extends State<SkillDetail> {
                   const Expanded(child: Text(''))
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Text(
-                    'Lorem ipsum dolor sit amet and some other very very boring text that no one understands.'),
-              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 30),
+                  child: Text(widget.name!)),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(children: [
@@ -309,8 +321,7 @@ class _SkillDetailState extends State<SkillDetail> {
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
                                 return Dropdown2(
-                                  dropdownItems:
-                                      dropdownItems, // Replace with actual instructor data
+                                  dropdownItems: dropdownItems,
                                   selectedItem: selectedInstructorId,
                                   callback: (value) {
                                     setState(() {
@@ -326,26 +337,35 @@ class _SkillDetailState extends State<SkillDetail> {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       flex: 2,
                       child: Text(''),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 25,
                     ),
                     Expanded(
                         flex: 5,
                         child: SizedBox(
                             height: 40,
-                            child: Text(
-                              '+ Add new Supervisor',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: AppColors.primaryLightColor),
+                            child: GestureDetector(
+                              onTap: () => GoRouter.of(context)
+                                  .pushNamed('NewSupervisor')
+                                  .then((value) {
+                                if (value != null) {
+                                  newSupervisorId(value);
+                                }
+                              }),
+                              child: const Text(
+                                '+ Add new Supervisor',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: AppColors.primaryColor),
+                              ),
                             )))
                   ],
                 ),
@@ -393,7 +413,7 @@ class _SkillDetailState extends State<SkillDetail> {
                       text: 'Save',
                       onClick: () => _saveSkill(),
                       theme: 'dark',
-                      radius: 'semiround',
+                      radius: 9,
                     ))),
               ),
             ],

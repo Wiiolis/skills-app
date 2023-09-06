@@ -161,6 +161,7 @@ class _SkillCardListState extends State<SkillCardList> {
                     return Dropdown2(
                       dropdownItems: dropdownItems,
                       selectedItem: selectedModuleVersionId,
+                      dropdownWidth: 150,
                       callback: (value) {
                         setState(() {
                           selectedModuleVersionId = value;
@@ -184,9 +185,9 @@ class _SkillCardListState extends State<SkillCardList> {
                   theme: filterCompletedSkills == true
                       ? 'dark'
                       : 'transparent-dark',
-                  radius: 'round',
-                  width: 110,
-                  height: 35),
+                  radius: 20,
+                  buttonWidth: 110,
+                  buttonHeight: 35),
             ],
           ),
           const SizedBox(
@@ -226,17 +227,15 @@ class _SkillCardListState extends State<SkillCardList> {
                                   .toString(),
                             },
                             queryParameters: {
+                              "name": filteredSkills[index].name,
                               "level":
                                   filteredSkills[index].assessment?.level ??
                                       'observer',
-                              "instructorId":
-                                  filteredSkills[index].assessment != null
-                                      ? filteredSkills[index]
-                                          .assessment
-                                          .instructor
-                                          .instructorId
-                                          .toString()
-                                      : null,
+                              "instructorId": filteredSkills[index]
+                                  .assessment
+                                  ?.instructor
+                                  .instructorId
+                                  .toString()
                             },
                           );
                         },

@@ -190,10 +190,6 @@ class ApiService {
           body: body,
         );
 
-        print([url, 'url']);
-        print([body, 'payload']);
-        print([response.statusCode, 'response.statusCode']);
-
         if (response.statusCode != 200) {
           log('Unauthorized access');
         }
@@ -218,6 +214,34 @@ class ApiService {
         if (response.statusCode != 200) {
           log('Unauthorized access');
         }
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
+  }
+
+  Future<dynamic> saveInstructor(body) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.instructors);
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token != null) {
+        final response = await http.post(
+          url,
+          headers: <String, String>{'authorization': token},
+          body: body,
+        );
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          final instructor = Instructor.fromJson(responseData);
+
+          return instructor.instructorId;
+        }
+
+        return null;
       }
     } catch (e) {
       log('Error: $e');

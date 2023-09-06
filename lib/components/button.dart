@@ -6,22 +6,10 @@ import 'package:flutter/material.dart';
 class Button extends StatelessWidget {
   final String text;
   String theme = 'light';
-  String radius = 'semiround';
-  double? height;
-  double? width;
+  double radius = 15;
+  double buttonHeight = 40;
+  double buttonWidth = double.maxFinite;
   final Function() onClick;
-
-  Size getButtonSize() {
-    if (width != null && height! != null) {
-      return Size(width!, height!);
-    } else if (height != null) {
-      return Size(80, height!);
-    } else if (width != null) {
-      return Size(width!, 40);
-    } else {
-      return Size(80, 40);
-    }
-  }
 
   Color getBorderColor() {
     if (theme == 'light') {
@@ -59,24 +47,14 @@ class Button extends StatelessWidget {
     }
   }
 
-  BorderRadius getBorderRadius() {
-    if (radius == 'round') {
-      return BorderRadius.circular(18);
-    } else if (theme == 'semiround') {
-      return BorderRadius.circular(9);
-    } else {
-      return BorderRadius.circular(9);
-    }
-  }
-
   Button(
       {super.key,
       required this.text,
       required this.onClick,
       required this.theme,
       required this.radius,
-      this.height,
-      this.width});
+      this.buttonHeight = 40,
+      this.buttonWidth = double.maxFinite});
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +62,9 @@ class Button extends StatelessWidget {
       onPressed: () => onClick(),
       style: OutlinedButton.styleFrom(
         backgroundColor: getBackgroundColor(),
-        fixedSize: getButtonSize(),
+        fixedSize: Size(buttonWidth, buttonHeight),
         shape: RoundedRectangleBorder(
-          borderRadius: getBorderRadius(),
+          borderRadius: BorderRadius.circular(radius),
         ),
         side: BorderSide(
           width: 1.0,
