@@ -195,7 +195,7 @@ class _NewSupervisorState extends State<NewSupervisor> {
                           ),
                           SizedBox(
                               height: 50,
-                              child: Dropdown2(
+                              child: Dropdown(
                                   dropdownItems: hospitals,
                                   callback: (selectedItem) {
                                     setState(() {

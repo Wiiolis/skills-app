@@ -217,7 +217,7 @@ class _SkillDetailState extends State<SkillDetail> {
                   ),
                   Expanded(
                     flex: 5,
-                    child: Dropdown2(
+                    child: Dropdown(
                         callback: (selectedItem) {
                           setState(() {
                             selectedLevel = selectedItem;
@@ -320,7 +320,7 @@ class _SkillDetailState extends State<SkillDetail> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
-                                return Dropdown2(
+                                return Dropdown(
                                     dropdownItems: dropdownItems,
                                     selectedItem: selectedInstructorId,
                                     callback: (value) {

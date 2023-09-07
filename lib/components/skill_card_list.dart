@@ -158,7 +158,7 @@ class _SkillCardListState extends State<SkillCardList> {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final dropdownItems = snapshot.data ?? [];
-                    return Dropdown2(
+                    return Dropdown(
                         dropdownItems: dropdownItems,
                         selectedItem: selectedModuleVersionId,
                         dropdownWidth: 150,
