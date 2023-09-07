@@ -180,6 +180,7 @@ class _SkillCardListState extends State<SkillCardList> {
                 width: 10,
               ),
               Button(
+                  icon: filterCompletedSkills == true ? 'check' : null,
                   text: 'Completed',
                   onClick: () => switchCompletedFilter(),
                   theme: filterCompletedSkills == true
