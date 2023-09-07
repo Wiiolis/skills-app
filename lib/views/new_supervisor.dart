@@ -196,15 +196,15 @@ class _NewSupervisorState extends State<NewSupervisor> {
                           SizedBox(
                               height: 50,
                               child: Dropdown2(
-                                dropdownItems: hospitals,
-                                callback: (selectedItem) {
-                                  setState(() {
-                                    selectedHospital = selectedItem;
-                                  });
-                                },
-                                selectedItem: selectedHospital,
-                                valueName: 'name',
-                              ))
+                                  dropdownItems: hospitals,
+                                  callback: (selectedItem) {
+                                    setState(() {
+                                      selectedHospital = selectedItem;
+                                    });
+                                  },
+                                  selectedItem: selectedHospital,
+                                  valueName: 'name',
+                                  theme: 'dark'))
                         ],
                       ),
 

@@ -218,15 +218,15 @@ class _SkillDetailState extends State<SkillDetail> {
                   Expanded(
                     flex: 5,
                     child: Dropdown2(
-                      callback: (selectedItem) {
-                        setState(() {
-                          selectedLevel = selectedItem;
-                        });
-                      },
-                      dropdownItems: levels,
-                      selectedItem: selectedLevel,
-                      valueName: 'level',
-                    ),
+                        callback: (selectedItem) {
+                          setState(() {
+                            selectedLevel = selectedItem;
+                          });
+                        },
+                        dropdownItems: levels,
+                        selectedItem: selectedLevel,
+                        valueName: 'level',
+                        theme: 'dark'),
                   ),
                 ]),
               ),
@@ -321,15 +321,15 @@ class _SkillDetailState extends State<SkillDetail> {
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
                                 return Dropdown2(
-                                  dropdownItems: dropdownItems,
-                                  selectedItem: selectedInstructorId,
-                                  callback: (value) {
-                                    setState(() {
-                                      selectedInstructorId = value;
-                                    });
-                                  },
-                                  valueName: 'instructorId',
-                                );
+                                    dropdownItems: dropdownItems,
+                                    selectedItem: selectedInstructorId,
+                                    callback: (value) {
+                                      setState(() {
+                                        selectedInstructorId = value;
+                                      });
+                                    },
+                                    valueName: 'instructorId',
+                                    theme: 'dark');
                               }
                             },
                           ),

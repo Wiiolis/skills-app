@@ -159,20 +159,20 @@ class _SkillCardListState extends State<SkillCardList> {
                   } else {
                     final dropdownItems = snapshot.data ?? [];
                     return Dropdown2(
-                      dropdownItems: dropdownItems,
-                      selectedItem: selectedModuleVersionId,
-                      dropdownWidth: 150,
-                      callback: (value) {
-                        setState(() {
-                          selectedModuleVersionId = value;
-                          _clinicalSkillsFuture = _getClinicalSkills(value);
-                          getFilteredSkills();
-                          filterCompletedSkills = false;
-                          _searchController.clear();
-                        });
-                      },
-                      valueName: 'moduleVersionId',
-                    );
+                        dropdownItems: dropdownItems,
+                        selectedItem: selectedModuleVersionId,
+                        dropdownWidth: 150,
+                        callback: (value) {
+                          setState(() {
+                            selectedModuleVersionId = value;
+                            _clinicalSkillsFuture = _getClinicalSkills(value);
+                            getFilteredSkills();
+                            filterCompletedSkills = false;
+                            _searchController.clear();
+                          });
+                        },
+                        valueName: 'moduleVersionId',
+                        theme: 'light');
                   }
                 },
               ),
