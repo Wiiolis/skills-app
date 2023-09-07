@@ -1,5 +1,6 @@
 import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Info extends StatefulWidget {
   var user;
@@ -35,7 +36,7 @@ class _InfoState extends State<Info> {
               Row(
                 children: [
                   Icon(
-                    Icons.verified_user_sharp,
+                    Icons.account_circle,
                     size: 18,
                     color: AppColors.goldColor,
                   ),
@@ -117,11 +118,10 @@ class _InfoState extends State<Info> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
-                            Icons.email_outlined,
-                            color: AppColors.primaryColor,
-                            size: 18,
-                          ),
+                          SvgPicture.asset(
+                              'assets/images/Clinical_Rotation.svg',
+                              color: AppColors.primaryColor,
+                              height: 15),
                           const SizedBox(
                             width: 10,
                           ),
@@ -136,7 +136,7 @@ class _InfoState extends State<Info> {
                       Row(
                         children: [
                           const Icon(
-                            Icons.verified_user_sharp,
+                            Icons.account_circle,
                             size: 18,
                             color: AppColors.primaryColor,
                           ),
