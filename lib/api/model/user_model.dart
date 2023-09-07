@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final user = userFromJson(jsonString);
-
 import 'dart:convert';
 
 class User {
@@ -56,26 +52,37 @@ class User {
   String toRawJson() => json.encode(toJson());
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        avatars: Avatars.fromJson(json["avatars"]),
+        avatars:
+            json["avatars"] == null ? null : Avatars.fromJson(json["avatars"]),
         bio: json["bio"],
         birthDate: json["birth_date"],
         cityOfResidence: json["city_of_residence"],
-        clinicalRotation: ClinicalRotation.fromJson(json["clinical_rotation"]),
+        clinicalRotation: json["clinical_rotation"] == null
+            ? null
+            : ClinicalRotation.fromJson(json["clinical_rotation"]),
         countryId: json["country_id"],
-        createdAt: DateTime.parse(json["created_at"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
         firstName: json["first_name"],
         jobTitle: json["job_title"],
         lastName: json["last_name"],
-        links: Links.fromJson(json["links"]),
+        links: json["links"] == null ? null : Links.fromJson(json["links"]),
         personalQuote: json["personal_quote"],
-        ppAcceptedAt: DateTime.parse(json["pp_accepted_at"]),
-        role: Role.fromJson(json["role"]),
+        ppAcceptedAt: json["pp_accepted_at"] == null
+            ? null
+            : DateTime.parse(json["pp_accepted_at"]),
+        role: json["role"] == null ? null : Role.fromJson(json["role"]),
         slug: json["slug"],
         studentId: json["student_id"],
         systemLanguage: json["system_language"],
         teachingStaff: json["teaching_staff"],
-        teams: List<dynamic>.from(json["teams"].map((x) => x)),
-        tosAcceptedAt: DateTime.parse(json["tos_accepted_at"]),
+        teams: json["teams"] == null
+            ? []
+            : List<dynamic>.from(json["teams"]!.map((x) => x)),
+        tosAcceptedAt: json["tos_accepted_at"] == null
+            ? null
+            : DateTime.parse(json["tos_accepted_at"]),
         userId: json["user_id"],
       );
 
@@ -98,7 +105,7 @@ class User {
         "student_id": studentId,
         "system_language": systemLanguage,
         "teaching_staff": teachingStaff,
-        "teams": List<dynamic>.from(teams!.map((x) => x)),
+        "teams": teams == null ? [] : List<dynamic>.from(teams!.map((x) => x)),
         "tos_accepted_at": tosAcceptedAt?.toIso8601String(),
         "user_id": userId,
       };
@@ -133,13 +140,22 @@ class ClinicalRotation {
   int? hospitalId;
   String? hospitalName;
   int? userGroupId;
+  String? hospitalEmail;
+  String? hospitalContact;
 
   ClinicalRotation({
     this.groupName,
     this.hospitalId,
     this.hospitalName,
     this.userGroupId,
+    this.hospitalEmail,
+    this.hospitalContact,
   });
+
+  factory ClinicalRotation.fromRawJson(String str) =>
+      ClinicalRotation.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
 
   factory ClinicalRotation.fromJson(Map<String, dynamic> json) =>
       ClinicalRotation(
@@ -147,6 +163,8 @@ class ClinicalRotation {
         hospitalId: json["hospital_id"],
         hospitalName: json["hospital_name"],
         userGroupId: json["user_group_id"],
+        hospitalEmail: json["hospital_email"],
+        hospitalContact: json["hospital_contact"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -154,14 +172,16 @@ class ClinicalRotation {
         "hospital_id": hospitalId,
         "hospital_name": hospitalName,
         "user_group_id": userGroupId,
+        "hospital_email": hospitalEmail,
+        "hospital_contact": hospitalContact,
       };
 }
 
 class Links {
-  String? linkedinUrl;
+  String? instagramUrl;
 
   Links({
-    this.linkedinUrl,
+    this.instagramUrl,
   });
 
   factory Links.fromRawJson(String str) => Links.fromJson(json.decode(str));
@@ -169,11 +189,11 @@ class Links {
   String toRawJson() => json.encode(toJson());
 
   factory Links.fromJson(Map<String, dynamic> json) => Links(
-        linkedinUrl: json["linkedin_url"],
+        instagramUrl: json["instagram_url"],
       );
 
   Map<String, dynamic> toJson() => {
-        "linkedin_url": linkedinUrl,
+        "instagram_url": instagramUrl,
       };
 }
 
