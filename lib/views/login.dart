@@ -161,7 +161,7 @@ class _LoginState extends State<Login> {
                                       )
                                     : SizedBox(),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 15,
                                 ),
                                 SizedBox(
                                   width: double.infinity,
@@ -188,7 +188,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 15,
                           ),
                           Center(
                             child: TextButton(
