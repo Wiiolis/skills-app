@@ -46,11 +46,10 @@ class _SkillDetailState extends State<SkillDetail> {
   String? selectedLevel;
 
   List<Map<String, String>> levels = [
-    {'name': 'Assistant', 'level': 'assistant'},
-    {'name': 'Transition to Observer', 'level': 'observer'},
+    {'name': 'Observer', 'level': 'observer'},
+    {'name': 'Transition to Assistant', 'level': 'assistant'},
     {'name': 'Transition to Performer', 'level': 'performer'}
   ];
-  //List<String> levels = <String>['assistant', 'observer', 'performer'];
 
   @override
   void initState() {
@@ -218,16 +217,16 @@ class _SkillDetailState extends State<SkillDetail> {
                   ),
                   Expanded(
                     flex: 5,
-                    child: Dropdown2(
-                      callback: (selectedItem) {
-                        setState(() {
-                          selectedLevel = selectedItem;
-                        });
-                      },
-                      dropdownItems: levels,
-                      selectedItem: selectedLevel,
-                      valueName: 'level',
-                    ),
+                    child: Dropdown(
+                        callback: (selectedItem) {
+                          setState(() {
+                            selectedLevel = selectedItem;
+                          });
+                        },
+                        dropdownItems: levels,
+                        selectedItem: selectedLevel,
+                        valueName: 'level',
+                        theme: 'dark'),
                   ),
                 ]),
               ),
@@ -321,16 +320,16 @@ class _SkillDetailState extends State<SkillDetail> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 final dropdownItems = snapshot.data ?? [];
-                                return Dropdown2(
-                                  dropdownItems: dropdownItems,
-                                  selectedItem: selectedInstructorId,
-                                  callback: (value) {
-                                    setState(() {
-                                      selectedInstructorId = value;
-                                    });
-                                  },
-                                  valueName: 'instructorId',
-                                );
+                                return Dropdown(
+                                    dropdownItems: dropdownItems,
+                                    selectedItem: selectedInstructorId,
+                                    callback: (value) {
+                                      setState(() {
+                                        selectedInstructorId = value;
+                                      });
+                                    },
+                                    valueName: 'instructorId',
+                                    theme: 'dark');
                               }
                             },
                           ),

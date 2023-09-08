@@ -158,21 +158,21 @@ class _SkillCardListState extends State<SkillCardList> {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final dropdownItems = snapshot.data ?? [];
-                    return Dropdown2(
-                      dropdownItems: dropdownItems,
-                      selectedItem: selectedModuleVersionId,
-                      dropdownWidth: 150,
-                      callback: (value) {
-                        setState(() {
-                          selectedModuleVersionId = value;
-                          _clinicalSkillsFuture = _getClinicalSkills(value);
-                          getFilteredSkills();
-                          filterCompletedSkills = false;
-                          _searchController.clear();
-                        });
-                      },
-                      valueName: 'moduleVersionId',
-                    );
+                    return Dropdown(
+                        dropdownItems: dropdownItems,
+                        selectedItem: selectedModuleVersionId,
+                        dropdownWidth: 150,
+                        callback: (value) {
+                          setState(() {
+                            selectedModuleVersionId = value;
+                            _clinicalSkillsFuture = _getClinicalSkills(value);
+                            getFilteredSkills();
+                            filterCompletedSkills = false;
+                            _searchController.clear();
+                          });
+                        },
+                        valueName: 'moduleVersionId',
+                        theme: 'light');
                   }
                 },
               ),
@@ -180,6 +180,7 @@ class _SkillCardListState extends State<SkillCardList> {
                 width: 10,
               ),
               Button(
+                  icon: filterCompletedSkills == true ? 'check' : null,
                   text: 'Completed',
                   onClick: () => switchCompletedFilter(),
                   theme: filterCompletedSkills == true
@@ -230,7 +231,7 @@ class _SkillCardListState extends State<SkillCardList> {
                               "name": filteredSkills[index].name,
                               "level":
                                   filteredSkills[index].assessment?.level ??
-                                      'assistant',
+                                      'observer',
                               "instructorId": filteredSkills[index]
                                   .assessment
                                   ?.instructor
