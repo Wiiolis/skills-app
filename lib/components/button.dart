@@ -10,6 +10,7 @@ class Button extends StatelessWidget {
   double buttonHeight = 40;
   double buttonWidth = double.maxFinite;
   final Function() onClick;
+  final String? icon;
 
   Color getBorderColor() {
     if (theme == 'light') {
@@ -54,7 +55,8 @@ class Button extends StatelessWidget {
       required this.theme,
       required this.radius,
       this.buttonHeight = 40,
-      this.buttonWidth = double.maxFinite});
+      this.buttonWidth = double.maxFinite,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,17 @@ class Button extends StatelessWidget {
           color: getBorderColor(),
         ),
       ),
-      child: Text(text, style: TextStyle(color: getTextColor())),
+      child:
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        if (icon != null)
+          Icon(
+            Icons.check,
+            size: 15,
+            color: getTextColor(),
+          ),
+        if (icon != null) const SizedBox(width: 3),
+        Text(text, style: TextStyle(color: getTextColor()))
+      ]),
     );
   }
 }

@@ -3,13 +3,26 @@ import 'package:intl/intl.dart';
 
 import '../globals.dart';
 
+// ignore: must_be_immutable
 class SkillCard extends StatelessWidget {
   final data;
 
-  const SkillCard({
+  SkillCard({
     Key? key,
     required this.data,
   }) : super(key: key);
+
+  String getLevelName(String level) {
+    List levelName = levels.where((o) => o.containsValue(level)).toList();
+
+    return levelName[0]['name'].toString();
+  }
+
+  List levels = [
+    {'name': 'Observer', 'level': 'observer'},
+    {'name': 'Transition to Assistant', 'level': 'assistant'},
+    {'name': 'Transition to Performer', 'level': 'performer'}
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +68,9 @@ class SkillCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      data.assessment?.level.toString().capitalize() ??
-                          'No Role',
+                      data.assessment?.level != null
+                          ? getLevelName(data.assessment?.level)
+                          : 'No Role',
                       style: TextStyle(
                           color: data.assessment?.level != null
                               ? AppColors.greenColor

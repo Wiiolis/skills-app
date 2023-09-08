@@ -1,5 +1,6 @@
 import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Info extends StatefulWidget {
   var user;
@@ -35,7 +36,7 @@ class _InfoState extends State<Info> {
               Row(
                 children: [
                   Icon(
-                    Icons.verified_user_sharp,
+                    Icons.account_circle,
                     size: 18,
                     color: AppColors.goldColor,
                   ),
@@ -112,44 +113,42 @@ class _InfoState extends State<Info> {
         ),
         Padding(
             padding: const EdgeInsets.all(15),
-            child: widget.user.clinicalRotation.hospitalName != null
-                ? const Column(
+            child: widget.user.clinicalRotation != {}
+                ? Column(
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.email_outlined,
-                            color: AppColors.primaryColor,
-                            size: 18,
-                          ),
-                          SizedBox(
+                          SvgPicture.asset(
+                              'assets/images/Clinical_Rotation.svg',
+                              color: AppColors.primaryColor,
+                              height: 15),
+                          const SizedBox(
                             width: 10,
                           ),
                           Text(
-                            'clinical.rotation@edu.edu.mt',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
+                            widget.user.clinicalRotation.hospitalName,
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.verified_user_sharp,
+                          const Icon(
+                            Icons.account_circle,
                             size: 18,
                             color: AppColors.primaryColor,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Judih Schimann'),
                               Text(
+                                  widget.user.clinicalRotation.hospitalContact),
+                              const Text(
                                 'Teaching hospital manager',
                                 style:
                                     TextStyle(color: AppColors.lightGrayColor),
@@ -158,21 +157,21 @@ class _InfoState extends State<Info> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Row(
                         children: [
-                          Icon(
-                            Icons.phone_outlined,
+                          const Icon(
+                            Icons.email_outlined,
                             size: 18,
                             color: AppColors.primaryColor,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text('0123 456 789',
-                              style: TextStyle(
+                          Text(widget.user.clinicalRotation.hospitalEmail,
+                              style: const TextStyle(
                                   decoration: TextDecoration.underline)),
                         ],
                       ),
