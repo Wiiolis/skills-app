@@ -252,66 +252,70 @@ class _SkillCardListState extends State<SkillCardList> {
       );
     } else {
       return SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            children: [
-              SvgPicture.asset(
-                'assets/images/placeholder.svg',
-                height: 237,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'Hello, Jane!',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text('You’re not in Clinical Rotation currently.',
-                  style: TextStyle(fontSize: 16)),
-              const SizedBox(
-                height: 15,
-              ),
-              Center(
-                child: SizedBox(
-                  width: 300,
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'You can stay and explore the app or ',
-                          style: TextStyle(
-                              fontSize: 16, color: AppColors.darkGrayColor),
-                        ),
-                        TextSpan(
-                          text: 'Go to the Platform',
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: AppColors.goldColor,
-                              decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              launchUrl(
-                                  'https://docs.flutter.io/flutter/services/UrlLauncher-class.html'
-                                      as Uri);
-                            },
-                        ),
-                        const TextSpan(
-                          text:
-                              ' and come back when your Clinical Rotation starts!',
-                          style: TextStyle(
-                              fontSize: 16, color: AppColors.darkGrayColor),
-                        ),
-                      ],
-                    ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/placeholder.svg',
+                    height: 237,
                   ),
-                ),
-              )
-            ],
-          ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    'Hello, Jane!',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const Text('You’re not in Clinical Rotation currently.',
+                      style: TextStyle(fontSize: 16)),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: SizedBox(
+                      width: 300,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: 'You can stay and explore the app or ',
+                              style: TextStyle(
+                                  fontSize: 16, color: AppColors.darkGrayColor),
+                            ),
+                            TextSpan(
+                              text: 'Go to the Platform',
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: AppColors.goldColor,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  launchUrl(
+                                      'https://docs.flutter.io/flutter/services/UrlLauncher-class.html'
+                                          as Uri);
+                                },
+                            ),
+                            const TextSpan(
+                              text:
+                                  ' and come back when your Clinical Rotation starts!',
+                              style: TextStyle(
+                                  fontSize: 16, color: AppColors.darkGrayColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
       );
     }

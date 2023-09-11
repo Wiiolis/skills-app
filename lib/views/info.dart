@@ -113,7 +113,7 @@ class _InfoState extends State<Info> {
         ),
         Padding(
             padding: const EdgeInsets.all(15),
-            child: widget.user.clinicalRotation != {}
+            child: widget.user.clinicalRotation.hospitalName != null
                 ? Column(
                     children: [
                       Row(
@@ -126,7 +126,7 @@ class _InfoState extends State<Info> {
                             width: 10,
                           ),
                           Text(
-                            widget.user.clinicalRotation.hospitalName,
+                            widget.user.clinicalRotation?.hospitalName,
                           ),
                         ],
                       ),
@@ -146,8 +146,8 @@ class _InfoState extends State<Info> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                  widget.user.clinicalRotation.hospitalContact),
+                              Text(widget
+                                  .user.clinicalRotation?.hospitalContact),
                               const Text(
                                 'Teaching hospital manager',
                                 style:
@@ -170,20 +170,21 @@ class _InfoState extends State<Info> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Text(widget.user.clinicalRotation.hospitalEmail,
+                          Text(widget.user.clinicalRotation?.hospitalEmail,
                               style: const TextStyle(
                                   decoration: TextDecoration.underline)),
                         ],
                       ),
                     ],
                   )
-                : const Row(
+                : Row(
                     children: [
-                      Icon(
-                        Icons.house_outlined,
-                        color: AppColors.primaryColor,
+                      SvgPicture.asset('assets/images/Clinical_Rotation.svg',
+                          color: AppColors.primaryColor, height: 15),
+                      const SizedBox(
+                        width: 10,
                       ),
-                      Text('No Hospital Info')
+                      const Text('No Hospital Info')
                     ],
                   ))
       ],
