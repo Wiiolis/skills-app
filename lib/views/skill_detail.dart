@@ -408,13 +408,12 @@ class _SkillDetailState extends State<SkillDetail> {
                 child: SizedBox(
                     width: 150,
                     height: 45,
-                    child: Expanded(
-                        child: Button(
+                    child: Button(
                       text: 'Save',
                       onClick: () => _saveSkill(),
                       theme: 'dark',
                       radius: 9,
-                    ))),
+                    )),
               ),
             ],
           ),
