@@ -5,6 +5,7 @@ import 'router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
   const apiBaseUrl = String.fromEnvironment('API_BASE_URL',
       defaultValue: 'https://gamma.staging.candena.de');
 
