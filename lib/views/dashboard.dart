@@ -132,9 +132,19 @@ class _DashboardState extends State<Dashboard> {
                               // Access the widget after the build phase
                               return Column(
                                 children: [
-                                  TopWidgetProfile(user: _userFuture),
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child:
+                                          TopWidgetProfile(user: _userFuture)),
                                   Expanded(
-                                      child: snapshot.data![selectedIndex]),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: Expanded(
+                                          child: snapshot.data![selectedIndex]),
+                                    ),
+                                  ),
                                 ],
                               );
                             },
