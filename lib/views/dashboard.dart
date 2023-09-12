@@ -113,8 +113,8 @@ class _DashboardState extends State<Dashboard> {
               return Row(
                 children: [
                   SideNavigation(
-                    callback: (val) => setState(() => selectedIndex = val),
-                  ),
+                      callback: (val) => setState(() => selectedIndex = val),
+                      user: _userFuture),
                   Expanded(
                     child: FutureBuilder<List<Widget>>(
                       future: pages(),
