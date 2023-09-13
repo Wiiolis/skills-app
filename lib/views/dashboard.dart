@@ -141,8 +141,7 @@ class _DashboardState extends State<Dashboard> {
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15),
-                                      child: Expanded(
-                                          child: snapshot.data![selectedIndex]),
+                                      child: snapshot.data![selectedIndex],
                                     ),
                                   ),
                                 ],

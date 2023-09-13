@@ -105,17 +105,24 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                 final user = snapshot.data;
                 return Row(
                   children: [
-                    user.avatars != null && user.avatars.small != null
-                        ? CircleAvatar(
-                            radius: 19,
-                            backgroundImage: NetworkImage(user.avatars.small),
-                          )
-                        : const Icon(
-                            Icons.account_circle,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                    const SizedBox(width: 15),
+                    LayoutBuilder(builder: (context, constraints) {
+                      if (constraints.maxWidth < 600) {
+                        return user.avatars != null &&
+                                user.avatars.small != null
+                            ? CircleAvatar(
+                                radius: 19,
+                                backgroundImage:
+                                    NetworkImage(user.avatars.small),
+                              )
+                            : const Icon(
+                                Icons.account_circle,
+                                color: Colors.white,
+                                size: 40,
+                              );
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
                     Flexible(
                       flex: 100,
                       child: Column(
