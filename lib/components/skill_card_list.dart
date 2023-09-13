@@ -35,22 +35,26 @@ class _SkillCardListState extends State<SkillCardList> {
     super.initState();
     _modulesFuture = _getModules();
     _modulesFuture.then((value) async {
-      await getselectedValueId(value);
-      setState(() {
-        _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
-      });
+      if (mounted) {
+        await getSelectedValueId(value);
+        setState(() {
+          _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
+        });
 
-      getFilteredSkills();
+        getFilteredSkills();
+      }
     });
   }
 
   getFilteredSkills() {
     return _clinicalSkillsFuture.then((value) {
-      setState(() {
-        clinicalSkills = value;
-        filteredSkills = List.from(clinicalSkills);
-        copyClinicalSkills = List.from(clinicalSkills);
-      });
+      if (mounted) {
+        setState(() {
+          clinicalSkills = value;
+          filteredSkills = List.from(clinicalSkills);
+          copyClinicalSkills = List.from(clinicalSkills);
+        });
+      }
     });
   }
 
@@ -80,10 +84,12 @@ class _SkillCardListState extends State<SkillCardList> {
     }
   }
 
-  Future<void> getselectedValueId(module) async {
-    setState(() {
-      selectedModuleVersionId = module[0].moduleVersionId;
-    });
+  Future<void> getSelectedValueId(module) async {
+    if (module != null) {
+      setState(() {
+        selectedModuleVersionId = module[0].moduleVersionId;
+      });
+    }
   }
 
   Future<dynamic> _getClinicalSkills(value) {

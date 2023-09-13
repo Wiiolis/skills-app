@@ -89,6 +89,8 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return SizedBox(
       height: 95,
       child: Column(
@@ -105,17 +107,27 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                 final user = snapshot.data;
                 return Row(
                   children: [
-                    user.avatars != null && user.avatars.small != null
-                        ? CircleAvatar(
-                            radius: 19,
-                            backgroundImage: NetworkImage(user.avatars.small),
-                          )
-                        : const Icon(
-                            Icons.account_circle,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                    const SizedBox(width: 15),
+                    LayoutBuilder(builder: (context, constraints) {
+                      if (screenWidth < 600) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child:
+                              user.avatars != null && user.avatars.small != null
+                                  ? CircleAvatar(
+                                      radius: 19,
+                                      backgroundImage:
+                                          NetworkImage(user.avatars.small),
+                                    )
+                                  : const Icon(
+                                      Icons.account_circle,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
                     Flexible(
                       flex: 100,
                       child: Column(

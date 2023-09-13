@@ -1,3 +1,4 @@
+import 'package:demo_app/components/side_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
@@ -58,8 +59,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigation(
-          callback: (val) => setState(() => selectedIndex = val)),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -74,13 +73,50 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              TopWidgetProfile(user: _userFuture),
-              Expanded(
-                  child: FutureBuilder<List<Widget>>(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 600) {
+              // Display mobile layout
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: TopWidgetProfile(user: _userFuture),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: FutureBuilder<List<Widget>>(
+                        future: pages(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else {
+                            return snapshot.data![selectedIndex];
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  BottomNavigation(
+                    callback: (val) => setState(() => selectedIndex = val),
+                  ),
+                ],
+              );
+            } else {
+              // Display tablet layout
+              return Row(
+                children: [
+                  SideNavigation(
+                      callback: (val) => setState(() => selectedIndex = val),
+                      user: _userFuture),
+                  Expanded(
+                    child: FutureBuilder<List<Widget>>(
                       future: pages(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -91,11 +127,35 @@ class _DashboardState extends State<Dashboard> {
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else {
-                          return snapshot.data![selectedIndex];
+                          return Builder(
+                            builder: (BuildContext context) {
+                              // Access the widget after the build phase
+                              return Column(
+                                children: [
+                                  Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child:
+                                          TopWidgetProfile(user: _userFuture)),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: snapshot.data![selectedIndex],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
-                      }))
-            ],
-          ),
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
