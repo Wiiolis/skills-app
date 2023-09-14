@@ -138,6 +138,8 @@ class _LoginState extends State<Login> {
                             child: Column(
                               children: [
                                 MyTextField(
+                                  // test and potentionally remove !!
+                                  autofill: 'email',
                                   controller: usernameController,
                                   hintText: 'Enter your EDU e-mail adress',
                                   obscureText: false,

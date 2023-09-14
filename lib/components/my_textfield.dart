@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../globals.dart';
 
@@ -10,6 +11,7 @@ class MyTextField extends StatefulWidget {
   final bool email;
   final bool required;
   final icon;
+  final autofill;
 
   const MyTextField({
     super.key,
@@ -20,6 +22,8 @@ class MyTextField extends StatefulWidget {
     this.email = false,
     this.required = true,
     this.icon,
+    // test and potentionally remove !!
+    this.autofill,
   });
 
   @override
@@ -27,6 +31,17 @@ class MyTextField extends StatefulWidget {
 }
 
 class _MyTextFieldState extends State<MyTextField> {
+  // test and potentionally remove !!
+  List<String> _getAutofillHints() {
+    if (widget.autofill == 'email') {
+      return [AutofillHints.email];
+    } else if (widget.autofill == 'password') {
+      return [AutofillHints.password];
+    } else {
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,6 +59,8 @@ class _MyTextFieldState extends State<MyTextField> {
           height: widget.label != null ? 10 : 0,
         ),
         TextFormField(
+          // test and potentionally remove !!
+          autofillHints: _getAutofillHints(),
           controller: widget.controller,
           obscureText: widget.obscureText,
           validator: (value) {
