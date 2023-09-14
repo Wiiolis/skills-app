@@ -68,7 +68,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         BottomNavigationBarItem(
           activeIcon: Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: SvgPicture.asset('assets/images/info-filled.svg',
+            child: SvgPicture.asset('assets/images/Info-filled.svg',
                 color: Colors.white),
           ),
           icon: Padding(

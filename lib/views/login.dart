@@ -22,6 +22,7 @@ class _LoginState extends State<Login> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String errorMessage = '';
+  bool passwordVisible = false;
 
   @override
   void initState() {
@@ -81,6 +82,7 @@ class _LoginState extends State<Login> {
           child: Stack(
             children: [
               Image(
+                  alignment: Alignment.topCenter,
                   image: const AssetImage('assets/images/loginBg.png'),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover),
@@ -136,20 +138,35 @@ class _LoginState extends State<Login> {
                             child: Column(
                               children: [
                                 MyTextField(
+                                  // test and potentionally remove !!
+                                  autofill: 'email',
                                   controller: usernameController,
                                   hintText: 'Enter your EDU e-mail adress',
                                   obscureText: false,
                                   email: true,
                                   label: 'E-mail',
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 MyTextField(
                                   controller: passwordController,
                                   hintText: 'Enter your EDU password',
-                                  obscureText: true,
+                                  obscureText: !passwordVisible,
                                   label: 'Password',
+                                  icon: IconButton(
+                                    icon: Icon(
+                                      passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        passwordVisible = !passwordVisible;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 errorMessage != ''
                                     ? Text(
@@ -159,7 +176,7 @@ class _LoginState extends State<Login> {
                                               Color.fromARGB(255, 213, 93, 91),
                                         ),
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 const SizedBox(
                                   height: 15,
                                 ),

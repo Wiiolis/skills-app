@@ -19,6 +19,8 @@ class Button extends StatelessWidget {
       return AppColors.primaryColor;
     } else if (theme == 'transparent-dark') {
       return AppColors.primaryColor;
+    } else if (theme == 'white') {
+      return Colors.white;
     } else {
       return Colors.white;
     }
@@ -31,6 +33,8 @@ class Button extends StatelessWidget {
       return AppColors.primaryColor;
     } else if (theme == 'transparent-dark') {
       return Colors.transparent;
+    } else if (theme == 'white') {
+      return Colors.white;
     } else {
       return AppColors.primaryColor;
     }
@@ -42,6 +46,8 @@ class Button extends StatelessWidget {
     } else if (theme == 'dark') {
       return Colors.white;
     } else if (theme == 'transparent-dark') {
+      return AppColors.primaryColor;
+    } else if (theme == 'white') {
       return AppColors.primaryColor;
     } else {
       return Colors.white;

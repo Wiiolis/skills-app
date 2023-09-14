@@ -103,7 +103,7 @@ class _SideNavigationState extends State<SideNavigation> {
                 NavigationRailDestination(
                   icon: Padding(
                     padding: const EdgeInsets.only(bottom: 3),
-                    child: SvgPicture.asset('assets/images/Info.svg',
+                    child: SvgPicture.asset('assets/images/info.svg',
                         color: Colors.white),
                   ),
                   selectedIcon: Padding(

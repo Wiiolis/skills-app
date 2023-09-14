@@ -5,8 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DocumentBox extends StatelessWidget {
   final String link;
+  final String title;
 
-  const DocumentBox({super.key, required this.link});
+  const DocumentBox({super.key, required this.link, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +41,9 @@ class DocumentBox extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    const Text(
-                      'Absence Form',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
