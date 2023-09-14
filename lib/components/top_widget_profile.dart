@@ -64,8 +64,8 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Button(
-                          text: 'Yes',
-                          onClick: () => _logout(context),
+                          text: 'Cancel',
+                          onClick: () => Navigator.pop(context),
                           theme: 'light',
                           radius: 9,
                           buttonWidth: 80),
@@ -73,11 +73,11 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
                         width: 15,
                       ),
                       Button(
-                          text: 'Cancel',
-                          onClick: () => Navigator.pop(context),
-                          theme: 'light',
+                          text: 'Log out',
+                          onClick: () => _logout(context),
+                          theme: 'white',
                           radius: 9,
-                          buttonWidth: 80)
+                          buttonWidth: 80),
                     ],
                   )
                 ],
