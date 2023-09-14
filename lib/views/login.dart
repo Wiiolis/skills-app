@@ -81,6 +81,7 @@ class _LoginState extends State<Login> {
           child: Stack(
             children: [
               Image(
+                  alignment: Alignment.topCenter,
                   image: const AssetImage('assets/images/loginBg.png'),
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover),
