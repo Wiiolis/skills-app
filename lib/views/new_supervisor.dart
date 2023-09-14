@@ -183,7 +183,7 @@ class _NewSupervisorState extends State<NewSupervisor> {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   Text(
-                                    'Select Hospital',
+                                    'Required',
                                     style: TextStyle(
                                         color: AppColors.lightGrayColor,
                                         fontSize: 10),

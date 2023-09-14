@@ -210,7 +210,7 @@ class _SkillDetailState extends State<SkillDetail> {
                 child: Row(children: [
                   const Expanded(
                     flex: 2,
-                    child: Text('level'),
+                    child: Text('Role'),
                   ),
                   const SizedBox(
                     width: 5,

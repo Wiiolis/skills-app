@@ -144,7 +144,7 @@ class _LoginState extends State<Login> {
                                   email: true,
                                   label: 'E-mail',
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 MyTextField(
@@ -174,7 +174,7 @@ class _LoginState extends State<Login> {
                                               Color.fromARGB(255, 213, 93, 91),
                                         ),
                                       )
-                                    : SizedBox(),
+                                    : const SizedBox(),
                                 const SizedBox(
                                   height: 15,
                                 ),

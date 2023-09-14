@@ -63,7 +63,7 @@ class _MyTextFieldState extends State<MyTextField> {
           maxLines: 1,
           decoration: InputDecoration(
             suffixIcon: widget.icon,
-            suffixIconConstraints: BoxConstraints(minWidth: 55),
+            suffixIconConstraints: const BoxConstraints(minWidth: 55),
             errorMaxLines: 1,
             enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
