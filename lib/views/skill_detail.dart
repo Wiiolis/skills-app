@@ -337,38 +337,18 @@ class _SkillDetailState extends State<SkillDetail> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      flex: 2,
-                      child: Text(''),
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    Expanded(
-                        flex: 5,
-                        child: SizedBox(
-                            height: 40,
-                            child: GestureDetector(
-                              onTap: () => GoRouter.of(context)
-                                  .pushNamed('NewSupervisor')
-                                  .then((value) {
-                                if (value != null) {
-                                  newSupervisorId(value);
-                                }
-                              }),
-                              child: const Text(
-                                '+ Add new Supervisor',
-                                style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: AppColors.primaryColor),
-                              ),
-                            )))
-                  ],
-                ),
+              Button(
+                onClick: () => GoRouter.of(context)
+                    .pushNamed('NewSupervisor')
+                    .then((value) {
+                  if (value != null) {
+                    newSupervisorId(value);
+                  }
+                }),
+                radius: 8,
+                text: 'Add New Supervisor',
+                theme: 'transparent-dark',
+                buttonHeight: 30,
               ),
               Padding(
                 padding: const EdgeInsets.all(15),
