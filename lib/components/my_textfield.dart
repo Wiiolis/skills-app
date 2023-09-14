@@ -9,6 +9,7 @@ class MyTextField extends StatefulWidget {
   final String? label;
   final bool email;
   final bool required;
+  final icon;
 
   const MyTextField({
     super.key,
@@ -18,6 +19,7 @@ class MyTextField extends StatefulWidget {
     this.label,
     this.email = false,
     this.required = true,
+    this.icon,
   });
 
   @override
@@ -60,6 +62,8 @@ class _MyTextFieldState extends State<MyTextField> {
           expands: false,
           maxLines: 1,
           decoration: InputDecoration(
+            suffixIcon: widget.icon,
+            suffixIconConstraints: BoxConstraints(minWidth: 55),
             errorMaxLines: 1,
             enabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),

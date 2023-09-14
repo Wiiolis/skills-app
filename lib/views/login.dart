@@ -22,6 +22,7 @@ class _LoginState extends State<Login> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String errorMessage = '';
+  bool passwordVisible = false;
 
   @override
   void initState() {
@@ -149,8 +150,21 @@ class _LoginState extends State<Login> {
                                 MyTextField(
                                   controller: passwordController,
                                   hintText: 'Enter your EDU password',
-                                  obscureText: true,
+                                  obscureText: !passwordVisible,
                                   label: 'Password',
+                                  icon: IconButton(
+                                    icon: Icon(
+                                      passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        passwordVisible = !passwordVisible;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 errorMessage != ''
                                     ? Text(
