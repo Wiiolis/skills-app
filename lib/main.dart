@@ -1,19 +1,24 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'instructors_adapter.dart';
+import 'api/model/instructors.dart';
+import 'api/model/instructors_adapter.dart';
 import 'router.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+
+import 'package:hive_flutter/hive_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final appDocumentDirectory =
-      await path_provider.getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDirectory.path);
-  Hive.registerAdapter(InstructorsAdapter()); // You need to create this adapter
+  final document = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(document.path);
+
+  Hive.registerAdapter(InstructorsAdapter());
+
+  await Hive.openBox<Instructors>('instructorsBox');
 
   const apiBaseUrl = String.fromEnvironment('API_BASE_URL',
       defaultValue: 'https://gamma.staging.candena.de');

@@ -1,7 +1,8 @@
+// instructors.dart
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 0)
-class Instructors extends HiveObject {
+class Instructors {
   @HiveField(0)
   String? name;
 

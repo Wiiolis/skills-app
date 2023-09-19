@@ -85,7 +85,7 @@ class _SkillDetailState extends State<SkillDetail> {
   }
 
   Future<List<Instructors>> _getInstructors() async {
-    final box = await Hive.openBox<Instructors>('instructorsBox');
+    final box = Hive.box<Instructors>('instructorsBox');
 
     // Check if the user is online
     final connectivityResult = await Connectivity().checkConnectivity();
