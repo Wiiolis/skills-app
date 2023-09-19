@@ -41,7 +41,7 @@ class ClinicalSkills {
 
 class Assessment {
   String? level;
-  Instructor? instructor;
+  InstructorCR? instructor;
   DateTime? assessmentDate;
   int? moduleVersionId;
 
@@ -61,7 +61,7 @@ class Assessment {
         level: json["level"],
         instructor: json["instructor"] == null
             ? null
-            : Instructor.fromJson(json["instructor"]),
+            : InstructorCR.fromJson(json["instructor"]),
         assessmentDate: json["assessment_date"] == null
             ? null
             : DateTime.parse(json["assessment_date"]),
@@ -77,25 +77,25 @@ class Assessment {
       };
 }
 
-class Instructor {
+class InstructorCR {
   String? fullName;
   String? department;
   int? hospitalId;
   int? instructorId;
 
-  Instructor({
+  InstructorCR({
     this.fullName,
     this.department,
     this.hospitalId,
     this.instructorId,
   });
 
-  factory Instructor.fromRawJson(String str) =>
-      Instructor.fromJson(json.decode(str));
+  factory InstructorCR.fromRawJson(String str) =>
+      InstructorCR.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
+  factory InstructorCR.fromJson(Map<String, dynamic> json) => InstructorCR(
         fullName: json["full_name"],
         department: json["department"],
         hospitalId: json["hospital_id"],

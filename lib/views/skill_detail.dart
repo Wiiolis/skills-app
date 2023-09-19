@@ -2,14 +2,19 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:demo_app/components/button.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+
+import 'package:demo_app/components/button.dart';
 //import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
 import '../api/api_service.dart';
+import '../api/model/instructor.dart';
+import '../api/model/instructors.dart';
 import '../components/dropdown.dart';
 import '../globals.dart';
 
@@ -79,8 +84,24 @@ class _SkillDetailState extends State<SkillDetail> {
     return levels[0]['level']!; // Use the first level as a default value
   }
 
-  Future<dynamic> _getInstructors() async {
-    return ApiService().getInstructors();
+  Future<List<Instructors>> _getInstructors() async {
+    final box = await Hive.openBox<Instructors>('instructorsBox');
+
+    // Check if the user is online
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      // User is offline, fetch data from Hive
+      return box.values.toList();
+    }
+
+    // User is online, fetch data from the API
+    final fetchedInstructors = await ApiService().getInstructors();
+
+    // Save the data to Hive
+    await box.clear(); // Clear the existing data
+    await box.addAll([...fetchedInstructors]);
+
+    return fetchedInstructors;
   }
 
   getDefaultDropdownValueId(value) {
