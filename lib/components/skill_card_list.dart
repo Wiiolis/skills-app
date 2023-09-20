@@ -1,9 +1,12 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
+import '../api/model/clinical_skills.dart';
 import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
@@ -92,8 +95,24 @@ class _SkillCardListState extends State<SkillCardList> {
     }
   }
 
-  Future<dynamic> _getClinicalSkills(value) {
-    return ApiService().getClinicalSkills(value);
+  Future<List<ClinicalSkills>> _getClinicalSkills(value) async {
+    final box = Hive.box<ClinicalSkills>('clinicalSkillsBox');
+
+    // Check if the user is online
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      // User is offline, fetch data from Hive
+      return box.values.toList();
+    }
+
+    // User is online, fetch data from the API
+    final fetchedClinicalSkills = await ApiService().getClinicalSkills(value);
+
+    // Save the data to Hive
+    await box.clear(); // Clear the existing data
+    await box.addAll(fetchedClinicalSkills);
+
+    return fetchedClinicalSkills;
   }
 
   Future<dynamic> _getModules() async {

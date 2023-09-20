@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'api/model/clinical_skills.dart';
+import 'api/model/clinical_skills_adapter.dart';
 import 'api/model/instructors.dart';
 import 'api/model/instructors_adapter.dart';
 import 'router.dart';
@@ -17,8 +19,12 @@ Future<void> main() async {
   await Hive.initFlutter(document.path);
 
   Hive.registerAdapter(InstructorsAdapter());
+  Hive.registerAdapter(ClinicalSkillsAdapter());
+  Hive.registerAdapter(AssessmentAdapter());
+  Hive.registerAdapter(InstructorCRAdapter());
 
   await Hive.openBox<Instructors>('instructorsBox');
+  await Hive.openBox<ClinicalSkills>('clinicalSkillsBox');
 
   const apiBaseUrl = String.fromEnvironment('API_BASE_URL',
       defaultValue: 'https://gamma.staging.candena.de');

@@ -82,7 +82,7 @@ class ApiService {
     return null;
   }
 
-  Future<List?> getClinicalSkills(moduleVersionId) async {
+  Future<List<ClinicalSkills>> getClinicalSkills(moduleVersionId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -96,13 +96,14 @@ class ApiService {
 
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
-          final clinicalSkills = [];
+          final List<ClinicalSkills> clinicalSkills =
+              []; // Specify the correct type
 
           for (var element in responseData) {
             clinicalSkills.add(ClinicalSkills.fromJson(element));
           }
 
-          return clinicalSkills;
+          return clinicalSkills; // Return a List<ClinicalSkills>
         } else if (response.statusCode == 401) {
           log('Unauthorized access');
         }
@@ -111,7 +112,7 @@ class ApiService {
       log('Error getting clinical skills: $e');
     }
 
-    return null;
+    return []; // Return an empty List<ClinicalSkills>
   }
 
   Future<List?> getModules() async {
