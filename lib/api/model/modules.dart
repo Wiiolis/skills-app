@@ -1,17 +1,22 @@
-// To parse this JSON data, do
-//
-//     final Modules = ModulesFromJson(jsonString);
+import 'package:hive/hive.dart';
 
-import 'dart:convert';
-
-class Modules {
+@HiveType(typeId: 9)
+class Modules extends HiveObject {
+  @HiveField(0)
   int? moduleVersionId;
+  @HiveField(1)
   int? version;
+  @HiveField(2)
   dynamic description;
+  @HiveField(3)
   String? name;
+  @HiveField(4)
   String? slug;
+  @HiveField(5)
   DateTime? startDate;
+  @HiveField(6)
   DateTime? endDate;
+  @HiveField(7)
   bool? disableUnits;
 
   Modules({
@@ -24,10 +29,6 @@ class Modules {
     this.endDate,
     this.disableUnits,
   });
-
-  factory Modules.fromRawJson(String str) => Modules.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Modules.fromJson(Map<String, dynamic> json) => Modules(
         moduleVersionId: json["module_version_id"],
