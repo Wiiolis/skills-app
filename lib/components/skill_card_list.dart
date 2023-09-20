@@ -1,9 +1,13 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../api/api_service.dart';
+import '../api/model/clinical_skills.dart';
+import '../api/model/modules.dart';
 import '../globals.dart';
 import '../components/dropdown.dart';
 import '../components/skill_card.dart';
@@ -92,12 +96,36 @@ class _SkillCardListState extends State<SkillCardList> {
     }
   }
 
-  Future<dynamic> _getClinicalSkills(value) {
-    return ApiService().getClinicalSkills(value);
+  Future<List<ClinicalSkills>> _getClinicalSkills(value) async {
+    final box = Hive.box<ClinicalSkills>('clinicalSkillsBox');
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return box.values.toList();
+    }
+
+    final fetchedClinicalSkills = await ApiService().getClinicalSkills(value);
+
+    await box.clear();
+    await box.addAll(fetchedClinicalSkills);
+
+    return fetchedClinicalSkills;
   }
 
-  Future<dynamic> _getModules() async {
-    return ApiService().getModules();
+  Future<List<Modules>> _getModules() async {
+    final box = Hive.box<Modules>('modulesBox');
+
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      return box.values.toList();
+    }
+
+    final fetchedModules = await ApiService().getModules();
+
+    await box.clear();
+    await box.addAll(fetchedModules);
+
+    return fetchedModules;
   }
 
   @override

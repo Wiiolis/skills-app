@@ -1,10 +1,20 @@
-import 'dart:convert';
+import 'package:hive/hive.dart';
 
+@HiveType(typeId: 1)
 class ClinicalSkills {
+  @HiveField(0)
   String? name;
+
+  @HiveField(1)
   String? level;
+
+  @HiveField(2)
   String? module;
+
+  @HiveField(3)
   Assessment? assessment;
+
+  @HiveField(4)
   int? clinicalSkillId;
 
   ClinicalSkills({
@@ -14,11 +24,6 @@ class ClinicalSkills {
     this.assessment,
     this.clinicalSkillId,
   });
-
-  factory ClinicalSkills.fromRawJson(String str) =>
-      ClinicalSkills.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory ClinicalSkills.fromJson(Map<String, dynamic> json) => ClinicalSkills(
         name: json["name"],
@@ -39,10 +44,18 @@ class ClinicalSkills {
       };
 }
 
+@HiveType(typeId: 2)
 class Assessment {
+  @HiveField(0)
   String? level;
-  Instructor? instructor;
+
+  @HiveField(1)
+  InstructorCR? instructor;
+
+  @HiveField(2)
   DateTime? assessmentDate;
+
+  @HiveField(3)
   int? moduleVersionId;
 
   Assessment({
@@ -52,16 +65,11 @@ class Assessment {
     this.moduleVersionId,
   });
 
-  factory Assessment.fromRawJson(String str) =>
-      Assessment.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
   factory Assessment.fromJson(Map<String, dynamic> json) => Assessment(
         level: json["level"],
         instructor: json["instructor"] == null
             ? null
-            : Instructor.fromJson(json["instructor"]),
+            : InstructorCR.fromJson(json["instructor"]),
         assessmentDate: json["assessment_date"] == null
             ? null
             : DateTime.parse(json["assessment_date"]),
@@ -77,25 +85,28 @@ class Assessment {
       };
 }
 
-class Instructor {
+@HiveType(typeId: 3)
+class InstructorCR {
+  @HiveField(0)
   String? fullName;
+
+  @HiveField(1)
   String? department;
+
+  @HiveField(2)
   int? hospitalId;
+
+  @HiveField(3)
   int? instructorId;
 
-  Instructor({
+  InstructorCR({
     this.fullName,
     this.department,
     this.hospitalId,
     this.instructorId,
   });
 
-  factory Instructor.fromRawJson(String str) =>
-      Instructor.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
+  factory InstructorCR.fromJson(Map<String, dynamic> json) => InstructorCR(
         fullName: json["full_name"],
         department: json["department"],
         hospitalId: json["hospital_id"],

@@ -1,22 +1,18 @@
-// To parse this JSON data, do
-//
-//     final instructors = instructorsFromJson(jsonString);
+// instructors.dart
+import 'package:hive/hive.dart';
 
-import 'dart:convert';
-
+@HiveType(typeId: 0)
 class Instructors {
+  @HiveField(0)
   String? name;
+
+  @HiveField(1)
   int? instructorId;
 
   Instructors({
     this.name,
     this.instructorId,
   });
-
-  factory Instructors.fromRawJson(String str) =>
-      Instructors.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Instructors.fromJson(Map<String, dynamic> json) => Instructors(
         name: json["full_name"],

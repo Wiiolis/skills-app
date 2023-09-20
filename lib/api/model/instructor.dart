@@ -1,16 +1,13 @@
-import 'dart:convert';
+import 'package:hive/hive.dart';
 
-class Instructor {
+@HiveType(typeId: 0)
+class Instructor extends HiveObject {
+  @HiveField(0)
   int? instructorId;
 
   Instructor({
     this.instructorId,
   });
-
-  factory Instructor.fromRawJson(String str) =>
-      Instructor.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
         instructorId: json["instructor_id"],

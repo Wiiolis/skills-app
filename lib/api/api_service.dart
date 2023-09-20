@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
 import 'model/clinical_skills.dart';
+import 'model/instructor.dart';
 import 'model/login_model.dart';
 import 'model/modules.dart';
 import 'model/user_model.dart';
@@ -81,7 +82,7 @@ class ApiService {
     return null;
   }
 
-  Future<List?> getClinicalSkills(moduleVersionId) async {
+  Future<List<ClinicalSkills>> getClinicalSkills(moduleVersionId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -95,13 +96,14 @@ class ApiService {
 
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
-          final clinicalSkills = [];
+          final List<ClinicalSkills> clinicalSkills =
+              []; // Specify the correct type
 
           for (var element in responseData) {
             clinicalSkills.add(ClinicalSkills.fromJson(element));
           }
 
-          return clinicalSkills;
+          return clinicalSkills; // Return a List<ClinicalSkills>
         } else if (response.statusCode == 401) {
           log('Unauthorized access');
         }
@@ -110,10 +112,10 @@ class ApiService {
       log('Error getting clinical skills: $e');
     }
 
-    return null;
+    return []; // Return an empty List<ClinicalSkills>
   }
 
-  Future<List?> getModules() async {
+  Future<List<Modules>> getModules() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -126,13 +128,14 @@ class ApiService {
         );
         if (response.statusCode == 200) {
           final responseData = jsonDecode(response.body);
-          final modules = [];
+          final List<Modules> modules =
+              []; // Specify the return type explicitly
 
           for (var element in responseData) {
             modules.add(Modules.fromJson(element));
           }
 
-          return modules;
+          return modules; // Return a List<Modules>
         } else if (response.statusCode == 401) {
           log('Unauthorized access');
         }
@@ -140,38 +143,38 @@ class ApiService {
     } catch (e) {
       log('Error getting modules: $e');
     }
-    return null;
+    return <Modules>[]; // Return an empty List<Modules>
   }
 
-  Future<List?> getInstructors() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+  Future<List<Instructors>> getInstructors() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
 
-      if (token != null) {
-        var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.instructors);
-        var response = await http.get(
+    if (token != null) {
+      try {
+        final url = Uri.parse(ApiConstants.baseUrl + ApiConstants.instructors);
+        final response = await http.get(
           url,
           headers: <String, String>{'authorization': token},
         );
 
         if (response.statusCode == 200) {
-          final responseData = jsonDecode(response.body);
-          final instructors = [];
-
-          for (var element in responseData) {
-            instructors.add(Instructors.fromJson(element));
-          }
-
+          final responseData = jsonDecode(response.body) as List<dynamic>;
+          final instructors = responseData
+              .map((element) => Instructors.fromJson(element))
+              .toList();
           return instructors;
         } else if (response.statusCode == 401) {
           log('Unauthorized access');
         }
+      } catch (e) {
+        log('Error getting instructors: $e');
+        throw Exception('Failed to fetch instructors');
       }
-    } catch (e) {
-      log('Error getting instructors: $e');
     }
-    return null;
+
+    // If any error occurred or token is null, return an empty list.
+    return [];
   }
 
   // save clinical skills

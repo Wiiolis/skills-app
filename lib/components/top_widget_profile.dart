@@ -2,7 +2,7 @@ import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../api/api_service.dart';
+import '../hive_adapters.dart' as HiveAdapters;
 import 'button.dart';
 
 class TopWidgetProfile extends StatefulWidget {
@@ -26,10 +26,18 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
   );
 
   _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('token');
 
-    context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
+      // Clear all Hive boxes (data stored)
+      await HiveAdapters.clearBoxes();
+
+      // ignore: use_build_context_synchronously
+      context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
+    } catch (e) {
+      print('Error during logout: $e');
+    }
   }
 
   Future<void> logoutDialog() async {
