@@ -1,26 +1,48 @@
-import 'dart:convert';
+import 'package:hive/hive.dart';
 
-class User {
+@HiveType(typeId: 4)
+class User extends HiveObject {
+  @HiveField(0)
   Avatars? avatars;
+  @HiveField(1)
   String? bio;
+  @HiveField(2)
   dynamic birthDate;
+  @HiveField(3)
   String? cityOfResidence;
+  @HiveField(4)
   ClinicalRotation? clinicalRotation;
+  @HiveField(5)
   String? countryId;
+  @HiveField(6)
   DateTime? createdAt;
+  @HiveField(7)
   String? firstName;
+  @HiveField(8)
   String? jobTitle;
+  @HiveField(9)
   String? lastName;
+  @HiveField(10)
   Links? links;
+  @HiveField(11)
   String? personalQuote;
+  @HiveField(12)
   DateTime? ppAcceptedAt;
+  @HiveField(13)
   Role? role;
+  @HiveField(14)
   String? slug;
+  @HiveField(15)
   dynamic studentId;
+  @HiveField(16)
   String? systemLanguage;
+  @HiveField(17)
   bool? teachingStaff;
+  @HiveField(18)
   List<dynamic>? teams;
+  @HiveField(19)
   DateTime? tosAcceptedAt;
+  @HiveField(20)
   int? userId;
 
   User({
@@ -46,10 +68,6 @@ class User {
     this.tosAcceptedAt,
     this.userId,
   });
-
-  factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         avatars:
@@ -111,18 +129,17 @@ class User {
       };
 }
 
+@HiveType(typeId: 5)
 class Avatars {
+  @HiveField(0)
   String? normal;
+  @HiveField(1)
   String? small;
 
   Avatars({
     this.normal,
     this.small,
   });
-
-  factory Avatars.fromRawJson(String str) => Avatars.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Avatars.fromJson(Map<String, dynamic> json) => Avatars(
         normal: json["normal"],
@@ -135,12 +152,19 @@ class Avatars {
       };
 }
 
+@HiveType(typeId: 6)
 class ClinicalRotation {
+  @HiveField(0)
   String? groupName;
+  @HiveField(1)
   int? hospitalId;
+  @HiveField(2)
   String? hospitalName;
+  @HiveField(3)
   int? userGroupId;
+  @HiveField(4)
   String? hospitalEmail;
+  @HiveField(5)
   String? hospitalContact;
 
   ClinicalRotation({
@@ -151,11 +175,6 @@ class ClinicalRotation {
     this.hospitalEmail,
     this.hospitalContact,
   });
-
-  factory ClinicalRotation.fromRawJson(String str) =>
-      ClinicalRotation.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory ClinicalRotation.fromJson(Map<String, dynamic> json) =>
       ClinicalRotation(
@@ -177,16 +196,14 @@ class ClinicalRotation {
       };
 }
 
+@HiveType(typeId: 7)
 class Links {
+  @HiveField(0)
   String? instagramUrl;
 
   Links({
     this.instagramUrl,
   });
-
-  factory Links.fromRawJson(String str) => Links.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Links.fromJson(Map<String, dynamic> json) => Links(
         instagramUrl: json["instagram_url"],
@@ -197,10 +214,15 @@ class Links {
       };
 }
 
+@HiveType(typeId: 8)
 class Role {
+  @HiveField(0)
   String? code;
+  @HiveField(1)
   String? color;
+  @HiveField(2)
   String? label;
+  @HiveField(3)
   bool? primary;
 
   Role({
@@ -209,10 +231,6 @@ class Role {
     this.label,
     this.primary,
   });
-
-  factory Role.fromRawJson(String str) => Role.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
         code: json["code"],

@@ -1,12 +1,15 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:demo_app/components/side_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
 import 'package:demo_app/components/bottom_navigation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/api_service.dart';
+import '../api/model/user_model.dart';
 import 'documents.dart';
 import '../globals.dart';
 import 'info.dart';
@@ -43,16 +46,35 @@ class _DashboardState extends State<Dashboard> {
     defaultValue: 'https://gamma.staging.candena.de',
   );
 
-  Future<dynamic> _getUser() async {
+  Future<User?> _getUser() async {
     final prefs = await SharedPreferences.getInstance();
+    final box = Hive.box<User>('UserBox');
+    final connectivityResult = await Connectivity().checkConnectivity();
     var token = prefs.getString('token');
-    if (token != null) {
+
+    if (token != null && connectivityResult == ConnectivityResult.none) {
       int? currentUserId = prefs.getInt('currentUserId');
 
-      return ApiService().getUser(currentUserId);
+      // User is offline, fetch data from Hive
+      final users = box.values.toList();
+      if (users.isNotEmpty) {
+        return users.first; // Return the first (and only) user
+      } else {
+        return null; // No user data available in Hive
+      }
+    } else if (token != null) {
+      int? currentUserId = prefs.getInt('currentUserId');
+      final fetchedUser = await ApiService().getUser(currentUserId);
+
+      // Save the data to Hive
+      await box.clear(); // Clear the existing data
+      await box.add(fetchedUser!);
+
+      // Return the fetched user
+      return fetchedUser;
     } else {
       context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});
-      return null;
+      return null; // No user data available (not logged in)
     }
   }
 
