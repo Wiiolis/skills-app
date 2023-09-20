@@ -35,5 +35,10 @@ Future<void> openHiveBoxes() async {
 }
 
 Future<void> clearBoxes() async {
+  await Hive.box('instructorsBox').clear();
+  await Hive.box('clinicalSkillsBox').clear();
+  await Hive.box('userBox').clear();
+  await Hive.box('modulesBox').clear();
+
   await Hive.close();
 }
