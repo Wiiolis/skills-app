@@ -31,7 +31,7 @@ class _TopWidgetProfileState extends State<TopWidgetProfile> {
       await prefs.remove('token');
 
       // Clear all Hive boxes (data stored)
-      await HiveAdapters.clearBoxes();
+      HiveAdapters.clearBoxes();
 
       // ignore: use_build_context_synchronously
       context.goNamed("login", queryParameters: {'apiBaseUrl': apiBaseUrl});

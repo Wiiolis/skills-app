@@ -15,6 +15,7 @@ Future<void> main() async {
   await Hive.initFlutter(document.path);
 
   await registerHiveAdapters();
+  print('mainn');
 
   const apiBaseUrl = String.fromEnvironment('API_BASE_URL',
       defaultValue: 'https://gamma.staging.candena.de');

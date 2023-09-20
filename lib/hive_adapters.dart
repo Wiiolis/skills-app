@@ -27,6 +27,13 @@ Future<void> registerHiveAdapters() async {
   await Hive.openBox<Modules>('modulesBox');
 }
 
+Future<void> openHiveBoxes() async {
+  await Hive.openBox<Instructors>('instructorsBox');
+  await Hive.openBox<ClinicalSkills>('clinicalSkillsBox');
+  await Hive.openBox<User>('userBox');
+  await Hive.openBox<Modules>('modulesBox');
+}
+
 Future<void> clearBoxes() async {
-  Hive.deleteFromDisk();
+  await Hive.close();
 }

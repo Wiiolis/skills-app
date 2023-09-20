@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:demo_app/components/side_navigation.dart';
+import 'package:demo_app/hive_adapters.dart';
 import 'package:flutter/material.dart';
 import 'package:demo_app/components/skill_card_list.dart';
 import 'package:demo_app/components/top_widget_profile.dart';
