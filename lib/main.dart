@@ -3,16 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'api/model/clinical_skills.dart';
-import 'api/model/clinical_skills_adapter.dart';
-import 'api/model/instructors.dart';
-import 'api/model/instructors_adapter.dart';
-import 'api/model/modules.dart';
-import 'api/model/modules_adapter.dart';
-import 'api/model/user_model.dart';
-import 'api/model/user_model_adapter.dart';
+import 'hive_adapters.dart';
 import 'router.dart';
-import 'package:hive/hive.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -22,21 +14,7 @@ Future<void> main() async {
   final document = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(document.path);
 
-  Hive.registerAdapter(InstructorsAdapter());
-  Hive.registerAdapter(ClinicalSkillsAdapter());
-  Hive.registerAdapter(AssessmentAdapter());
-  Hive.registerAdapter(InstructorCRAdapter());
-  Hive.registerAdapter(UserAdapter());
-  Hive.registerAdapter(AvatarsAdapter());
-  Hive.registerAdapter(ClinicalRotationAdapter());
-  Hive.registerAdapter(LinksAdapter());
-  Hive.registerAdapter(RoleAdapter());
-  Hive.registerAdapter(ModulesAdapter());
-
-  await Hive.openBox<Instructors>('instructorsBox');
-  await Hive.openBox<ClinicalSkills>('clinicalSkillsBox');
-  await Hive.openBox<User>('userBox');
-  await Hive.openBox<Modules>('modulesBox');
+  await registerHiveAdapters();
 
   const apiBaseUrl = String.fromEnvironment('API_BASE_URL',
       defaultValue: 'https://gamma.staging.candena.de');
