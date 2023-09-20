@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
 
 import '../api/api_service.dart';
-import '../api/model/instructor.dart';
 import '../api/model/instructors.dart';
 import '../components/dropdown.dart';
 import '../globals.dart';
@@ -39,7 +38,6 @@ class SkillDetail extends StatefulWidget {
 }
 
 class _SkillDetailState extends State<SkillDetail> {
-  // initialize the signature controller
   TextEditingController dateInput = TextEditingController();
   final SignatureController _controller = SignatureController(
       penStrokeWidth: 1,
@@ -125,18 +123,36 @@ class _SkillDetailState extends State<SkillDetail> {
   }
 
   Future _saveSkill() async {
-    var body = jsonEncode({
-      "instructor_id": selectedInstructorId,
-      "level": selectedLevel,
-      "date": dateInput.text,
-    });
+    final Uint8List? signatureData = await _controller.toPngBytes(
+      height: 1000,
+      width: 1000,
+    );
 
-    try {
-      return ApiService()
-          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
-          .then((value) => context.goNamed("home"));
-    } catch (err) {
-      print(err);
+    if (signatureData != null) {
+      final String signatureBase64 = base64Encode(signatureData);
+
+      var body = jsonEncode({
+        "instructor_id": selectedInstructorId,
+        "level": selectedLevel,
+        "date": dateInput.text,
+        "signature": signatureBase64,
+      });
+
+      try {
+        return ApiService()
+            .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
+            .then((value) => context.goNamed("home"));
+      } catch (err) {
+        print(err);
+      }
+    } else {
+      // Handle the case where signatureData is null (no signature)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please provide a signature.'),
+        ),
+      );
+      return;
     }
   }
 
