@@ -129,6 +129,8 @@ class _SkillCardListState extends State<SkillCardList> {
     return fetchedModules;
   }
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     if (widget.user.clinicalRotation.hospitalName != null) {
@@ -138,14 +140,28 @@ class _SkillCardListState extends State<SkillCardList> {
           // Search Bar
           SizedBox(
               height: 35,
-              child: MyTextField(
-                controller: _searchController,
-                hintText: 'Search skilfffs by name',
-                obscureText: false,
-                displayBorder: false,
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppColors.primaryColor,
+              child: Form(
+                key: _formKey,
+                child: MyTextField(
+                  onChanged: (value) {
+                    if (filterCompletedSkills) {
+                      filterSkills(
+                          value,
+                          clinicalSkills
+                              .where((skill) => skill.assessment != null)
+                              .toList());
+                    } else {
+                      filterSkills(value, copyClinicalSkills);
+                    }
+                  },
+                  controller: _searchController,
+                  hintText: 'Search skills by name',
+                  obscureText: false,
+                  displayBorder: false,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               )),
           const SizedBox(
