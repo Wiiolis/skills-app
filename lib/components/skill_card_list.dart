@@ -129,146 +129,130 @@ class _SkillCardListState extends State<SkillCardList> {
     return fetchedModules;
   }
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     if (widget.user.clinicalRotation.hospitalName != null) {
-      return Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Search Bar
-            SizedBox(
-                height: 35,
-                child: MyTextField(
-                  onChanged: (value) {
-                    if (filterCompletedSkills) {
-                      filterSkills(
-                          value,
-                          clinicalSkills
-                              .where((skill) => skill.assessment != null)
-                              .toList());
-                    } else {
-                      filterSkills(value, copyClinicalSkills);
-                    }
-                  },
-                  controller: _searchController,
-                  hintText: 'Search skills by name',
-                  obscureText: false,
-                  displayBorder: false,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: AppColors.primaryColor,
-                  ),
-                )),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                FutureBuilder<dynamic>(
-                  future: _modulesFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      final dropdownItems = snapshot.data ?? [];
-                      return Dropdown(
-                          dropdownItems: dropdownItems,
-                          selectedItem: selectedModuleVersionId,
-                          dropdownWidth: 150,
-                          callback: (value) {
-                            setState(() {
-                              selectedModuleVersionId = value;
-                              _clinicalSkillsFuture = _getClinicalSkills(value);
-                              getFilteredSkills();
-                              filterCompletedSkills = false;
-                              _searchController.clear();
-                            });
-                          },
-                          valueName: 'moduleVersionId',
-                          theme: 'light');
-                    }
-                  },
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Search Bar
+          SizedBox(
+              height: 35,
+              child: MyTextField(
+                controller: _searchController,
+                hintText: 'Search skilfffs by name',
+                obscureText: false,
+                displayBorder: false,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: AppColors.primaryColor,
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Button(
-                    icon: filterCompletedSkills == true ? 'check' : null,
-                    text: 'Completed',
-                    onClick: () => switchCompletedFilter(),
-                    theme: filterCompletedSkills == true
-                        ? 'dark'
-                        : 'transparent-dark',
-                    radius: 20,
-                    buttonWidth: 110,
-                    buttonHeight: 35),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Text(
-                'Skills Catalogue',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              )),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              FutureBuilder<dynamic>(
+                future: _modulesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final dropdownItems = snapshot.data ?? [];
+                    return Dropdown(
+                        dropdownItems: dropdownItems,
+                        selectedItem: selectedModuleVersionId,
+                        dropdownWidth: 150,
+                        callback: (value) {
+                          setState(() {
+                            selectedModuleVersionId = value;
+                            _clinicalSkillsFuture = _getClinicalSkills(value);
+                            getFilteredSkills();
+                            filterCompletedSkills = false;
+                            _searchController.clear();
+                          });
+                        },
+                        valueName: 'moduleVersionId',
+                        theme: 'light');
+                  }
+                },
               ),
+              const SizedBox(
+                width: 10,
+              ),
+              Button(
+                  icon: filterCompletedSkills == true ? 'check' : null,
+                  text: 'Completed',
+                  onClick: () => switchCompletedFilter(),
+                  theme: filterCompletedSkills == true
+                      ? 'dark'
+                      : 'transparent-dark',
+                  radius: 20,
+                  buttonWidth: 110,
+                  buttonHeight: 35),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: Text(
+              'Skills Catalogue',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            FutureBuilder<dynamic>(
-              future: _clinicalSkillsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return Flexible(
-                    child: ListView.builder(
-                      itemCount: filteredSkills.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            context.goNamed(
-                              "skillDetail",
-                              pathParameters: {
-                                "moduleVersionId":
-                                    selectedModuleVersionId.toString(),
-                                "skillId": filteredSkills[index]
-                                    .clinicalSkillId
-                                    .toString(),
-                              },
-                              queryParameters: {
-                                "name": filteredSkills[index].name,
-                                "level":
-                                    filteredSkills[index].assessment?.level ??
-                                        'observer',
-                                "instructorId": filteredSkills[index]
-                                    .assessment
-                                    ?.instructor
-                                    .instructorId
-                                    .toString()
-                              },
-                            );
-                          },
-                          child: SkillCard(data: filteredSkills[index]),
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          FutureBuilder<dynamic>(
+            future: _clinicalSkillsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return Flexible(
+                  child: ListView.builder(
+                    itemCount: filteredSkills.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.goNamed(
+                            "skillDetail",
+                            pathParameters: {
+                              "moduleVersionId":
+                                  selectedModuleVersionId.toString(),
+                              "skillId": filteredSkills[index]
+                                  .clinicalSkillId
+                                  .toString(),
+                            },
+                            queryParameters: {
+                              "name": filteredSkills[index].name,
+                              "level":
+                                  filteredSkills[index].assessment?.level ??
+                                      'observer',
+                              "instructorId": filteredSkills[index]
+                                  .assessment
+                                  ?.instructor
+                                  .instructorId
+                                  .toString()
+                            },
+                          );
+                        },
+                        child: SkillCard(data: filteredSkills[index]),
+                      );
+                    },
+                  ),
+                );
+              }
+            },
+          ),
+        ],
       );
     } else {
       return SingleChildScrollView(
