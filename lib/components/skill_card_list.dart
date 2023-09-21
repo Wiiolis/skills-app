@@ -151,8 +151,9 @@ class _SkillCardListState extends State<SkillCardList> {
                   }
                 },
                 controller: _searchController,
-                hintText: 'Search skill by name',
+                hintText: 'Search skills by name',
                 obscureText: false,
+                displayBorder: false,
                 prefixIcon: Icon(
                   Icons.search,
                   color: AppColors.primaryColor,

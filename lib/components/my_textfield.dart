@@ -14,6 +14,7 @@ class MyTextField extends StatefulWidget {
   final prefixIcon;
   final autofill;
   final ValueChanged<String>? onChanged;
+  final displayBorder;
 
   const MyTextField({
     super.key,
@@ -28,6 +29,7 @@ class MyTextField extends StatefulWidget {
     // test and potentionally remove !!
     this.autofill,
     this.onChanged,
+    this.displayBorder = true,
   });
 
   @override
@@ -88,13 +90,17 @@ class _MyTextFieldState extends State<MyTextField> {
             prefixIcon: widget.prefixIcon,
             suffixIconConstraints: const BoxConstraints(minWidth: 55),
             errorMaxLines: 1,
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(
-                width: 1,
-                color: AppColors.placeholderColor,
-              ),
-            ),
+            enabledBorder: widget.displayBorder
+                ? OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: AppColors.placeholderColor,
+                    ),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide.none),
             focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               borderSide: BorderSide(color: AppColors.primaryLightColor),
