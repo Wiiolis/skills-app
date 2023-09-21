@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:demo_app/hive_adapters.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,6 +38,8 @@ class _LoginState extends State<Login> {
       "email": usernameController.text,
       "password": passwordController.text,
     });
+
+    await openHiveBoxes();
 
     await ApiService()
         .login(body)
