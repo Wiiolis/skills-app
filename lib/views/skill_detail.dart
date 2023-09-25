@@ -220,7 +220,7 @@ class _SkillDetailState extends State<SkillDetail> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.goNamed("home"),
+                      onTap: () => context.pop(),
                       child: const Row(
                         children: [
                           Icon(Icons.chevron_left_outlined,

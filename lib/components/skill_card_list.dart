@@ -238,7 +238,7 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          context.goNamed(
+                          context.pushNamed(
                             "skillDetail",
                             pathParameters: {
                               "moduleVersionId":
