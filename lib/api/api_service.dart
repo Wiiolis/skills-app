@@ -194,11 +194,11 @@ class ApiService {
         );
 
         if (response.statusCode != 200) {
-          log('Unauthorized access');
+          throw Exception('Unauthorized access');
         }
       }
     } catch (e) {
-      log('Error: $e');
+      throw Exception('Error: $e');
     }
   }
 

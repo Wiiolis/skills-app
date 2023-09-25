@@ -141,13 +141,14 @@ class _SkillDetailState extends State<SkillDetail> {
         "signature": signatureBase64,
       });
 
-      try {
-        return ApiService()
-            .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
-            .then((value) => context.goNamed("home"));
-      } catch (err) {
-        print(err);
-      }
+      ApiService()
+          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
+          .then((value) => context.pop())
+          .catchError((onError) => {
+                setState(() {
+                  errorMessage = '${onError.toString()}';
+                })
+              });
     } else {
       if (selectedInstructorId == null) {
         setState(() {
