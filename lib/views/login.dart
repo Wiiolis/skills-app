@@ -119,7 +119,7 @@ class _LoginState extends State<Login> {
                                     color: Colors.white),
                               ),
                               Text(
-                                'Clinical Skill App',
+                                'Clinical Skills Catalogue',
                                 style: TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.w600,
@@ -131,7 +131,7 @@ class _LoginState extends State<Login> {
                             ],
                           ),
                           const Text(
-                              'To begin mastering your clinical skills, login with your platform credentials below.',
+                              'To begin mastering your Clinical Skills, login with your platform credentials below.',
                               textAlign: TextAlign.center),
                           const SizedBox(
                             height: 20,

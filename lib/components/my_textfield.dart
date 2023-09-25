@@ -11,7 +11,10 @@ class MyTextField extends StatefulWidget {
   final bool email;
   final bool required;
   final icon;
+  final prefixIcon;
   final autofill;
+  final ValueChanged<String>? onChanged;
+  final displayBorder;
 
   const MyTextField({
     super.key,
@@ -22,8 +25,11 @@ class MyTextField extends StatefulWidget {
     this.email = false,
     this.required = true,
     this.icon,
+    this.prefixIcon,
     // test and potentionally remove !!
     this.autofill,
+    this.onChanged,
+    this.displayBorder = true,
   });
 
   @override
@@ -44,8 +50,7 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -61,6 +66,7 @@ class _MyTextFieldState extends State<MyTextField> {
         TextFormField(
           // test and potentionally remove !!
           autofillHints: _getAutofillHints(),
+          onChanged: widget.onChanged,
           controller: widget.controller,
           obscureText: widget.obscureText,
           validator: (value) {
@@ -79,16 +85,22 @@ class _MyTextFieldState extends State<MyTextField> {
           expands: false,
           maxLines: 1,
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             suffixIcon: widget.icon,
+            prefixIcon: widget.prefixIcon,
             suffixIconConstraints: const BoxConstraints(minWidth: 55),
             errorMaxLines: 1,
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              borderSide: BorderSide(
-                width: 1,
-                color: AppColors.placeholderColor,
-              ),
-            ),
+            enabledBorder: widget.displayBorder
+                ? OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: AppColors.placeholderColor,
+                    ),
+                  )
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide.none),
             focusedBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15)),
               borderSide: BorderSide(color: AppColors.primaryLightColor),

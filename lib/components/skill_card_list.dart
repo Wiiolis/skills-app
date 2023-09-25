@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:demo_app/components/my_textfield.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -136,48 +137,28 @@ class _SkillCardListState extends State<SkillCardList> {
         children: [
           // Search Bar
           SizedBox(
-            height: 35,
-            child: TextField(
-              textAlignVertical: TextAlignVertical.center,
-              controller: _searchController,
-              onChanged: (value) {
-                if (filterCompletedSkills) {
-                  filterSkills(
-                      value,
-                      clinicalSkills
-                          .where((skill) => skill.assessment != null)
-                          .toList());
-                } else {
-                  filterSkills(value, copyClinicalSkills);
-                }
-              },
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                prefixIcon: Icon(
+              height: 35,
+              child: MyTextField(
+                onChanged: (value) {
+                  if (filterCompletedSkills) {
+                    filterSkills(
+                        value,
+                        clinicalSkills
+                            .where((skill) => skill.assessment != null)
+                            .toList());
+                  } else {
+                    filterSkills(value, copyClinicalSkills);
+                  }
+                },
+                controller: _searchController,
+                hintText: 'Search skills by name',
+                obscureText: false,
+                displayBorder: false,
+                prefixIcon: const Icon(
                   Icons.search,
                   color: AppColors.primaryColor,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(18)),
-                  borderSide: BorderSide(
-                    width: 1,
-                    color: Colors.white,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(18)),
-                  borderSide: BorderSide(color: AppColors.primaryLightColor),
-                ),
-                fillColor: Colors.white,
-                filled: true,
-                hintText: 'Search skill by name',
-                hintStyle: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.lightGrayColor,
-                ),
-              ),
-            ),
-          ),
+              )),
           const SizedBox(
             height: 10,
           ),
@@ -252,7 +233,7 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          context.goNamed(
+                          context.pushNamed(
                             "skillDetail",
                             pathParameters: {
                               "moduleVersionId":

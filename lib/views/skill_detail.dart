@@ -45,8 +45,9 @@ class _SkillDetailState extends State<SkillDetail> {
       exportBackgroundColor: Colors.transparent,
       exportPenColor: Colors.black);
   late Future<dynamic> _instructorsFuture;
-  int selectedInstructorId = 0;
+  int? selectedInstructorId;
   String? selectedLevel;
+  String errorMessage = '';
 
   List<Map<String, String>> levels = [
     {'name': 'Observer', 'level': 'observer'},
@@ -104,7 +105,7 @@ class _SkillDetailState extends State<SkillDetail> {
 
   getDefaultDropdownValueId(value) {
     setState(() {
-      selectedInstructorId = widget.instructorId ?? value[0].instructorId;
+      selectedInstructorId = widget.instructorId;
     });
   }
 
@@ -128,7 +129,9 @@ class _SkillDetailState extends State<SkillDetail> {
       width: 1000,
     );
 
-    if (signatureData != null) {
+    if (signatureData != null &&
+        selectedLevel != null &&
+        selectedInstructorId != null) {
       final String signatureBase64 = base64Encode(signatureData);
 
       var body = jsonEncode({
@@ -138,21 +141,24 @@ class _SkillDetailState extends State<SkillDetail> {
         "signature": signatureBase64,
       });
 
-      try {
-        return ApiService()
-            .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
-            .then((value) => context.goNamed("home"));
-      } catch (err) {
-        print(err);
-      }
+      ApiService()
+          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
+          .then((value) => context.pop())
+          .catchError((onError) => {
+                setState(() {
+                  errorMessage = '${onError.toString()}';
+                })
+              });
     } else {
-      // Handle the case where signatureData is null (no signature)
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please provide a signature.'),
-        ),
-      );
-      return;
+      if (selectedInstructorId == null) {
+        setState(() {
+          errorMessage = 'Please provide an instructor.';
+        });
+      } else if (signatureData == null) {
+        setState(() {
+          errorMessage = 'Please provide a signature.';
+        });
+      }
     }
   }
 
@@ -215,7 +221,7 @@ class _SkillDetailState extends State<SkillDetail> {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => context.goNamed("home"),
+                      onTap: () => context.pop(),
                       child: const Row(
                         children: [
                           Icon(Icons.chevron_left_outlined,
@@ -418,6 +424,17 @@ class _SkillDetailState extends State<SkillDetail> {
                   backgroundColor: Colors.white,
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              errorMessage != ''
+                  ? Text(
+                      errorMessage,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 213, 93, 91),
+                      ),
+                    )
+                  : const SizedBox(),
               const SizedBox(
                 height: 20,
               ),
