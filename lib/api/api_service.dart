@@ -193,6 +193,8 @@ class ApiService {
           body: body,
         );
 
+        print(response.statusCode);
+
         if (response.statusCode != 200) {
           log('Unauthorized access');
         }
@@ -217,6 +219,8 @@ class ApiService {
         if (response.statusCode != 200) {
           log('Unauthorized access');
         }
+
+        print(response.body);
       }
     } catch (e) {
       log('Error: $e');
