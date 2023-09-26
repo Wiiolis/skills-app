@@ -31,6 +31,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      elevation: 0,
       onTap: _onItemTapped,
       currentIndex: selectedIndex,
       backgroundColor: AppColors.primaryColor,
