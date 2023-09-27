@@ -107,25 +107,32 @@ class _LoginState extends State<Login> {
                               'Hello.',
                               style: TextStyle(
                                   fontSize: 46,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                             Text(
-                              'Welcome to EDU',
+                              'Welcome to',
                               style: TextStyle(
                                   fontSize: 28,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                             Text(
-                              'Clinical Skills Catalogue',
+                              'EDU Clinical',
                               style: TextStyle(
                                   fontSize: 28,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white),
+                            ),
+                            Text(
+                              'Skills Catalogue',
+                              style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                             SizedBox(
-                              height: 80,
+                              height: 40,
                             )
                           ],
                         ),
@@ -139,36 +146,64 @@ class _LoginState extends State<Login> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              MyTextField(
-                                // test and potentionally remove !!
-                                autofill: 'email',
-                                controller: usernameController,
-                                hintText: 'Enter your EDU e-mail adress',
-                                obscureText: false,
-                                email: true,
-                                label: 'E-mail',
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                                    child: Text(
+                                      'E-mail',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  MyTextField(
+                                    // test and potentionally remove !!
+                                    autofill: 'email',
+                                    controller: usernameController,
+                                    hintText: 'Enter your EDU e-mail adress',
+                                    obscureText: false,
+                                    email: true,
+                                    label: 'E-mail',
+                                  ),
+                                ],
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
-                              MyTextField(
-                                controller: passwordController,
-                                hintText: 'Enter your EDU password',
-                                obscureText: !passwordVisible,
-                                label: 'Password',
-                                icon: IconButton(
-                                  icon: Icon(
-                                    passwordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: AppColors.primaryColor,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                                    child: Text(
+                                      'Password',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      passwordVisible = !passwordVisible;
-                                    });
-                                  },
-                                ),
+                                  MyTextField(
+                                    controller: passwordController,
+                                    hintText: 'Enter your EDU password',
+                                    obscureText: !passwordVisible,
+                                    label: 'Password',
+                                    icon: IconButton(
+                                      icon: Icon(
+                                        passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: AppColors.primaryColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          passwordVisible = !passwordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                               errorMessage != ''
                                   ? Text(
