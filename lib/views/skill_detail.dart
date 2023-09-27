@@ -209,247 +209,250 @@ class _SkillDetailState extends State<SkillDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => context.pop(),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.chevron_left_outlined,
-                              color: AppColors.primaryColor, size: 25),
-                          Text(
-                            'Back',
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: AppColors.primaryColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Expanded(
-                      child: Center(
-                          child: Text(
-                    'Details',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ))),
-                  const Expanded(child: Text(''))
-                ],
-              ),
-              Padding(
-                  padding: EdgeInsets.symmetric(vertical: 30),
-                  child: Text(widget.name!)),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(children: [
-                  const Expanded(
-                    flex: 2,
-                    child: Text('Role'),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Dropdown(
-                        callback: (selectedItem) {
-                          setState(() {
-                            selectedLevel = selectedItem;
-                          });
-                        },
-                        dropdownItems: levels,
-                        selectedItem: selectedLevel,
-                        valueName: 'level',
-                        theme: 'dark'),
-                  ),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      flex: 2,
-                      child: Text('Date of Assessing'),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                        flex: 5,
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          controller: dateInput,
-                          decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 7, horizontal: 15),
-                            isCollapsed: true,
-                            isDense: true,
-                            suffixIcon: Icon(
-                              Icons.edit_calendar,
-                              size: 18,
-                              color: AppColors.primaryColor,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: AppColors.placeholderColor,
-                              ),
-                            ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                  color: AppColors.primaryLightColor),
-                            ),
-                          ),
-                          readOnly: true,
-                          //set it true, so that user will not able to edit text
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                initialDate: DateTime.now(),
-                                context: context,
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2024));
-                            if (pickedDate != null) {
-                              String newDate =
-                                  DateFormat('yyyy-MM-dd').format(pickedDate);
-                              String date = newDate.toString().split(' ')[0];
-                              setState(() {
-                                dateInput.text = date;
-                              });
-                            } else {}
-                          },
-                        ))
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      flex: 2,
-                      child: Text('Supervisor*'),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                        flex: 5,
-                        child: SizedBox(
-                          height: 40,
-                          child: FutureBuilder<dynamic>(
-                            future: _instructorsFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                final dropdownItems = snapshot.data ?? [];
-                                return Dropdown(
-                                    dropdownItems: dropdownItems,
-                                    selectedItem: selectedInstructorId,
-                                    callback: (value) {
-                                      setState(() {
-                                        selectedInstructorId = value;
-                                      });
-                                    },
-                                    valueName: 'instructorId',
-                                    theme: 'dark');
-                              }
-                            },
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-              Button(
-                onClick: () => GoRouter.of(context)
-                    .pushNamed('NewSupervisor')
-                    .then((value) {
-                  if (value != null) {
-                    newSupervisorId(value);
-                  }
-                }),
-                radius: 8,
-                text: 'Add New Supervisor',
-                theme: 'transparent-dark',
-                buttonHeight: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Row(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Supervisor signature',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => context.pop(),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.chevron_left_outlined,
+                                color: AppColors.primaryColor, size: 25),
+                            Text(
+                              'Back',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: AppColors.primaryColor),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => _controller.clear(),
-                      child: const Text('Clear',
-                          style: TextStyle(
-                              color: AppColors.primaryColor,
-                              decoration: TextDecoration.underline,
-                              fontWeight: FontWeight.normal)),
-                    ),
+                    const Expanded(
+                        child: Center(
+                            child: Text(
+                      'Details',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ))),
+                    const Expanded(child: Text(''))
                   ],
                 ),
-              ),
-              ClipRRect(
-                child: Signature(
-                  key: const Key('signature'),
-                  controller: _controller,
-                  height: 110,
-                  backgroundColor: Colors.white,
+                Padding(
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    child: Text(widget.name!)),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(children: [
+                    const Expanded(
+                      flex: 2,
+                      child: Text('Role'),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Dropdown(
+                          callback: (selectedItem) {
+                            setState(() {
+                              selectedLevel = selectedItem;
+                            });
+                          },
+                          dropdownItems: levels,
+                          selectedItem: selectedLevel,
+                          valueName: 'level',
+                          theme: 'dark'),
+                    ),
+                  ]),
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              errorMessage != ''
-                  ? Text(
-                      errorMessage,
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 213, 93, 91),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        flex: 2,
+                        child: Text('Date of Assessing'),
                       ),
-                    )
-                  : const SizedBox(),
-              const SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: SizedBox(
-                    width: 150,
-                    height: 45,
-                    child: Button(
-                      text: 'Save',
-                      onClick: () => _saveSkill(),
-                      theme: 'dark',
-                      radius: 9,
-                    )),
-              ),
-            ],
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                          flex: 5,
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            controller: dateInput,
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 7, horizontal: 15),
+                              isCollapsed: true,
+                              isDense: true,
+                              suffixIcon: Icon(
+                                Icons.edit_calendar,
+                                size: 18,
+                                color: AppColors.primaryColor,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: AppColors.placeholderColor,
+                                ),
+                              ),
+                              fillColor: Colors.white,
+                              filled: true,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                    color: AppColors.primaryLightColor),
+                              ),
+                            ),
+                            readOnly: true,
+                            //set it true, so that user will not able to edit text
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                  initialDate: DateTime.now(),
+                                  context: context,
+                                  firstDate: DateTime(2020),
+                                  lastDate: DateTime(2024));
+                              if (pickedDate != null) {
+                                String newDate =
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                                String date = newDate.toString().split(' ')[0];
+                                setState(() {
+                                  dateInput.text = date;
+                                });
+                              } else {}
+                            },
+                          ))
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        flex: 2,
+                        child: Text('Supervisor*'),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                          flex: 5,
+                          child: SizedBox(
+                            height: 40,
+                            child: FutureBuilder<dynamic>(
+                              future: _instructorsFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  final dropdownItems = snapshot.data ?? [];
+                                  return Dropdown(
+                                      dropdownItems: dropdownItems,
+                                      selectedItem: selectedInstructorId,
+                                      callback: (value) {
+                                        setState(() {
+                                          selectedInstructorId = value;
+                                        });
+                                      },
+                                      valueName: 'instructorId',
+                                      theme: 'dark');
+                                }
+                              },
+                            ),
+                          ))
+                    ],
+                  ),
+                ),
+                Button(
+                  onClick: () => GoRouter.of(context)
+                      .pushNamed('NewSupervisor')
+                      .then((value) {
+                    if (value != null) {
+                      newSupervisorId(value);
+                    }
+                  }),
+                  radius: 8,
+                  text: 'Add New Supervisor',
+                  theme: 'transparent-dark',
+                  buttonHeight: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Supervisor signature',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _controller.clear(),
+                        child: const Text('Clear',
+                            style: TextStyle(
+                                color: AppColors.primaryColor,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.normal)),
+                      ),
+                    ],
+                  ),
+                ),
+                ClipRRect(
+                  child: Signature(
+                    key: const Key('signature'),
+                    controller: _controller,
+                    height: 110,
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                errorMessage != ''
+                    ? Text(
+                        errorMessage,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 213, 93, 91),
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: SizedBox(
+                      width: 150,
+                      height: 45,
+                      child: Button(
+                        text: 'Save',
+                        onClick: () => _saveSkill(),
+                        theme: 'dark',
+                        radius: 9,
+                      )),
+                ),
+              ],
+            ),
           ),
         ),
       ),

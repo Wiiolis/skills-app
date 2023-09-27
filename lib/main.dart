@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:demo_app/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
@@ -41,11 +42,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: MaterialApp.router(
-          theme: ThemeData(fontFamily: 'OpenSans'),
-          routerConfig: router,
-          debugShowCheckedModeBanner: false),
-    );
+    return MaterialApp.router(
+        theme: ThemeData(fontFamily: 'OpenSans'),
+        routerConfig: router,
+        debugShowCheckedModeBanner: false);
   }
 }

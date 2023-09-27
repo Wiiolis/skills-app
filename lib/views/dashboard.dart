@@ -83,33 +83,65 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0.05, 0.15, 0.7, 0.9],
-            colors: [
-              AppColors.primaryColor,
-              AppColors.backgroundColor,
-              AppColors.backgroundColor,
-              AppColors.backgroundColor
-            ],
+      backgroundColor: AppColors.primaryColor,
+      body: SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.05, 0.15, 0.7, 0.9],
+              colors: [
+                AppColors.primaryColor,
+                AppColors.backgroundColor,
+                AppColors.backgroundColor,
+                AppColors.backgroundColor
+              ],
+            ),
           ),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < 600) {
-              // Display mobile layout
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: TopWidgetProfile(user: _userFuture),
-                  ),
-                  Expanded(
-                    child: Padding(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 600) {
+                // Display mobile layout
+                return Column(
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: TopWidgetProfile(user: _userFuture),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: FutureBuilder<List<Widget>>(
+                          future: pages(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            } else {
+                              return snapshot.data![selectedIndex];
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    BottomNavigation(
+                      callback: (val) => setState(() => selectedIndex = val),
+                    ),
+                  ],
+                );
+              } else {
+                // Display tablet layout
+                return Row(
+                  children: [
+                    SideNavigation(
+                        callback: (val) => setState(() => selectedIndex = val),
+                        user: _userFuture),
+                    Expanded(
                       child: FutureBuilder<List<Widget>>(
                         future: pages(),
                         builder: (context, snapshot) {
@@ -121,65 +153,36 @@ class _DashboardState extends State<Dashboard> {
                             return Center(
                                 child: Text('Error: ${snapshot.error}'));
                           } else {
-                            return snapshot.data![selectedIndex];
+                            return Builder(
+                              builder: (BuildContext context) {
+                                // Access the widget after the build phase
+                                return Column(
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: TopWidgetProfile(
+                                            user: _userFuture)),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: snapshot.data![selectedIndex],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
                         },
                       ),
                     ),
-                  ),
-                  BottomNavigation(
-                    callback: (val) => setState(() => selectedIndex = val),
-                  ),
-                ],
-              );
-            } else {
-              // Display tablet layout
-              return Row(
-                children: [
-                  SideNavigation(
-                      callback: (val) => setState(() => selectedIndex = val),
-                      user: _userFuture),
-                  Expanded(
-                    child: FutureBuilder<List<Widget>>(
-                      future: pages(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
-                        } else {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              // Access the widget after the build phase
-                              return Column(
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15),
-                                      child:
-                                          TopWidgetProfile(user: _userFuture)),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15),
-                                      child: snapshot.data![selectedIndex],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              );
-            }
-          },
+                  ],
+                );
+              }
+            },
+          ),
         ),
       ),
     );
