@@ -49,7 +49,7 @@ class SkillCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         data.name,
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                     const SizedBox(
@@ -90,7 +90,7 @@ class SkillCard extends StatelessWidget {
                               .format(data.assessment.assessmentDate)
                               .toString()
                           : '',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: AppColors.lightGrayColor,
                           fontWeight: FontWeight.w300,
                           fontSize: 12),
@@ -103,7 +103,7 @@ class SkillCard extends StatelessWidget {
                           data.assessment != null
                               ? data.assessment.instructor.fullName
                               : '',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: AppColors.lightGrayColor,
                               overflow: TextOverflow.ellipsis,
                               fontWeight: FontWeight.w300,

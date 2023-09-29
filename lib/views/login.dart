@@ -149,15 +149,6 @@ class _LoginState extends State<Login> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                                    child: Text(
-                                      'E-mail',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
                                   MyTextField(
                                     // test and potentionally remove !!
                                     autofill: 'email',
@@ -165,6 +156,7 @@ class _LoginState extends State<Login> {
                                     hintText: 'Enter your EDU e-mail adress',
                                     obscureText: false,
                                     email: true,
+                                    displayRequired: false,
                                     label: 'E-mail',
                                   ),
                                 ],
@@ -175,19 +167,11 @@ class _LoginState extends State<Login> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                                    child: Text(
-                                      'Password',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
                                   MyTextField(
                                     controller: passwordController,
                                     hintText: 'Enter your EDU password',
                                     obscureText: !passwordVisible,
+                                    displayRequired: false,
                                     label: 'Password',
                                     icon: IconButton(
                                       icon: Icon(
@@ -204,6 +188,9 @@ class _LoginState extends State<Login> {
                                     ),
                                   ),
                                 ],
+                              ),
+                              const SizedBox(
+                                height: 10,
                               ),
                               errorMessage != ''
                                   ? Text(
