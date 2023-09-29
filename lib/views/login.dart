@@ -233,7 +233,8 @@ class _LoginState extends State<Login> {
                                   ),
                                   child: const Text(
                                     'LOGIN',
-                                    style: TextStyle(fontSize: 16),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                 ),
                               ),

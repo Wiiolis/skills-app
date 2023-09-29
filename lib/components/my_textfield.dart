@@ -37,6 +37,8 @@ class MyTextField extends StatefulWidget {
 }
 
 class _MyTextFieldState extends State<MyTextField> {
+  final focusNode = FocusNode();
+  Color color = AppColors.lightGrayColor;
   // test and potentionally remove !!
   List<String> _getAutofillHints() {
     if (widget.autofill == 'email') {
@@ -49,8 +51,30 @@ class _MyTextFieldState extends State<MyTextField> {
   }
 
   @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  focusColor() {
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        setState(() {
+          color = AppColors.placeholderColor;
+        });
+      } else {
+        setState(() {
+          color = AppColors.lightGrayColor;
+        });
+      }
+    });
+    return color;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       // test and potentionally remove !!
       autofillHints: _getAutofillHints(),
       onChanged: widget.onChanged,
@@ -71,20 +95,20 @@ class _MyTextFieldState extends State<MyTextField> {
       expands: false,
       maxLines: 1,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         suffixIcon: widget.icon,
         prefixIcon: widget.prefixIcon,
         suffixIconConstraints: const BoxConstraints(minWidth: 55),
         errorMaxLines: 1,
         enabledBorder: widget.displayBorder
-            ? OutlineInputBorder(
+            ? const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 borderSide: BorderSide(
                   width: 1,
                   color: AppColors.placeholderColor,
                 ),
               )
-            : OutlineInputBorder(
+            : const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 borderSide: BorderSide.none),
         focusedBorder: const OutlineInputBorder(
@@ -102,9 +126,7 @@ class _MyTextFieldState extends State<MyTextField> {
         fillColor: Colors.white,
         filled: true,
         hintText: widget.hintText,
-        hintStyle: const TextStyle(
-          color: AppColors.placeholderColor,
-        ),
+        hintStyle: TextStyle(color: focusColor()),
       ),
       mouseCursor: MaterialStateMouseCursor.clickable,
     );
