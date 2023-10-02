@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:demo_app/components/my_textfield.dart';
 import 'package:flutter/gestures.dart';
@@ -49,6 +51,19 @@ class _SkillCardListState extends State<SkillCardList> {
         getFilteredSkills();
       }
     });
+
+    synchronizeData();
+  }
+
+  Future<void> refreshData() async {
+    synchronizeData();
+
+    final newSkills = await _getClinicalSkills(selectedModuleVersionId);
+    setState(() {
+      clinicalSkills = newSkills;
+      filteredSkills = List.from(clinicalSkills);
+      copyClinicalSkills = List.from(clinicalSkills);
+    });
   }
 
   getFilteredSkills() {
@@ -61,6 +76,64 @@ class _SkillCardListState extends State<SkillCardList> {
         });
       }
     });
+  }
+
+  List<dynamic> getUnsynchronizedSkills() {
+    final box = Hive.box('skillData');
+    final int itemCount = box.length;
+    final List unsynchronizedSkills = [];
+
+    for (int i = 0; i < itemCount; i++) {
+      final dynamic skillData = box.getAt(i);
+      if (skillData != null && skillData["synchronized"] == false) {
+        print(':(');
+        unsynchronizedSkills.add(skillData);
+      }
+    }
+
+    return unsynchronizedSkills;
+  }
+
+  Future<void> synchronizeData() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult != ConnectivityResult.none) {
+      final unsynchronizedSkills = getUnsynchronizedSkills();
+
+      for (var skillData in unsynchronizedSkills) {
+        final body = jsonEncode({
+          "instructor_id": skillData["instructor_id"],
+          "level": skillData["level"],
+          "date": skillData["date"],
+          "signature": skillData["signature"],
+        });
+
+        if (skillData["moduleVersionId"] != null &&
+            skillData["skillId"] != null) {
+          ApiService()
+              .saveClinicalSkill(
+            skillData["moduleVersionId"],
+            skillData["skillId"],
+            body,
+          )
+              .then((value) {
+            final box = Hive.box('skillData');
+            if (skillData["key"] != null) {
+              final skillKey = skillData["key"];
+
+              if (box.containsKey(skillKey)) {
+                final skill = box.get(skillKey);
+                skill["synchronized"] = true;
+
+                box.delete(skillKey);
+              }
+            }
+          }).catchError((onError) {
+            print([onError, 'errorrr']);
+          });
+        }
+      }
+    }
   }
 
   void switchCompletedFilter() {
@@ -254,7 +327,7 @@ class _SkillCardListState extends State<SkillCardList> {
                                   .instructorId
                                   .toString()
                             },
-                          );
+                          ).then((value) => refreshData());
                         },
                         child: SkillCard(data: filteredSkills[index]),
                       );

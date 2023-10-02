@@ -11,6 +11,7 @@ import 'package:demo_app/components/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
+import 'package:uuid/uuid.dart';
 
 import '../api/api_service.dart';
 import '../api/model/instructors.dart';
@@ -72,31 +73,16 @@ class _SkillDetailState extends State<SkillDetail> {
     selectedLevel = widget.level;
   }
 
-  String getCurrentUserLevel() {
-    if (widget.level != null) {
-      for (var levelData in levels) {
-        if (levelData['level'] == widget.level) {
-          return levelData['level']!;
-        }
-      }
-    }
-    return levels[0]['level']!; // Use the first level as a default value
-  }
-
   Future<List<Instructors>> _getInstructors() async {
     final box = Hive.box<Instructors>('instructorsBox');
 
-    // Check if the user is online
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      // User is offline, fetch data from Hive
       return box.values.toList();
     }
 
-    // User is online, fetch data from the API
     final fetchedInstructors = await ApiService().getInstructors();
 
-    // Save the data to Hive
     await box.clear(); // Clear the existing data
     await box.addAll([...fetchedInstructors]);
 
@@ -123,7 +109,9 @@ class _SkillDetailState extends State<SkillDetail> {
     );
   }
 
-  Future _saveSkill() async {
+  Future<void> _saveSkill() async {
+    print('saveSkill');
+
     final Uint8List? signatureData = await _controller.toPngBytes(
       height: 1000,
       width: 1000,
@@ -141,14 +129,34 @@ class _SkillDetailState extends State<SkillDetail> {
         "signature": signatureBase64,
       });
 
-      ApiService()
-          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
-          .then((value) => context.pop())
-          .catchError((onError) => {
-                setState(() {
-                  errorMessage = '${onError.toString()}';
-                })
-              });
+      final connectivityResult = await Connectivity().checkConnectivity();
+
+      if (connectivityResult == ConnectivityResult.none) {
+        final box = Hive.box('skillData');
+        const uuid = Uuid();
+        final skillData = {
+          "instructor_id": selectedInstructorId,
+          "level": selectedLevel,
+          "date": dateInput.text,
+          "signature": signatureBase64,
+          "synchronized": false,
+          "moduleVersionId": widget.moduleVersionId,
+          "skillId": widget.skillId,
+          "key": uuid.v4()
+        };
+
+        await box.add(skillData);
+      } else {
+        ApiService()
+            .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
+            .then((value) {
+          context.pop();
+        }).catchError((onError) {
+          setState(() {
+            errorMessage = onError.toString();
+          });
+        });
+      }
     } else {
       if (selectedInstructorId == null) {
         setState(() {
@@ -248,7 +256,7 @@ class _SkillDetailState extends State<SkillDetail> {
                   ],
                 ),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
+                    padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Text(widget.name!)),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -426,7 +434,7 @@ class _SkillDetailState extends State<SkillDetail> {
                     backgroundColor: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 errorMessage != ''
