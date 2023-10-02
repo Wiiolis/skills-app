@@ -22,7 +22,23 @@ class _NewSupervisorState extends State<NewSupervisor> {
   final departmentInputController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool _isNameEmpty = false;
+  bool _isEmailEmpty = false;
+  bool _isDepartmentEmpty = false;
+
   Future _saveSupervisor() async {
+    _isNameEmpty = nameInputController.text.isEmpty;
+    _isEmailEmpty = emailInputController.text.isEmpty;
+    _isDepartmentEmpty = departmentInputController.text.isEmpty;
+
+    if (_isNameEmpty ||
+        _isEmailEmpty ||
+        _isDepartmentEmpty ||
+        !RegExp(r'\S+@\S+\.\S+').hasMatch(emailInputController.text)) {
+      setState(() {});
+      return; // Don't proceed if any field is empty
+    }
+
     var body = jsonEncode({
       "full_name": nameInputController.text,
       "email": emailInputController.text,
@@ -84,117 +100,36 @@ class _NewSupervisorState extends State<NewSupervisor> {
                           'Supervisor Details',
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
-
-                        // NAME
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Name Surname',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      'Required',
-                                      style: TextStyle(
-                                          color: AppColors.lightGrayColor,
-                                          fontSize: 10),
-                                    )
-                                  ]),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            MyTextField(
-                              controller: nameInputController,
-                              hintText: 'Add supervisor name and surname',
-                              obscureText: false,
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 15,
                         ),
-
-                        // EMAIL
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Email',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      'Required',
-                                      style: TextStyle(
-                                          color: AppColors.lightGrayColor,
-                                          fontSize: 10),
-                                    )
-                                  ]),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            MyTextField(
-                              controller: emailInputController,
-                              hintText: 'Add email',
-                              email: true,
-                              obscureText: false,
-                            ),
-                          ],
+                        MyTextField(
+                          controller: nameInputController,
+                          hintText: 'Add supervisor name and surname',
+                          label: 'Name Surname',
+                          obscureText: false,
+                          required: true,
                         ),
-
-                        //DEPARTMENT
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 15, 0),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Department',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    Text(
-                                      'Required',
-                                      style: TextStyle(
-                                          color: AppColors.lightGrayColor,
-                                          fontSize: 10),
-                                    )
-                                  ]),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            MyTextField(
-                              controller: departmentInputController,
-                              hintText: 'e.g. Cardiology',
-                              obscureText: false,
-                            )
-                          ],
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        MyTextField(
+                          controller: emailInputController,
+                          hintText: 'Add email',
+                          label: 'Email',
+                          email: true,
+                          required: true,
+                          obscureText: false,
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        MyTextField(
+                          controller: departmentInputController,
+                          hintText: 'e.g. Cardiology',
+                          label: 'Department',
+                          obscureText: false,
+                          required: true,
                         ),
                         const SizedBox(
                           height: 40,

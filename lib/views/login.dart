@@ -107,25 +107,32 @@ class _LoginState extends State<Login> {
                               'Hello.',
                               style: TextStyle(
                                   fontSize: 46,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                             Text(
-                              'Welcome to EDU',
+                              'Welcome to',
                               style: TextStyle(
                                   fontSize: 28,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                             Text(
-                              'Clinical Skills Catalogue',
+                              'EDU Clinical',
                               style: TextStyle(
                                   fontSize: 28,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white),
+                            ),
+                            Text(
+                              'Skills Catalogue',
+                              style: TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                             SizedBox(
-                              height: 80,
+                              height: 40,
                             )
                           ],
                         ),
@@ -139,36 +146,51 @@ class _LoginState extends State<Login> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              MyTextField(
-                                // test and potentionally remove !!
-                                autofill: 'email',
-                                controller: usernameController,
-                                hintText: 'Enter your EDU e-mail adress',
-                                obscureText: false,
-                                email: true,
-                                label: 'E-mail',
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  MyTextField(
+                                    // test and potentionally remove !!
+                                    autofill: 'email',
+                                    controller: usernameController,
+                                    hintText: 'Enter your EDU e-mail adress',
+                                    obscureText: false,
+                                    email: true,
+                                    displayRequired: false,
+                                    label: 'E-mail',
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  MyTextField(
+                                    controller: passwordController,
+                                    hintText: 'Enter your EDU password',
+                                    obscureText: !passwordVisible,
+                                    displayRequired: false,
+                                    label: 'Password',
+                                    icon: IconButton(
+                                      icon: Icon(
+                                        passwordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: AppColors.primaryColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          passwordVisible = !passwordVisible;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                               const SizedBox(
                                 height: 10,
-                              ),
-                              MyTextField(
-                                controller: passwordController,
-                                hintText: 'Enter your EDU password',
-                                obscureText: !passwordVisible,
-                                label: 'Password',
-                                icon: IconButton(
-                                  icon: Icon(
-                                    passwordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      passwordVisible = !passwordVisible;
-                                    });
-                                  },
-                                ),
                               ),
                               errorMessage != ''
                                   ? Text(
@@ -198,7 +220,8 @@ class _LoginState extends State<Login> {
                                   ),
                                   child: const Text(
                                     'LOGIN',
-                                    style: TextStyle(fontSize: 16),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                 ),
                               ),

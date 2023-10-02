@@ -137,7 +137,7 @@ class _SkillCardListState extends State<SkillCardList> {
         children: [
           // Search Bar
           SizedBox(
-              height: 35,
+              height: 55,
               child: MyTextField(
                 onChanged: (value) {
                   if (filterCompletedSkills) {
@@ -151,6 +151,7 @@ class _SkillCardListState extends State<SkillCardList> {
                   }
                 },
                 controller: _searchController,
+                required: false,
                 hintText: 'Search skills by name',
                 obscureText: false,
                 displayBorder: false,

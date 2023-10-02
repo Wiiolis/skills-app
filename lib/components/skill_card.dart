@@ -47,7 +47,10 @@ class SkillCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text(data.name),
+                      child: Text(
+                        data.name,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     ),
                     const SizedBox(
                       width: 10,
@@ -74,7 +77,7 @@ class SkillCard extends StatelessWidget {
                       style: TextStyle(
                           color: data.assessment?.level != null
                               ? AppColors.greenColor
-                              : AppColors.placeholderColor,
+                              : AppColors.lightGrayColor,
                           fontWeight: FontWeight.w600,
                           fontSize: 12),
                     ),
@@ -86,11 +89,9 @@ class SkillCard extends StatelessWidget {
                           ? DateFormat('dd.MM.yyyy')
                               .format(data.assessment.assessmentDate)
                               .toString()
-                          : 'date unavailable',
-                      style: TextStyle(
-                          color: data.assessment != null
-                              ? AppColors.lightGrayColor
-                              : AppColors.placeholderColor,
+                          : '',
+                      style: const TextStyle(
+                          color: AppColors.lightGrayColor,
                           fontWeight: FontWeight.w300,
                           fontSize: 12),
                     ),
@@ -101,11 +102,9 @@ class SkillCard extends StatelessWidget {
                       child: Text(
                           data.assessment != null
                               ? data.assessment.instructor.fullName
-                              : 'No instructor',
-                          style: TextStyle(
-                              color: data.assessment != null
-                                  ? AppColors.lightGrayColor
-                                  : AppColors.placeholderColor,
+                              : '',
+                          style: const TextStyle(
+                              color: AppColors.lightGrayColor,
                               overflow: TextOverflow.ellipsis,
                               fontWeight: FontWeight.w300,
                               fontSize: 12)),
