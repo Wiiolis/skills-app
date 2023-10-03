@@ -6,10 +6,12 @@ import '../globals.dart';
 // ignore: must_be_immutable
 class SkillCard extends StatelessWidget {
   final data;
+  bool pendingBackground = false;
 
   SkillCard({
     Key? key,
     required this.data,
+    required this.pendingBackground,
   }) : super(key: key);
 
   String getLevelName(String level) {
@@ -32,7 +34,7 @@ class SkillCard extends StatelessWidget {
       ),
       elevation: 3,
       shadowColor: const Color.fromARGB(208, 0, 0, 0),
-      color: Colors.white,
+      color: pendingBackground ? Colors.red : Colors.white,
       child: FractionallySizedBox(
         widthFactor: 1,
         child: ConstrainedBox(

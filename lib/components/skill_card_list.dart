@@ -48,7 +48,7 @@ class _SkillCardListState extends State<SkillCardList> {
           _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
         });
 
-        getFilteredSkills();
+        refreshData();
       }
     });
 
@@ -58,15 +58,6 @@ class _SkillCardListState extends State<SkillCardList> {
   Future<void> refreshData() async {
     synchronizeData();
 
-    final newSkills = await _getClinicalSkills(selectedModuleVersionId);
-    setState(() {
-      clinicalSkills = newSkills;
-      filteredSkills = List.from(clinicalSkills);
-      copyClinicalSkills = List.from(clinicalSkills);
-    });
-  }
-
-  getFilteredSkills() {
     return _clinicalSkillsFuture.then((value) {
       if (mounted) {
         setState(() {
@@ -78,13 +69,25 @@ class _SkillCardListState extends State<SkillCardList> {
     });
   }
 
+  bool checkBackground(skill) {
+    final box = Hive.box('skillData');
+
+    for (int i = 0; i < box.length; i++) {
+      final dynamic skillData = box.getAt(i);
+
+      if (skillData['skillId'] == skill.clinicalSkillId) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   List<dynamic> getUnsynchronizedSkills() {
     final box = Hive.box('skillData');
 
     final int itemCount = box.length;
     final List unsynchronizedSkills = [];
-
-    print(itemCount);
 
     for (int i = 0; i < itemCount; i++) {
       final dynamic skillData = box.getAt(i);
@@ -253,7 +256,7 @@ class _SkillCardListState extends State<SkillCardList> {
                           setState(() {
                             selectedModuleVersionId = value;
                             _clinicalSkillsFuture = _getClinicalSkills(value);
-                            getFilteredSkills();
+                            refreshData();
                             filterCompletedSkills = false;
                             _searchController.clear();
                           });
@@ -304,31 +307,33 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemCount: filteredSkills.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () {
-                          context.pushNamed(
-                            "skillDetail",
-                            pathParameters: {
-                              "moduleVersionId":
-                                  selectedModuleVersionId.toString(),
-                              "skillId": filteredSkills[index]
-                                  .clinicalSkillId
-                                  .toString(),
-                            },
-                            queryParameters: {
-                              "name": filteredSkills[index].name,
-                              "level":
-                                  filteredSkills[index].assessment?.level ??
-                                      'observer',
-                              "instructorId": filteredSkills[index]
-                                  .assessment
-                                  ?.instructor
-                                  .instructorId
-                                  .toString()
-                            },
-                          ).then((value) => refreshData());
-                        },
-                        child: SkillCard(data: filteredSkills[index]),
-                      );
+                          onTap: () {
+                            context.pushNamed(
+                              "skillDetail",
+                              pathParameters: {
+                                "moduleVersionId":
+                                    selectedModuleVersionId.toString(),
+                                "skillId": filteredSkills[index]
+                                    .clinicalSkillId
+                                    .toString(),
+                              },
+                              queryParameters: {
+                                "name": filteredSkills[index].name,
+                                "level":
+                                    filteredSkills[index].assessment?.level ??
+                                        'observer',
+                                "instructorId": filteredSkills[index]
+                                    .assessment
+                                    ?.instructor
+                                    .instructorId
+                                    .toString()
+                              },
+                            ).then((value) => refreshData());
+                          },
+                          child: SkillCard(
+                              data: filteredSkills[index],
+                              pendingBackground:
+                                  checkBackground(filteredSkills[index])));
                     },
                   ),
                 );
