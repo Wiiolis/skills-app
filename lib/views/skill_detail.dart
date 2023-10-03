@@ -110,8 +110,6 @@ class _SkillDetailState extends State<SkillDetail> {
   }
 
   Future<void> _saveSkill() async {
-    print('saveSkill');
-
     final Uint8List? signatureData = await _controller.toPngBytes(
       height: 1000,
       width: 1000,
@@ -131,9 +129,12 @@ class _SkillDetailState extends State<SkillDetail> {
 
       final connectivityResult = await Connectivity().checkConnectivity();
 
+      //If no connection, save to Hive box
       if (connectivityResult == ConnectivityResult.none) {
         final box = Hive.box('skillData');
         const uuid = Uuid();
+        final String skillKey = uuid.v4();
+
         final skillData = {
           "instructor_id": selectedInstructorId,
           "level": selectedLevel,
@@ -142,10 +143,10 @@ class _SkillDetailState extends State<SkillDetail> {
           "synchronized": false,
           "moduleVersionId": widget.moduleVersionId,
           "skillId": widget.skillId,
-          "key": uuid.v4()
+          "key": skillKey
         };
 
-        await box.add(skillData);
+        await box.put(skillKey, skillData).then((value) => context.pop());
       } else {
         ApiService()
             .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)

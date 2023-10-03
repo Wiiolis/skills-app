@@ -80,13 +80,15 @@ class _SkillCardListState extends State<SkillCardList> {
 
   List<dynamic> getUnsynchronizedSkills() {
     final box = Hive.box('skillData');
+
     final int itemCount = box.length;
     final List unsynchronizedSkills = [];
+
+    print(itemCount);
 
     for (int i = 0; i < itemCount; i++) {
       final dynamic skillData = box.getAt(i);
       if (skillData != null && skillData["synchronized"] == false) {
-        print(':(');
         unsynchronizedSkills.add(skillData);
       }
     }
@@ -116,20 +118,16 @@ class _SkillCardListState extends State<SkillCardList> {
             skillData["skillId"],
             body,
           )
-              .then((value) {
+              .then((value) async {
             final box = Hive.box('skillData');
-            if (skillData["key"] != null) {
-              final skillKey = skillData["key"];
 
-              if (box.containsKey(skillKey)) {
-                final skill = box.get(skillKey);
-                skill["synchronized"] = true;
-
-                box.delete(skillKey);
+            for (var o in box.keys) {
+              if (o == skillData['key']) {
+                box.delete(o);
               }
             }
           }).catchError((onError) {
-            print([onError, 'errorrr']);
+            print([onError, 'onError']);
           });
         }
       }
