@@ -9,10 +9,15 @@ class Button extends StatelessWidget {
   double radius = 15;
   double buttonHeight = 40;
   double buttonWidth = double.maxFinite;
-  final Function() onClick;
+  final Function()? onClick;
   final String? icon;
 
   Color getBorderColor() {
+    // disabled
+    if (onClick == null) {
+      return AppColors.placeholderColor;
+    }
+
     if (theme == 'light') {
       return Colors.white;
     } else if (theme == 'dark') {
@@ -41,6 +46,11 @@ class Button extends StatelessWidget {
   }
 
   Color getTextColor() {
+    // disabled
+    if (onClick == null) {
+      return AppColors.placeholderColor;
+    }
+
     if (theme == 'light') {
       return Colors.white;
     } else if (theme == 'dark') {
@@ -57,7 +67,7 @@ class Button extends StatelessWidget {
   Button(
       {super.key,
       required this.text,
-      required this.onClick,
+      this.onClick,
       required this.theme,
       required this.radius,
       this.buttonHeight = 40,
@@ -67,7 +77,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => onClick(),
+      onPressed: onClick != null ? (() => onClick!()) : null,
       style: OutlinedButton.styleFrom(
         backgroundColor: getBackgroundColor(),
         fixedSize: Size(buttonWidth, buttonHeight),

@@ -391,18 +391,55 @@ class _SkillDetailState extends State<SkillDetail> {
                     ],
                   ),
                 ),
-                Button(
-                  onClick: () => GoRouter.of(context)
-                      .pushNamed('NewSupervisor')
-                      .then((value) {
-                    if (value != null) {
-                      newSupervisorId(value);
-                    }
-                  }),
-                  radius: 8,
-                  text: 'Add New Supervisor',
-                  theme: 'transparent-dark',
-                  buttonHeight: 30,
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: SizedBox(
+                        height: 40,
+                        child: FutureBuilder<ConnectivityResult>(
+                          future: Connectivity().checkConnectivity(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasData) {
+                              final connectivityResult = snapshot.data;
+                              if (connectivityResult ==
+                                  ConnectivityResult.none) {
+                                // No internet connectivity, disable the button
+                                return Button(
+                                  onClick: null,
+                                  radius: 8,
+                                  text: 'Add New Supervisor',
+                                  theme: 'transparent-dark',
+                                  buttonHeight: 30,
+                                );
+                              } else {
+                                // Internet connectivity available, enable the button
+                                return Button(
+                                  onClick: () => GoRouter.of(context)
+                                      .pushNamed('NewSupervisor')
+                                      .then((value) {
+                                    if (value != null) {
+                                      newSupervisorId(value);
+                                    }
+                                  }),
+                                  radius: 8,
+                                  text: 'Add New Supervisor',
+                                  theme: 'transparent-dark',
+                                  buttonHeight: 30,
+                                );
+                              }
+                            } else {
+                              return const Text('Error');
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15),
