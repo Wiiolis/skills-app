@@ -48,6 +48,7 @@ class _SkillCardListState extends State<SkillCardList> {
           _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
         });
 
+        print('init state');
         refreshData();
       }
     });
@@ -56,21 +57,37 @@ class _SkillCardListState extends State<SkillCardList> {
   }
 
   Future<void> refreshData() async {
-    synchronizeData();
+    print('refresh data');
+    final connectivityResult = await Connectivity().checkConnectivity();
 
-    return _clinicalSkillsFuture.then((value) {
-      if (mounted) {
-        setState(() {
-          clinicalSkills = value;
-          filteredSkills = List.from(clinicalSkills);
-          copyClinicalSkills = List.from(clinicalSkills);
-        });
-      }
-    });
+    if (connectivityResult == ConnectivityResult.none) {
+      // If no internet, use old data
+      return _clinicalSkillsFuture.then((value) {
+        if (mounted) {
+          setState(() {
+            clinicalSkills = value;
+            filteredSkills = List.from(clinicalSkills);
+            copyClinicalSkills = List.from(clinicalSkills);
+          });
+        }
+      });
+    } else {
+      // If internet available, fetch data
+      synchronizeData();
+      return _getClinicalSkills(selectedModuleVersionId).then((value) {
+        if (mounted) {
+          setState(() {
+            clinicalSkills = value;
+            filteredSkills = List.from(clinicalSkills);
+            copyClinicalSkills = List.from(clinicalSkills);
+          });
+        }
+      });
+    }
   }
 
   bool checkBackground(skill) {
-    final box = Hive.box('skillData');
+    final box = Hive.box('skillDataBox');
 
     for (int i = 0; i < box.length; i++) {
       final dynamic skillData = box.getAt(i);
@@ -84,7 +101,7 @@ class _SkillCardListState extends State<SkillCardList> {
   }
 
   List<dynamic> getUnsynchronizedSkills() {
-    final box = Hive.box('skillData');
+    final box = Hive.box('skillDataBox');
 
     final int itemCount = box.length;
     final List unsynchronizedSkills = [];
@@ -102,9 +119,13 @@ class _SkillCardListState extends State<SkillCardList> {
   Future<void> synchronizeData() async {
     final connectivityResult = await Connectivity().checkConnectivity();
 
+// if internet available, go trough unsychronized skills and update them,
+// and then delete them from hive box.
+
     if (connectivityResult != ConnectivityResult.none) {
       final unsynchronizedSkills = getUnsynchronizedSkills();
 
+// Get data from each saved skill and create "body"
       for (var skillData in unsynchronizedSkills) {
         final body = jsonEncode({
           "instructor_id": skillData["instructor_id"],
@@ -122,8 +143,8 @@ class _SkillCardListState extends State<SkillCardList> {
             body,
           )
               .then((value) async {
-            final box = Hive.box('skillData');
-
+            final box = Hive.box('skillDataBox');
+// compare key from unsychronized skill that I just did POST to to key from box and delete it.
             for (var o in box.keys) {
               if (o == skillData['key']) {
                 box.delete(o);
@@ -240,32 +261,42 @@ class _SkillCardListState extends State<SkillCardList> {
           Row(
             children: [
               FutureBuilder<dynamic>(
-                future: _modulesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    final dropdownItems = snapshot.data ?? [];
-                    return Dropdown(
-                        dropdownItems: dropdownItems,
-                        selectedItem: selectedModuleVersionId,
-                        dropdownWidth: 150,
-                        callback: (value) {
-                          setState(() {
-                            selectedModuleVersionId = value;
-                            _clinicalSkillsFuture = _getClinicalSkills(value);
-                            refreshData();
-                            filterCompletedSkills = false;
-                            _searchController.clear();
-                          });
+                  future: _modulesFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      final dropdownItems = snapshot.data ?? [];
+                      return FutureBuilder<ConnectivityResult>(
+                        future: Connectivity().checkConnectivity(),
+                        builder: (context, snapshot) {
+                          final networkStatus =
+                              snapshot.data ?? ConnectivityResult.none;
+
+                          return Dropdown(
+                            disabled: networkStatus == ConnectivityResult.none,
+                            dropdownItems: dropdownItems,
+                            selectedItem: selectedModuleVersionId,
+                            dropdownWidth: 150,
+                            callback: (value) {
+                              setState(() {
+                                selectedModuleVersionId = value;
+                                _clinicalSkillsFuture =
+                                    _getClinicalSkills(value);
+                                refreshData();
+                                filterCompletedSkills = false;
+                                _searchController.clear();
+                              });
+                            },
+                            valueName: 'moduleVersionId',
+                            theme: 'light',
+                          );
                         },
-                        valueName: 'moduleVersionId',
-                        theme: 'light');
-                  }
-                },
-              ),
+                      );
+                    }
+                  }),
               const SizedBox(
                 width: 10,
               ),

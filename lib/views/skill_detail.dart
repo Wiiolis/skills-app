@@ -83,7 +83,7 @@ class _SkillDetailState extends State<SkillDetail> {
 
     final fetchedInstructors = await ApiService().getInstructors();
 
-    await box.clear(); // Clear the existing data
+    await box.clear();
     await box.addAll([...fetchedInstructors]);
 
     return fetchedInstructors;
@@ -131,7 +131,7 @@ class _SkillDetailState extends State<SkillDetail> {
 
       //If no connection, save to Hive box
       if (connectivityResult == ConnectivityResult.none) {
-        final box = Hive.box('skillData');
+        final box = Hive.box('skillDataBox');
         const uuid = Uuid();
         final String skillKey = uuid.v4();
 
