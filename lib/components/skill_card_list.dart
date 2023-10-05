@@ -48,7 +48,6 @@ class _SkillCardListState extends State<SkillCardList> {
           _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
         });
 
-        print('init state');
         refreshData();
       }
     });
@@ -57,7 +56,6 @@ class _SkillCardListState extends State<SkillCardList> {
   }
 
   Future<void> refreshData() async {
-    print('refresh data');
     final connectivityResult = await Connectivity().checkConnectivity();
 
     if (connectivityResult == ConnectivityResult.none) {

@@ -111,6 +111,7 @@ class _MyTextFieldState extends State<MyTextField> {
           autofillHints: _getAutofillHints(),
           onChanged: widget.onChanged,
           controller: widget.controller,
+          autofocus: false,
           obscureText: widget.obscureText,
           validator: (value) {
             if ((value == null || value.isEmpty) && widget.required == true) {
