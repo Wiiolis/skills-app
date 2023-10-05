@@ -36,7 +36,7 @@ class SkillCard extends StatelessWidget {
       shadowColor: const Color.fromARGB(208, 0, 0, 0),
       color: pendingBackground ? AppColors.placeholderColor : Colors.white,
       child: Stack(children: [
-        const Positioned(
+        /*   const Positioned(
           top: 10,
           right: 15,
           child: Icon(
@@ -44,7 +44,7 @@ class SkillCard extends StatelessWidget {
             color: AppColors.goldColor,
             size: 26,
           ),
-        ),
+        ), */
         FractionallySizedBox(
           widthFactor: 1,
           child: ConstrainedBox(
