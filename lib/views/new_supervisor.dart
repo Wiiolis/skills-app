@@ -46,7 +46,10 @@ class _NewSupervisorState extends State<NewSupervisor> {
     });
 
     return ApiService().saveInstructor(body).then((value) => {
-          Navigator.pop(context, value),
+          if (value != null)
+            {
+              Navigator.pop(context, value),
+            }
         });
   }
 

@@ -25,6 +25,7 @@ Future<void> registerHiveAdapters() async {
   await Hive.openBox<ClinicalSkills>('clinicalSkillsBox');
   await Hive.openBox<User>('userBox');
   await Hive.openBox<Modules>('modulesBox');
+  await Hive.openBox('skillDataBox');
 }
 
 Future<void> openHiveBoxes() async {
@@ -32,6 +33,7 @@ Future<void> openHiveBoxes() async {
   await Hive.openBox<ClinicalSkills>('clinicalSkillsBox');
   await Hive.openBox<User>('userBox');
   await Hive.openBox<Modules>('modulesBox');
+  await Hive.openBox('skillDataBox');
 }
 
 Future<void> clearBoxes() async {
@@ -39,6 +41,7 @@ Future<void> clearBoxes() async {
   await Hive.box('clinicalSkillsBox').clear();
   await Hive.box('userBox').clear();
   await Hive.box('modulesBox').clear();
+  await Hive.box('skillDataBox').clear();
 
   await Hive.close();
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:demo_app/components/my_textfield.dart';
 import 'package:flutter/gestures.dart';
@@ -46,21 +48,114 @@ class _SkillCardListState extends State<SkillCardList> {
           _clinicalSkillsFuture = _getClinicalSkills(selectedModuleVersionId);
         });
 
-        getFilteredSkills();
+        print('init state');
+        refreshData();
       }
     });
+
+    synchronizeData();
   }
 
-  getFilteredSkills() {
-    return _clinicalSkillsFuture.then((value) {
-      if (mounted) {
-        setState(() {
-          clinicalSkills = value;
-          filteredSkills = List.from(clinicalSkills);
-          copyClinicalSkills = List.from(clinicalSkills);
-        });
+  Future<void> refreshData() async {
+    print('refresh data');
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      // If no internet, use old data
+      return _clinicalSkillsFuture.then((value) {
+        if (mounted) {
+          setState(() {
+            clinicalSkills = value;
+            filteredSkills = List.from(clinicalSkills);
+            copyClinicalSkills = List.from(clinicalSkills);
+          });
+        }
+      });
+    } else {
+      // If internet available, fetch data
+      synchronizeData();
+      return _getClinicalSkills(selectedModuleVersionId).then((value) {
+        if (mounted) {
+          setState(() {
+            clinicalSkills = value;
+            filteredSkills = List.from(clinicalSkills);
+            copyClinicalSkills = List.from(clinicalSkills);
+          });
+        }
+      });
+    }
+  }
+
+  bool checkBackground(skill) {
+    final box = Hive.box('skillDataBox');
+
+    for (int i = 0; i < box.length; i++) {
+      final dynamic skillData = box.getAt(i);
+
+      if (skillData['skillId'] == skill.clinicalSkillId) {
+        return true;
       }
-    });
+    }
+
+    return false;
+  }
+
+  List<dynamic> getUnsynchronizedSkills() {
+    final box = Hive.box('skillDataBox');
+
+    final int itemCount = box.length;
+    final List unsynchronizedSkills = [];
+
+    for (int i = 0; i < itemCount; i++) {
+      final dynamic skillData = box.getAt(i);
+      if (skillData != null && skillData["synchronized"] == false) {
+        unsynchronizedSkills.add(skillData);
+      }
+    }
+
+    return unsynchronizedSkills;
+  }
+
+  Future<void> synchronizeData() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+
+// if internet available, go trough unsychronized skills and update them,
+// and then delete them from hive box.
+
+    if (connectivityResult != ConnectivityResult.none) {
+      final unsynchronizedSkills = getUnsynchronizedSkills();
+
+// Get data from each saved skill and create "body"
+      for (var skillData in unsynchronizedSkills) {
+        final body = jsonEncode({
+          "instructor_id": skillData["instructor_id"],
+          "level": skillData["level"],
+          "date": skillData["date"],
+          "signature": skillData["signature"],
+        });
+
+        if (skillData["moduleVersionId"] != null &&
+            skillData["skillId"] != null) {
+          ApiService()
+              .saveClinicalSkill(
+            skillData["moduleVersionId"],
+            skillData["skillId"],
+            body,
+          )
+              .then((value) async {
+            final box = Hive.box('skillDataBox');
+// compare key from unsychronized skill that I just did POST to to key from box and delete it.
+            for (var o in box.keys) {
+              if (o == skillData['key']) {
+                box.delete(o);
+              }
+            }
+          }).catchError((onError) {
+            print([onError, 'onError']);
+          });
+        }
+      }
+    }
   }
 
   void switchCompletedFilter() {
@@ -166,32 +261,42 @@ class _SkillCardListState extends State<SkillCardList> {
           Row(
             children: [
               FutureBuilder<dynamic>(
-                future: _modulesFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    final dropdownItems = snapshot.data ?? [];
-                    return Dropdown(
-                        dropdownItems: dropdownItems,
-                        selectedItem: selectedModuleVersionId,
-                        dropdownWidth: 150,
-                        callback: (value) {
-                          setState(() {
-                            selectedModuleVersionId = value;
-                            _clinicalSkillsFuture = _getClinicalSkills(value);
-                            getFilteredSkills();
-                            filterCompletedSkills = false;
-                            _searchController.clear();
-                          });
+                  future: _modulesFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      final dropdownItems = snapshot.data ?? [];
+                      return FutureBuilder<ConnectivityResult>(
+                        future: Connectivity().checkConnectivity(),
+                        builder: (context, snapshot) {
+                          final networkStatus =
+                              snapshot.data ?? ConnectivityResult.none;
+
+                          return Dropdown(
+                            disabled: networkStatus == ConnectivityResult.none,
+                            dropdownItems: dropdownItems,
+                            selectedItem: selectedModuleVersionId,
+                            dropdownWidth: 150,
+                            callback: (value) {
+                              setState(() {
+                                selectedModuleVersionId = value;
+                                _clinicalSkillsFuture =
+                                    _getClinicalSkills(value);
+                                refreshData();
+                                filterCompletedSkills = false;
+                                _searchController.clear();
+                              });
+                            },
+                            valueName: 'moduleVersionId',
+                            theme: 'light',
+                          );
                         },
-                        valueName: 'moduleVersionId',
-                        theme: 'light');
-                  }
-                },
-              ),
+                      );
+                    }
+                  }),
               const SizedBox(
                 width: 10,
               ),
@@ -233,31 +338,33 @@ class _SkillCardListState extends State<SkillCardList> {
                     itemCount: filteredSkills.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () {
-                          context.pushNamed(
-                            "skillDetail",
-                            pathParameters: {
-                              "moduleVersionId":
-                                  selectedModuleVersionId.toString(),
-                              "skillId": filteredSkills[index]
-                                  .clinicalSkillId
-                                  .toString(),
-                            },
-                            queryParameters: {
-                              "name": filteredSkills[index].name,
-                              "level":
-                                  filteredSkills[index].assessment?.level ??
-                                      'observer',
-                              "instructorId": filteredSkills[index]
-                                  .assessment
-                                  ?.instructor
-                                  .instructorId
-                                  .toString()
-                            },
-                          );
-                        },
-                        child: SkillCard(data: filteredSkills[index]),
-                      );
+                          onTap: () {
+                            context.pushNamed(
+                              "skillDetail",
+                              pathParameters: {
+                                "moduleVersionId":
+                                    selectedModuleVersionId.toString(),
+                                "skillId": filteredSkills[index]
+                                    .clinicalSkillId
+                                    .toString(),
+                              },
+                              queryParameters: {
+                                "name": filteredSkills[index].name,
+                                "level":
+                                    filteredSkills[index].assessment?.level ??
+                                        'observer',
+                                "instructorId": filteredSkills[index]
+                                    .assessment
+                                    ?.instructor
+                                    .instructorId
+                                    .toString()
+                              },
+                            ).then((value) => refreshData());
+                          },
+                          child: SkillCard(
+                              data: filteredSkills[index],
+                              pendingBackground:
+                                  checkBackground(filteredSkills[index])));
                     },
                   ),
                 );

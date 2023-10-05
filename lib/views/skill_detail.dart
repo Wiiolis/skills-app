@@ -11,6 +11,7 @@ import 'package:demo_app/components/button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:signature/signature.dart';
+import 'package:uuid/uuid.dart';
 
 import '../api/api_service.dart';
 import '../api/model/instructors.dart';
@@ -72,32 +73,17 @@ class _SkillDetailState extends State<SkillDetail> {
     selectedLevel = widget.level;
   }
 
-  String getCurrentUserLevel() {
-    if (widget.level != null) {
-      for (var levelData in levels) {
-        if (levelData['level'] == widget.level) {
-          return levelData['level']!;
-        }
-      }
-    }
-    return levels[0]['level']!; // Use the first level as a default value
-  }
-
   Future<List<Instructors>> _getInstructors() async {
     final box = Hive.box<Instructors>('instructorsBox');
 
-    // Check if the user is online
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      // User is offline, fetch data from Hive
       return box.values.toList();
     }
 
-    // User is online, fetch data from the API
     final fetchedInstructors = await ApiService().getInstructors();
 
-    // Save the data to Hive
-    await box.clear(); // Clear the existing data
+    await box.clear();
     await box.addAll([...fetchedInstructors]);
 
     return fetchedInstructors;
@@ -123,7 +109,7 @@ class _SkillDetailState extends State<SkillDetail> {
     );
   }
 
-  Future _saveSkill() async {
+  Future<void> _saveSkill() async {
     final Uint8List? signatureData = await _controller.toPngBytes(
       height: 1000,
       width: 1000,
@@ -141,14 +127,37 @@ class _SkillDetailState extends State<SkillDetail> {
         "signature": signatureBase64,
       });
 
-      ApiService()
-          .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
-          .then((value) => context.pop())
-          .catchError((onError) => {
-                setState(() {
-                  errorMessage = '${onError.toString()}';
-                })
-              });
+      final connectivityResult = await Connectivity().checkConnectivity();
+
+      //If no connection, save to Hive box
+      if (connectivityResult == ConnectivityResult.none) {
+        final box = Hive.box('skillDataBox');
+        const uuid = Uuid();
+        final String skillKey = uuid.v4();
+
+        final skillData = {
+          "instructor_id": selectedInstructorId,
+          "level": selectedLevel,
+          "date": dateInput.text,
+          "signature": signatureBase64,
+          "synchronized": false,
+          "moduleVersionId": widget.moduleVersionId,
+          "skillId": widget.skillId,
+          "key": skillKey
+        };
+
+        await box.put(skillKey, skillData).then((value) => context.pop());
+      } else {
+        ApiService()
+            .saveClinicalSkill(widget.moduleVersionId, widget.skillId, body)
+            .then((value) {
+          context.pop();
+        }).catchError((onError) {
+          setState(() {
+            errorMessage = onError.toString();
+          });
+        });
+      }
     } else {
       if (selectedInstructorId == null) {
         setState(() {
@@ -248,7 +257,7 @@ class _SkillDetailState extends State<SkillDetail> {
                   ],
                 ),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
+                    padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Text(widget.name!)),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
@@ -382,18 +391,55 @@ class _SkillDetailState extends State<SkillDetail> {
                     ],
                   ),
                 ),
-                Button(
-                  onClick: () => GoRouter.of(context)
-                      .pushNamed('NewSupervisor')
-                      .then((value) {
-                    if (value != null) {
-                      newSupervisorId(value);
-                    }
-                  }),
-                  radius: 8,
-                  text: 'Add New Supervisor',
-                  theme: 'transparent-dark',
-                  buttonHeight: 30,
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: SizedBox(
+                        height: 40,
+                        child: FutureBuilder<ConnectivityResult>(
+                          future: Connectivity().checkConnectivity(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasData) {
+                              final connectivityResult = snapshot.data;
+                              if (connectivityResult ==
+                                  ConnectivityResult.none) {
+                                // No internet connectivity, disable the button
+                                return Button(
+                                  onClick: null,
+                                  radius: 8,
+                                  text: 'Add New Supervisor',
+                                  theme: 'transparent-dark',
+                                  buttonHeight: 30,
+                                );
+                              } else {
+                                // Internet connectivity available, enable the button
+                                return Button(
+                                  onClick: () => GoRouter.of(context)
+                                      .pushNamed('NewSupervisor')
+                                      .then((value) {
+                                    if (value != null) {
+                                      newSupervisorId(value);
+                                    }
+                                  }),
+                                  radius: 8,
+                                  text: 'Add New Supervisor',
+                                  theme: 'transparent-dark',
+                                  buttonHeight: 30,
+                                );
+                              }
+                            } else {
+                              return const Text('Error');
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15),
@@ -426,7 +472,7 @@ class _SkillDetailState extends State<SkillDetail> {
                     backgroundColor: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 errorMessage != ''

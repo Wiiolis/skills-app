@@ -13,6 +13,7 @@ class Dropdown extends StatefulWidget {
   final String valueName;
   double dropdownWidth = double.maxFinite;
   String theme = 'light';
+  bool disabled;
 
   Dropdown(
       {Key? key,
@@ -21,7 +22,8 @@ class Dropdown extends StatefulWidget {
       required this.valueName,
       required this.callback,
       this.dropdownWidth = double.maxFinite,
-      required this.theme})
+      required this.theme,
+      this.disabled = false})
       : super(key: key);
 
   @override
@@ -54,7 +56,7 @@ class _DropdownState extends State<Dropdown> {
                     : Colors.white),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: DropdownButton(
+          child: DropdownButton<dynamic>(
             focusColor: Colors.transparent,
             iconEnabledColor: AppColors.primaryColor,
             isExpanded: true,
@@ -81,12 +83,14 @@ class _DropdownState extends State<Dropdown> {
                 child: Text(getValueText(value)),
               );
             }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                widget.selectedItem = newValue!;
-              });
-              widget.callback(newValue!);
-            },
+            onChanged: widget.disabled
+                ? null
+                : (newValue) {
+                    setState(() {
+                      widget.selectedItem = newValue!;
+                    });
+                    widget.callback(newValue!);
+                  },
           ),
         ));
   }
