@@ -331,41 +331,53 @@ class _SkillCardListState extends State<SkillCardList> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return Flexible(
-                  child: ListView.builder(
-                    itemCount: filteredSkills.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                          onTap: () {
-                            context.pushNamed(
-                              "skillDetail",
-                              pathParameters: {
-                                "moduleVersionId":
-                                    selectedModuleVersionId.toString(),
-                                "skillId": filteredSkills[index]
-                                    .clinicalSkillId
-                                    .toString(),
-                              },
-                              queryParameters: {
-                                "name": filteredSkills[index].name,
-                                "level":
-                                    filteredSkills[index].assessment?.level ??
+                if (filteredSkills.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(5, 30, 0, 0),
+                      child: const Text(
+                        'No skills found',
+                        style: TextStyle(color: AppColors.lightGrayColor),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Flexible(
+                    child: ListView.builder(
+                        itemCount: filteredSkills.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                              onTap: () {
+                                context.pushNamed(
+                                  "skillDetail",
+                                  pathParameters: {
+                                    "moduleVersionId":
+                                        selectedModuleVersionId.toString(),
+                                    "skillId": filteredSkills[index]
+                                        .clinicalSkillId
+                                        .toString(),
+                                  },
+                                  queryParameters: {
+                                    "name": filteredSkills[index].name,
+                                    "level": filteredSkills[index]
+                                            .assessment
+                                            ?.level ??
                                         'observer',
-                                "instructorId": filteredSkills[index]
-                                    .assessment
-                                    ?.instructor
-                                    .instructorId
-                                    .toString()
+                                    "instructorId": filteredSkills[index]
+                                        .assessment
+                                        ?.instructor
+                                        .instructorId
+                                        .toString()
+                                  },
+                                ).then((value) => refreshData());
                               },
-                            ).then((value) => refreshData());
-                          },
-                          child: SkillCard(
-                              data: filteredSkills[index],
-                              pendingBackground:
-                                  checkBackground(filteredSkills[index])));
-                    },
-                  ),
-                );
+                              child: SkillCard(
+                                  data: filteredSkills[index],
+                                  pendingBackground:
+                                      checkBackground(filteredSkills[index])));
+                        }),
+                  );
+                }
               }
             },
           ),
